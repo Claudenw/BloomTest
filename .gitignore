@@ -1,1 +1,5 @@
 src/test/allCountries.txt
+.classpath
+.project
+.settings/
+bin/
