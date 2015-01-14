@@ -9,28 +9,30 @@ public class Summary {
 		int n;
 		String type;
 		int limit;
+		int density;
 		double load;
 		double complete;
-		double name;
-		double feature;
+		double highCard;
+		double lowCard;
 
 		public Element(Stats stat) {
+			this.density = stat.density;
 			this.type = stat.type;
 			this.limit = stat.limit;
 			this.n = 0;
 		}
-
+		
 		public String toString() {
-			return String.format("'%s',%s,%s,%s,%s,%s", type, limit, load / n,
-					complete / n, name / n, feature / n);
+			return String.format("'%s',%s,%s,%s,%s,%s,%s",  type, density, limit, load / n,
+					complete / n, highCard / n, lowCard / n);
 		}
 
 		public boolean add(Stats stat) {
 			if (stat.type.equals(type) && stat.limit == limit) {
 				load += stat.load;
 				complete += stat.complete;
-				name += stat.name;
-				feature += stat.feature;
+				highCard += stat.highCard;
+				lowCard += stat.lowCard;
 				n++;
 				return true;
 			}
@@ -40,7 +42,10 @@ public class Summary {
 	}
 
 	private List<Element> table = new ArrayList<Element>();
+	
+	public static String header() {return "'name','density','N','load','complete','high cardinality','low cardinality'";}
 
+	
 	public Summary(List<Stats> table) {
 		Element el = new Element(table.get(0));
 		this.table.add(el);

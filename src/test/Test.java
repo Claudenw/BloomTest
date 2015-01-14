@@ -13,20 +13,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import normalfilter.NormalBloomFilter;
+import normalfilter.NormalBloomFilterFactory;
+
 public class Test {
 	// 9,772,346 max lines
 	private static int RUN_COUNT = 5;
 	private static int[] RUNSIZE = {
-		100, 1000, 10000, 100000, 1000000
+		/*100, 1000, 10000,*/ 100000, /*1000000*/
 	};
+	private static int MAX_RUNSIZE = 1000000;
 
 	public static void main(final String[] args) throws Exception {
-		final Class<?> factoryClass = Class.forName(args[0]);
-		final BloomFilterFactory factory = (BloomFilterFactory) factoryClass
-				.newInstance();
+		//final Class<?> factoryClass = Class.forName(args[0]);
+		final NormalBloomFilterFactory factory = new NormalBloomFilterFactory();
 		final List<Constructor<? extends BloomIndex>> constructors = new ArrayList<Constructor<? extends BloomIndex>>();
 		final List<Stats> table = new ArrayList<Stats>();
-		final BloomFilter[] filters = new BloomFilter[1000000]; // (1e6)
+		BloomFilter[] filters;
 		final URL inputFile = Test.class.getResource("allCountries.txt");
 		final List<GeoName> sample = new ArrayList<GeoName>(1000); // (1e3)
 
@@ -40,34 +43,41 @@ public class Test {
 		constructors.add(BloomIndexLinear.class.getConstructor(int.class,int.class));
 
 		// read the test data.
-		final BufferedReader br = new BufferedReader(new InputStreamReader(
-				inputFile.openStream()));
-		for (int i = 0; i < 1000000; i++) {
-			final GeoName gn = GeoName.parse(br.readLine());
-			if ((i % 1000) == 0) {
-				sample.add(gn);
-			}
-			filters[i] = factory.create(gn);
-		}
+		
+//		final BufferedReader br = new BufferedReader(new InputStreamReader(
+//				inputFile.openStream()));
+//		for (int i = 0; i < 1000000; i++) {
+//			final GeoName gn = GeoName.parse(br.readLine());
+//			if ((i % 1000) == 0) {
+//				sample.add(gn);
+//			}
+//			filters[i] = factory.create(gn);
+//		}
 
-		for (final Constructor<? extends BloomIndex> constructor : constructors) {
-			for (final int i : RUNSIZE) {
-				final Stats[] stats = new Stats[RUN_COUNT];
-				for (int j = 0; j < RUN_COUNT; j++) {
-					stats[j] = new Stats(i);
+		for (int density=1; density < 10; density++)
+		{
+			filters = createFilterArray( factory, sample, inputFile, density ); 
+			for (int runsize : RUNSIZE )
+			{
+				for (final Constructor<? extends BloomIndex> constructor : constructors) {
+					final Stats[] stats = new Stats[RUN_COUNT];
+					for (int j = 0; j < RUN_COUNT; j++) {
+						stats[j] = new Stats(density, runsize);
+					}
+					table.addAll(runTest(factory, constructor, sample, filters, runsize,
+							stats));
 				}
-				table.addAll(runTest(factory, constructor, sample, filters, i,
-						stats));
 			}
 		}
 
 		System.out.println("===  data ===");
+		System.out.println( Stats.header() );
 		for (final Stats s : table) {
 			System.out.println(s.toString());
 		}
 		System.out.println("=== summary data ===");
 		final Summary summary = new Summary(table);
-
+		System.out.println( Summary.header() );
 		for (final Summary.Element e : summary.getTable()) {
 			System.out.println(e.toString());
 		}
@@ -82,6 +92,7 @@ public class Test {
 			IllegalArgumentException, InvocationTargetException {
 		final BloomIndex bi = doLoad(constructor, filters, limit, stats);
 		final int sampleSize = sample.size();
+		
 		BloomFilter[] bfSample = new BloomFilter[sampleSize];
 		for (int i = 0; i < sample.size(); i++) {
 			bfSample[i] = factory.create(sample.get(i));
@@ -119,33 +130,10 @@ public class Test {
 			final long end = System.currentTimeMillis();
 			stats[j].load = end - start;
 			System.out.println(String.format(
-					"%s 0 limit %s run %s  load time %s", bi.getName(), limit,
+					"%s d:%s 0 limit %s run %s  load time %s", bi.getName(), stats[0].density, limit,
 					j, end - start));
 		}
 		return bi;
-	}
-
-	private static void doSearch(final int pos, final BloomIndex bi,
-			final BloomFilter[] bfSample, final int limit, final Stats[] stats) {
-		final int sampleSize = bfSample.length;
-		for (int j = 0; j < RUN_COUNT; j++) {
-			long total = 0;
-			long start = 0;
-			long found = 0;
-			List<BloomFilter> result;
-			for (int i = 0; i < sampleSize; i++) {
-				start = System.currentTimeMillis();
-				result = bi.get(bfSample[i]);
-				total += (System.currentTimeMillis() - start);
-				found += result.size();
-			}
-			registerResult(stats[j], pos, total, found);
-
-			System.out.println(String.format(
-					"%s %s limit %s run %s  search time %s (%s)", bi.getName(),
-					pos, limit, j, total, found));
-		}
-
 	}
 
 	private static void doCount(final int pos, final BloomIndex bi,
@@ -164,7 +152,7 @@ public class Test {
 			registerResult(stats[j], pos, total, found);
 
 			System.out.println(String.format(
-					"%s %s limit %s run %s  count time %s (%s)", bi.getName(),
+					"%s D:%s %s limit %s run %s  count time %s (%s)", bi.getName(), stats[0].density,
 					pos, limit, j, total, found));
 		}
 
@@ -178,17 +166,51 @@ public class Test {
 				stat.completeFound = found;
 				break;
 			case 2:
-				stat.name = total;
-				stat.nameFound = found;
+				stat.highCard = total;
+				stat.hcFound = found;
 				break;
 			case 3:
-				stat.feature = total;
-				stat.featureFound = found;
+				stat.lowCard = total;
+				stat.lcFound = found;
 				break;
 			default:
 				throw new IllegalArgumentException(String.format(
 						"%s is not a valid position", pos));
 		}
 
+	}
+	
+	public static BloomFilter[] createFilterArray( NormalBloomFilterFactory factory, List<GeoName> sample, URL inputFile, int density ) throws IOException
+	{
+		boolean loadSample = sample.isEmpty();
+		BloomFilter[] result = new BloomFilter[MAX_RUNSIZE];
+		NormalBloomFilter.Builder builder = factory.getBuilder();
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new InputStreamReader(
+					inputFile.openStream()));
+			int geoCount = 0;
+			for (int i = 0; i < MAX_RUNSIZE; i++) {
+				for (int j=0;j<density;j++)
+				{
+					final GeoName gn = GeoName.parse(br.readLine());
+					geoCount++;
+					builder.add(gn);
+					if (loadSample && sample.size()<1000 && (geoCount % 1000)==0)
+					{
+						sample.add( gn );
+					}
+				}
+				result[i]=builder.build();
+			}
+			return result;
+		} finally {
+			try {
+				br.close();
+			}
+			catch (IOException e) {
+				// ignore
+			}
+		}
 	}
 }
