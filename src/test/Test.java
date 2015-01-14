@@ -3,6 +3,9 @@ package test;
 import geoname.GeoName;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
@@ -22,15 +25,15 @@ public class Test {
 		100, //1000, 10000, 100000, 1000000
 	};
 	private static int MAX_RUNSIZE = 1000000;
+	private static String eol = System.getProperty("line.separator");
 
 	public static void main(final String[] args) throws Exception {
-		//final Class<?> factoryClass = Class.forName(args[0]);
 		final NormalBloomFilterFactory factory = new NormalBloomFilterFactory();
 		final List<Constructor<? extends BloomIndex>> constructors = new ArrayList<Constructor<? extends BloomIndex>>();
 		final List<Stats> table = new ArrayList<Stats>();
 		BloomFilter[] filters;
 		final URL inputFile = Test.class.getResource("allCountries.txt");
-		final List<GeoName> sample = new ArrayList<GeoName>(1000); // (1e3)
+		final List<GeoName> sample = new ArrayList<GeoName>(1000); 
 
 		// create the index constructors
 		constructors.add(BloomIndexHamming.class.getConstructor(int.class,int.class));
@@ -60,18 +63,30 @@ public class Test {
 		printReport( table );
 	}
 	
-	private static void printReport( List<Stats> table ) {
+	private static void printReport( List<Stats> table ) throws IOException {
 		System.out.println("===  data ===");
 		System.out.println( Stats.header() );
 		for (final Stats s : table) {
 			System.out.println(s.toString());
 		}
+
 		System.out.println("=== summary data ===");
 		final Summary summary = new Summary(table);
 		System.out.println( Summary.header() );
 		for (final Summary.Element e : summary.getTable()) {
 			System.out.println(e.toString());
 		}
+		
+		File f = File.createTempFile( "Bloom", ".csv");
+		System.out.println("Writing data to "+f);
+		 BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+		writer.write(Summary.header());
+		writer.write( eol );
+		for (final Summary.Element e : summary.getTable()) {
+			writer.write( e.toString() );
+			writer.write( eol );
+		}
+	    writer.close();
 
 	}
 
