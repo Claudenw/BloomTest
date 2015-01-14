@@ -11,7 +11,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import normalfilter.NormalBloomFilter;
 import normalfilter.NormalBloomFilterFactory;
@@ -22,8 +24,6 @@ public class Test2 {
 	private static int MAX_FACTOR = 9772346/RUNSIZE;
 
 	public static void main(final String[] args) throws Exception {
-				final List<Stats> table = new ArrayList<Stats>();
-		
 		final URL inputFile = Test2.class.getResource("allCountries.txt");
 		BloomIndexHamming idx;
 		int maxDensity = 9;
@@ -72,7 +72,7 @@ public class Test2 {
 		if ( density > MAX_FACTOR) {
 			throw new IllegalArgumentException( "Density must be less than "+MAX_FACTOR);
 		}
-		
+
 		BloomIndexHamming idx = new BloomIndexHamming( RUNSIZE, NormalBloomFilterFactory.WIDTH);
 		NormalBloomFilter.Builder builder = new NormalBloomFilterFactory().getBuilder();
 		final BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -83,9 +83,11 @@ public class Test2 {
 			{
 				final GeoName gn = GeoName.parse(br.readLine());
 				builder.add(gn);
+
 			}
-			idx.add( builder.build());;
+			idx.add( builder.build());
 		}
+		
 		return idx;
 	}
 
