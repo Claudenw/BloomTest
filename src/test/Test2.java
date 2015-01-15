@@ -1,23 +1,13 @@
 package test;
 
 import geoname.GeoName;
-import hamming.ByteInfo;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import normalfilter.NormalBloomFilter;
 import normalfilter.NormalBloomFilterFactory;
 
@@ -35,10 +25,14 @@ public class Test2 {
 		int [][] reportData = new int[maxDensity][NormalBloomFilterFactory.WIDTH+1];
 		for (int i=0;i<maxDensity;i++) {
 			idx = createFilters( i+1, inputFile );
-			int[][] offsets = idx.getOffsets();
-			for (int j=0;j<NormalBloomFilterFactory.WIDTH+1;j++)
+			BloomIndexHamming.HammingStats stats = idx.getStats();
+			for (int j=stats.getMinimumHamming();j<stats.getMinimumHamming();j++)
 			{
-				reportData[i][j] = offsets[j][BloomIndexHamming.LENGTH];
+				BloomIndexHamming.Block block = stats.getBlock( j );
+				if ( block != null)
+				{
+					reportData[i][j] = block.getLength();
+				}
 			}
 		}
 		

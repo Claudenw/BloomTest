@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.RandomAccess;
 
 /**
  * Implementation that uses hamming based index.
@@ -13,11 +14,12 @@ public class BloomIndexHamming extends BloomIndex {
 	// public Map<Integer,HammingList> index;
 	// must be an array list.
 	protected ArrayList<BloomFilter> lst;
-	private final int[][] offsets;
+	//private final int[][] offsets;
+	private final HammingStats stats;
 	private final int bytes;
 	protected int width;
-	public static final int START = 0;
-	public static final int LENGTH = 1;
+	//public static final int START = 0;
+	//public static final int LENGTH = 1;
 	private final BloomComparator comparator;
 	private static final int BINARYSEARCH_THRESHOLD = 5000;
 
@@ -25,74 +27,42 @@ public class BloomIndexHamming extends BloomIndex {
 		super(limit, width);
 		this.lst = new ArrayList<BloomFilter>(limit);
 		this.width = width;
-		offsets = new int[width + 1][2];
+
+		stats = new HammingStats(width);
 		bytes = Double.valueOf(Math.ceil(width / 8.0)).intValue();
 		comparator = new BloomComparator();
 	}
 
 	@Override
 	public void add(final BloomFilter filter) {
-		final int hStart = filter.getHammingWeight();
-		final List<BloomFilter> block = getBlock(hStart);
-		int blockPos = binarySearch(block, filter, false);
-		if (blockPos < 0) {
-			blockPos = Math.abs(blockPos + 1);
-		}
-
-		// can add to block pos because it may be null list
-		final int pos = offsets[hStart][START] + blockPos;
-		lst.add(pos, filter);
-
-		// adjust the indexes
-		++offsets[hStart][LENGTH];
-		for (int i = hStart + 1; i < filter.getWidth(); i++) {
-			++offsets[i][START];
-		}
-	}
-
-	private List<BloomFilter> getBlock(final int hStart) {
-
-		if (offsets[hStart][LENGTH] > 0) {
-			final int limit = offsets[hStart][START] + offsets[hStart][LENGTH];
-
-			return lst.subList(offsets[hStart][START], limit);
-		}
-		return Collections.emptyList();
+		stats.add( filter );
 	}
 
 	@Override
 	public List<BloomFilter> get(final BloomFilter filter) {
-		final List<BloomFilter> retval = new ArrayList<BloomFilter>();
+		List<BloomFilter> retval = null;
 
 		final int hStart = filter.getHammingWeight();
-
-		// handle the exact match block
-		List<BloomFilter> block = getBlock(hStart);
-		if (block.size() > 0) {
-			int pos = Collections.binarySearch(block, filter, comparator);
-			if (pos >= 0) {
-				while ((pos < block.size()) && filter.match(block.get(pos))) {
-					retval.add(block.get(pos));
-					pos++;
-				}
+		if (hStart >= stats.getMinimumHamming())
+		{
+			// handle the exact match block
+			Block block = stats.getBlock(hStart);
+			if (block != null) {
+				retval = block.get(filter);
 			}
-
 		}
-
+		else
+		{
+			retval = new ArrayList<BloomFilter>();
+		}
+		
 		// handle the remaining blocks
-		for (int idx = hStart + 1; idx <= width; idx++) {
-			block = getBlock(idx);
-			if (block.size() > 0) {
-				int pos = Collections.binarySearch(block, filter, comparator);
-				if (pos < 0) {
-					pos = Math.abs(pos + 1);
-				}
-				for (int i = pos; i < block.size(); i++) {
-					if (filter.match(block.get(i))) {
-						retval.add(block.get(i));
-					}
-				}
-
+		int start = Math.max(hStart+1, stats.getMinimumHamming());
+		for (int idx = start; idx <= stats.getMaximumHamming(); idx++) {
+			Block block = stats.getBlock(idx);
+			if ( block != null )
+			{
+				block.scan( filter, retval );
 			}
 		}
 
@@ -103,37 +73,26 @@ public class BloomIndexHamming extends BloomIndex {
 	public int count(final BloomFilter filter) {
 		int retval = 0;
 		final int hStart = filter.getHammingWeight();
-
-		// do direct check;
-		// handle the exact match block
-		List<BloomFilter> block = getBlock(hStart);
-		if (block.size() > 0) {
-			int pos = binarySearch(block, filter, true);
-			if (pos >= 0) {
-				while ((pos < block.size()) && filter.match(block.get(pos))) {
-					retval++;
-					pos++;
-				}
+		if (hStart >= stats.getMinimumHamming())
+		{
+			// handle the exact match block
+			Block block = stats.getBlock(hStart);
+			if (block != null) {
+				retval = block.count(filter);
 			}
-
 		}
-
+		
+		
 		// handle the remaining blocks
-		for (int idx = hStart + 1; idx <= width; idx++) {
-			block = getBlock(idx);
-			if (block.size() > 0) {
-				int pos = binarySearch(block, filter, true);
-				if (pos < 0) {
-					pos = Math.abs(pos + 1);
-				}
-				for (int i = pos; i < block.size(); i++) {
-					if (filter.match(block.get(i))) {
-						retval++;
-					}
-				}
-
+		int start = Math.max(hStart+1, stats.getMinimumHamming());
+		for (int idx = start; idx <= stats.getMaximumHamming(); idx++) {
+			Block block = stats.getBlock(idx);
+			if ( block != null )
+			{
+				retval += block.countMatch( filter );
 			}
 		}
+
 		return retval;
 	}
 
@@ -175,11 +134,12 @@ public class BloomIndexHamming extends BloomIndex {
 
 	private int binarySearch(final List<BloomFilter> l, final BloomFilter key,
 			final boolean checkDups) {
-		if (l.size() < BINARYSEARCH_THRESHOLD) {
+		if (l instanceof RandomAccess || l.size() < BINARYSEARCH_THRESHOLD) {
 			return indexedBinarySearch(l, key, checkDups);
 		}
 		else {
 			return iteratorBinarySearch(l, key, checkDups);
+			
 		}
 	}
 
@@ -203,7 +163,6 @@ public class BloomIndexHamming extends BloomIndex {
 		else {
 				if (checkDups) {
 					return adjustForDups(low, mid, l, key);
-
 				}
 				return mid; // key found
 			}
@@ -273,11 +232,172 @@ public class BloomIndexHamming extends BloomIndex {
 		}
 	}
 	
-	public int[][] getOffsets()
+	public HammingStats getStats()
 	{
-		return offsets;
+		return stats;
 	}
 	
+	public class HammingStats {
+		private int minHamming;
+		private int maxHamming;
+		private int[][] blocks;
+		
+		public HammingStats(int width) {
+			blocks = new int[width+1][2];
+			minHamming = width+1;
+			maxHamming = 0;
+		}
+		
+		public int getMinimumHamming()
+		{
+			return minHamming;
+		}
+		
+		public int getMaximumHamming()
+		{
+			return maxHamming;
+		}
+		
+		public void add(BloomFilter filter)
+		{
+			final int hStart = filter.getHammingWeight();
+			if (hStart < minHamming)
+			{
+				minHamming = hStart;
+			}
+			if (hStart > maxHamming)
+			{
+				maxHamming = hStart;
+			}
+			Block block = new Block(blocks[hStart]);
+			block.add( filter );
+			
+			// adjust the indexes
+			for( int i =hStart+1;i<blocks.length;i++)
+			{
+				blocks[i][Block.START]++;
+			}		
+		}
+		
+		public Block getBlock( int hamming )
+		{
+			if (hamming<minHamming || hamming>maxHamming || blocks[hamming][Block.LENGTH] == 0)
+			{
+				return null;
+			}
+			return new Block(blocks[hamming]);
+		}
+		
+	}
 	
+	public class Block {
+		private int [] data;
+		private static final int START=0;
+		private static final int LENGTH=1;
+		
+		Block(int[] data) {
+			this.data=data;
+		}
+		
+		public int getLength()
+		{
+			return data[LENGTH];
+		}
+		private List<BloomFilter> getSubList()
+		{
+			final int limit =data[START] + data[LENGTH];
+			return lst.subList(data[START], limit);
+		}
+		
+		public void add(BloomFilter filter)
+		{
+			int blockPos = 0;
+			if (data[LENGTH]>0)
+			{
+				List<BloomFilter> subList = getSubList();
+				blockPos = binarySearch(subList, filter, false);
+				if (blockPos < 0) {
+					blockPos = Math.abs(blockPos + 1);
+				}
+			}
+			// can add to block pos because it may be null list
+			final int pos = data[START] + blockPos;
+			lst.add(pos, filter);
+			data[LENGTH]++;
+		}
+		
+		public void incrementStart()
+		{
+			data[START]++;
+		}
+		
+		// TODO optimize this based on size
+		// exact match
+		public List<BloomFilter> get(BloomFilter filter)
+		{
+			List<BloomFilter> subList = getSubList();
+			int pos = Collections.binarySearch(subList, filter, comparator);
+			if (pos >= 0) {
+				// we found some.
+				List<BloomFilter> retval = new ArrayList<BloomFilter>();
+				while (pos < data[LENGTH]	 && filter.match(subList.get(pos))) {
+					retval.add(subList.get(pos));
+					pos++;
+				}
+				return retval;
+			}
+			return Collections.emptyList();
+		}
+
+		// TODO optimize this based on size
+		// exact match
+		public int count(BloomFilter filter) 
+		{
+			int retval = 0;
+			List<BloomFilter> subList = getSubList();
+			int pos = Collections.binarySearch(subList, filter, comparator);
+			if (pos >= 0) {
+				// we found some.
+
+				while (pos < data[LENGTH] && filter.match(subList.get(pos))) {
+					retval++;
+					pos++;
+				}
+			}
+			return retval;
+		}
+				
+		// range match
+		public void scan(BloomFilter filter, List<BloomFilter> result)
+		{
+			List<BloomFilter> subList = getSubList();
+			int pos = Collections.binarySearch(subList, filter, comparator);
+			if (pos < 0) {
+				pos = Math.abs(pos + 1);
+			}
+			for (int i = pos; i < data[LENGTH]; i++) {
+				if (filter.match(subList.get(i))) {
+					result.add(subList.get(i));
+				}
+			}
+		}
+		
+		public int countMatch(BloomFilter filter)
+		{
+			int retval = 0;
+			List<BloomFilter> subList = getSubList();
+			int pos = Collections.binarySearch(subList, filter, comparator);
+			if (pos < 0) {
+				pos = Math.abs(pos + 1);
+			}
+			for (int i = pos; i < data[LENGTH]; i++) {
+				if (filter.match(subList.get(i))) {
+					retval++;
+				}
+			}
+			return retval;
+		}
+		
+	}
 
 }
