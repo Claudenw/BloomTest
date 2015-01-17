@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import normalfilter.NormalBloomFilter;
-import normalfilter.NormalBloomFilterFactory;
 import test.BloomFilter;
 
 public class InnerNode implements Node {
@@ -100,7 +99,7 @@ public class InnerNode implements Node {
 		used -= sibling.used;
 		Arrays.fill( buckets, used, buckets.length, null);
 		
-		// reset out filter
+		// reset our filter
 		filter = new NormalBloomFilter( width );
 		for (int i=0;i<used;i++)
 		{
@@ -119,6 +118,7 @@ public class InnerNode implements Node {
 		{
 			parent = new InnerNode( null, width );
 			parent.insert( this );
+			parent.filter.merge( candidate );
 		}
 		
 		// add the sibling to the parent

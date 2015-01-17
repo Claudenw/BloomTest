@@ -22,7 +22,7 @@ public class Test {
 	// 9,772,346 max lines
 	private static int RUN_COUNT = 5;
 	private static int[] RUNSIZE = {
-		100, 1000, 10000, 100000, 1000000
+		100 //, 1000, 10000, 100000, 1000000
 	};
 	private static int MAX_RUNSIZE = 1000000;
 	private static String eol = System.getProperty("line.separator");
@@ -36,12 +36,12 @@ public class Test {
 		final List<GeoName> sample = new ArrayList<GeoName>(1000); 
 
 		// create the index constructors
-		constructors.add(BloomIndexHamming.class.getConstructor(int.class,int.class));
+		//constructors.add(BloomIndexHamming.class.getConstructor(int.class,int.class));
 		//constructors.add(BloomIndexLimitedHamming.class.getConstructor(int.class,int.class));
-		constructors.add(BloomIndexBTree.class.getConstructor(int.class,int.class));
+		//constructors.add(BloomIndexBTree.class.getConstructor(int.class,int.class));
 		//constructors.add(BloomIndexPartialBTree.class.getConstructor(int.class,int.class));
 		constructors.add(BloomIndexBloofi.class.getConstructor(int.class,int.class));
-		constructors.add(BloomIndexLimitedBTree.class.getConstructor(int.class,int.class));
+		//constructors.add(BloomIndexLimitedBTree.class.getConstructor(int.class,int.class));
 		constructors.add(BloomIndexLinear.class.getConstructor(int.class,int.class));
 
 		for (int density=1; density < 10; density++)
@@ -176,12 +176,12 @@ public class Test {
 				for (int j=0;j<density;j++)
 				{
 					final GeoName gn = GeoName.parse(br.readLine());
-					geoCount++;
 					builder.add(gn);
 					if (loadSample && sample.size()<1000 && (geoCount % 1000)==0)
 					{
 						sample.add( gn );
 					}
+					geoCount++;
 				}
 				result[i]=builder.build();
 			}

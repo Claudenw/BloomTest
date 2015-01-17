@@ -11,7 +11,6 @@ public class Bloofi {
 	
 	public Bloofi(int width) {
 		root = new InnerNode( null, width );
-		//BUCKETS = Double.valueOf(Math.pow(2, width )).intValue();
 	}
 	
 

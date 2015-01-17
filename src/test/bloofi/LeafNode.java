@@ -4,12 +4,10 @@ import java.util.List;
 import test.BloomFilter;
 
 public class LeafNode implements Node {
-	private InnerNode parent;
 	private final BloomFilter filter;
 	private int count;
 	
 	public LeafNode(InnerNode parent, BloomFilter candidate) {
-		this.parent = parent;
 		this.filter = candidate;
 		this.count = 1;
 	}
@@ -17,7 +15,6 @@ public class LeafNode implements Node {
 	@Override
 	public void setParent(InnerNode parent)
 	{
-		this.parent = parent;
 	}
 	
 	@Override
