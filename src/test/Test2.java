@@ -26,7 +26,7 @@ public class Test2 {
 		for (int i=0;i<maxDensity;i++) {
 			idx = createFilters( i+1, inputFile );
 			BloomIndexHamming.HammingStats stats = idx.getStats();
-			for (int j=stats.getMinimumHamming();j<stats.getMaximumHamming();j++)
+			for (int j=stats.getMinimumHamming();j<=stats.getMaximumHamming();j++)
 			{
 				BloomIndexHamming.Block block = stats.getBlock( j );
 				if ( block != null)
