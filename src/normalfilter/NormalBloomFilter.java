@@ -5,7 +5,9 @@ import hamming.ByteInfo;
 import hamming.NibbleInfo;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Collections;
 
 import org.apache.cassandra.utils.MurmurHash;
 
@@ -195,10 +197,11 @@ public class NormalBloomFilter implements BloomFilter {
 			return bf;
 		}
 		
-		public BloomFilter build(BitSet bitset) {
+		public BloomFilter build(BitSet bitSet) {
 			
 			byte[] buff = new byte[bytes];
 			byte[] data = bitSet.toByteArray();
+			//Collections.reverse(Arrays.asList(data));
 			for (int i=0;i<data.length;i++)
 			{
 				buff[bytes-i-1]=data[i];
@@ -213,7 +216,7 @@ public class NormalBloomFilter implements BloomFilter {
 		
 		public static BitSet toBitSet(BloomFilter bf)
 		{
-			int bytes = bf.getWidth();
+			int bytes = Double.valueOf( Math.ceil( bf.getWidth() / 8.0)).intValue();
 			byte[] buff = new byte[bytes];
 			for (int i=0;i<buff.length;i++)
 			{

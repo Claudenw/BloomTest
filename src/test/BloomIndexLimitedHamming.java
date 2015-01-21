@@ -18,7 +18,7 @@ import test.btree.InnerNode;
  */
 public class BloomIndexLimitedHamming extends BloomIndexHamming {
 	//private int count;
-	private int MIN_LIST = 100; // below this the linear scan is faster.
+	private int MIN_LIST = 1000; // below this the linear scan is faster.
 	
 	public BloomIndexLimitedHamming( int limit, int width )
 	{
@@ -99,26 +99,26 @@ public class BloomIndexLimitedHamming extends BloomIndexHamming {
 
 	public class LimitedHammingStats extends HammingStats {
 		
-		private double[] factorials;
+		//private double[] factorials;
 		
 		public LimitedHammingStats(int width) {
 			super( width );
-			factorials = new double[width+1];
-			factorials[0] = 1.0;
-			for (int i=1;i<width+1;i++)
-			{
-				factorials[i] = factorials[i-1]*i;
-			}
+//			factorials = new double[width+1];
+//			factorials[0] = 1.0;
+//			for (int i=1;i<width+1;i++)
+//			{
+//				factorials[i] = factorials[i-1]*i;
+//			}
 		}
 		
-		public double factorial(int i)
-		{
-			if (i<0 || i>width)
-			{
-				throw new IllegalArgumentException( String.format("Factorial must be between 0 and %s inclusive", width));
-			}
-			return factorials[i];
-		}
+//		public double factorial(int i)
+//		{
+//			if (i<0 || i>width)
+//			{
+//				throw new IllegalArgumentException( String.format("Factorial must be between 0 and %s inclusive", width));
+//			}
+//			return factorials[i];
+//		}
 		
 		
 		@Override
@@ -175,7 +175,7 @@ public class BloomIndexLimitedHamming extends BloomIndexHamming {
 					return doCountMatchLinear( filter, subList, pos, getLength() );
 				}
 				
-				int limit = binarySearch(subList, filter, true, true);
+				int limit = binarySearch(subList, filter, true, true)+1;
 				return doCountMatchLinear( filter, subList, pos, limit );
 			}
 			return 0;
@@ -219,7 +219,7 @@ public class BloomIndexLimitedHamming extends BloomIndexHamming {
 			NormalBloomFilter.Builder builder = new NormalBloomFilter.Builder( width, 0);
 			BloomFilter candidate = subList.get(0);
 			int s = candidate.getHammingWeight()-filter.getHammingWeight();
-			int bit = width;
+			int bit = width-1;
 			for (int i=0;i<s;i++)
 			{
 				builder.set(bit);
@@ -228,7 +228,7 @@ public class BloomIndexLimitedHamming extends BloomIndexHamming {
 			BitSet target = NormalBloomFilter.Builder.toBitSet( filter );
 			target.xor(builder.getBitSet());
 			boolean isUpperLimit = true;
-			bit = width;
+			bit = width-1;
 			for (int i=0;i<s;i++)
 			{
 				isUpperLimit &= target.get(bit);
@@ -237,16 +237,21 @@ public class BloomIndexLimitedHamming extends BloomIndexHamming {
 			int limit = getLength();
 			if (isUpperLimit)
 			{
-				 limit = binarySearch(subList, filter, true, true);
+				BloomFilter targetFilter = builder.build(target);
+				 limit = binarySearch(subList, targetFilter, true, true);
 				 if (limit < 0 )
 				 {
 					 limit = Math.abs( limit+1);
+				 }
+				 if (limit<subList.size())
+				 {
+					 limit++; // make after last
 				 }
 			}
 			return limit;
 		}
 
-		
+		// scan
 		public int countMatch(BloomFilter filter)
 		{
 			
@@ -257,10 +262,15 @@ public class BloomIndexLimitedHamming extends BloomIndexHamming {
 				return doCountMatchLinear( filter, subList, 0, getLength() );
 			}
 			int pos = binarySearch(subList, filter, true, false);
-			if (pos >= 0) {
-				return doCountMatchLinear( filter, subList, pos, findUpperLimit( filter, subList ) );
+			if (pos < 0) {
+				pos = Math.abs( pos+1);
 			}
-			return 0;
+			if (getLength()-pos <MIN_LIST)
+			{
+				return doCountMatchLinear( filter, subList, pos, getLength());
+			}
+			return doCountMatchLinear( filter, subList, pos, findUpperLimit( filter, subList ) );
+
 		}
 		
 		private int doCountMatchLinear( BloomFilter filter, List<BloomFilter> subList, int start, int limit)
