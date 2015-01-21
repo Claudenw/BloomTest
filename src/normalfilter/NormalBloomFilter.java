@@ -190,6 +190,12 @@ public class NormalBloomFilter implements BloomFilter {
 		}
 		
 		public BloomFilter build() {
+			BloomFilter bf = this.build( this.bitSet );
+			reset();
+			return bf;
+		}
+		
+		public BloomFilter build(BitSet bitset) {
 			
 			byte[] buff = new byte[bytes];
 			byte[] data = bitSet.toByteArray();
@@ -197,9 +203,23 @@ public class NormalBloomFilter implements BloomFilter {
 			{
 				buff[bytes-i-1]=data[i];
 			}
-			BloomFilter bf =  new NormalBloomFilter(buff, width );
-			reset();
-			return bf;
+			return  new NormalBloomFilter(buff, width );
+		}
+
+		public BitSet getBitSet()
+		{
+			return bitSet;
+		}
+		
+		public static BitSet toBitSet(BloomFilter bf)
+		{
+			int bytes = bf.getWidth();
+			byte[] buff = new byte[bytes];
+			for (int i=0;i<buff.length;i++)
+			{
+				buff[bytes-i-1]=(byte) bf.getByte(i).getVal();
+			}
+			return BitSet.valueOf(buff);
 		}
 	}
 }

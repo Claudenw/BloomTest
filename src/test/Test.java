@@ -22,7 +22,7 @@ public class Test {
 	// 9,772,346 max lines
 	private static int RUN_COUNT = 5;
 	private static int[] RUNSIZE = {
-		100 //, 1000, 10000, 100000, 1000000
+		100 , 1000//, 10000, 100000, 1000000
 	};
 	private static int MAX_RUNSIZE = 1000000;
 	private static String eol = System.getProperty("line.separator");
@@ -37,10 +37,10 @@ public class Test {
 
 		// create the index constructors
 		//constructors.add(BloomIndexHamming.class.getConstructor(int.class,int.class));
-		//constructors.add(BloomIndexLimitedHamming.class.getConstructor(int.class,int.class));
-		//constructors.add(BloomIndexBTree.class.getConstructor(int.class,int.class));
+		constructors.add(BloomIndexLimitedHamming.class.getConstructor(int.class,int.class));
+		constructors.add(BloomIndexBTree.class.getConstructor(int.class,int.class));
 		//constructors.add(BloomIndexPartialBTree.class.getConstructor(int.class,int.class));
-		constructors.add(BloomIndexBloofi.class.getConstructor(int.class,int.class));
+		//constructors.add(BloomIndexBloofi.class.getConstructor(int.class,int.class));
 		//constructors.add(BloomIndexLimitedBTree.class.getConstructor(int.class,int.class));
 		constructors.add(BloomIndexLinear.class.getConstructor(int.class,int.class));
 

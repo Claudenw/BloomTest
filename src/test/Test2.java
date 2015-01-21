@@ -61,6 +61,18 @@ public class Test2 {
 			System.out.println( sb.toString());
 		}
 		
+		for (int i=1;i<NormalBloomFilterFactory.WIDTH;i++)
+		{
+			sb = new StringBuilder().append( i ).append(",");
+			for (int j=i;j<=NormalBloomFilterFactory.WIDTH;j++)
+			{
+				sb.append( Util.getMissProbability(NormalBloomFilterFactory.WIDTH, i, j))
+				.append(",");
+			}
+			sb.deleteCharAt( sb.length()-1 );
+			System.out.println( sb.toString());
+		}
+		
 		File f = File.createTempFile( "Bloom", ".csv");
 		System.out.println("Writing data to "+f);
 		 BufferedWriter writer = new BufferedWriter(new FileWriter(f));
