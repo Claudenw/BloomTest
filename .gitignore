@@ -1,6 +1,6 @@
-src/test/allCountries.txt
 .classpath
 .project
 .settings/
-bin/
-*~
+/target/
+/src/main/resources/allCountries.txt
+
