@@ -40,6 +40,6 @@ public class BloomIndexBloofi extends BloomIndex {
 
 	@Override
 	public String getName() {
-		return "Btree";
+		return "Bloofi Reference";
 	}
 }

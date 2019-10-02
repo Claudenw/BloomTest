@@ -1,4 +1,4 @@
-package org.xenei.bloompaper.test;
+package org.xenei.bloompaper;
 
 
 import java.io.BufferedReader;
@@ -9,47 +9,105 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
 import org.apache.commons.collections4.bloomfilter.StandardBloomFilter;
-import org.xenei.bloompaper.GeoNameFilterFactory;
 import org.xenei.bloompaper.geoname.GeoName;
 import org.xenei.bloompaper.index.BloomIndex;
+import org.xenei.bloompaper.index.BloomIndexBTree;
+import org.xenei.bloompaper.index.BloomIndexBTreeNoStack;
+import org.xenei.bloompaper.index.BloomIndexBloofi;
+import org.xenei.bloompaper.index.BloomIndexBloofiR;
+import org.xenei.bloompaper.index.BloomIndexHamming;
 import org.xenei.bloompaper.index.BloomIndexLimitedBTree;
+import org.xenei.bloompaper.index.BloomIndexLinear;
+import org.xenei.bloompaper.index.BloomIndexPartialBTree;
 
 public class Test {
+
+    public static Map<String,Constructor<? extends BloomIndex>> constructors = new HashMap<String,Constructor<? extends BloomIndex>>();
+
+
+    private static void init() throws NoSuchMethodException, SecurityException {
+        constructors.put( "Hamming", BloomIndexHamming.class.getConstructor(int.class,BloomFilterConfiguration.class));
+        constructors.put( "Bloofi", BloomIndexBloofi.class.getConstructor(int.class,BloomFilterConfiguration.class));
+        constructors.put( "BloofiR", BloomIndexBloofiR.class.getConstructor(int.class,BloomFilterConfiguration.class));
+        constructors.put( "BtreeNoStack", BloomIndexBTreeNoStack.class.getConstructor(int.class,BloomFilterConfiguration.class));
+        constructors.put( "Btree", BloomIndexBTree.class.getConstructor(int.class,BloomFilterConfiguration.class));
+        constructors.put( "PartialBtree", BloomIndexPartialBTree.class.getConstructor(int.class,BloomFilterConfiguration.class));
+        constructors.put( "LimitedBTree", BloomIndexLimitedBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
+        constructors.put( "Linear", BloomIndexLinear.class.getConstructor(int.class,BloomFilterConfiguration.class));
+    }
+
+    public static Options getOptions() {
+        StringBuffer sb = new StringBuffer("List of tests to run.  Valid test names are: ");
+        sb.append( String.join(", ", constructors.keySet()) );
+
+        Options options = new Options();
+        options.addRequiredOption( "r", "run", true, sb.toString());
+        options.addOption( "d", "dense", false, "Use compact filters");
+        options.addOption( "h", "help", false, "This help");
+        return options;
+    }
+
 	// 9,772,346 max lines
 	private static int RUN_COUNT = 5;
+
 	private static int[] RUNSIZE = {
 		100, 1000, 10000, 100000, 1000000
 	};
 
 	public static void main(final String[] args) throws Exception {
+	    init();
+	    CommandLineParser parser = new DefaultParser();
+	    CommandLine cmd = null;
+	    try {
+	     cmd = parser.parse( getOptions(), args);
+	    }
+	    catch(Exception e)
+	    {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp( "Test", "", getOptions(), e.getMessage() );
+            System.exit(1);
+	    }
+
+	    if (cmd.hasOption("h"))
+	    {
+	        StringBuffer sb = new StringBuffer("Valid test names are: ");
+	        sb.append( String.join(", ", constructors.keySet()) );
+	        HelpFormatter formatter = new HelpFormatter();
+	        formatter.printHelp( "Test", "", getOptions(), sb.toString() );
+	    }
+
 	    BloomFilterConfiguration bloomFilterConfig;
-		if (args.length == 1)
+		if (cmd.hasOption("d"))
 		{
-		    bloomFilterConfig = new BloomFilterConfiguration( 1, 0.007782062 );
+		    bloomFilterConfig = new BloomFilterConfiguration( 1, 11, 8 );
 		} else {
 		   // 3 items 1/100,000
 		    bloomFilterConfig = new BloomFilterConfiguration( 3, 1.0/100000 );
 		}
 
-		final List<Constructor<? extends BloomIndex>> constructors = new ArrayList<Constructor<? extends BloomIndex>>();
+		final List<Constructor<? extends BloomIndex>> tests = new ArrayList<Constructor<? extends BloomIndex>>();
 		final List<Stats> table = new ArrayList<Stats>();
 		final BloomFilter[] filters = new BloomFilter[1000000]; // (1e6)
 		final URL inputFile = Test.class.getResource("/allCountries.txt");
 		final List<GeoName> sample = new ArrayList<GeoName>(1000); // (1e3)
 
-		// create the index constructors
-		// constructors.add(BloomIndexHamming.class.getConstructor(int.class));
-		// constructors.add(BloomIndexBTreeNoStack.class.getConstructor(int.class));
-		// constructors.add(BloomIndexBTree.class.getConstructor(int.class));
-		// constructors.add(BloomIndexPartialBTree.class.getConstructor(int.class));
-		constructors
-				.add(BloomIndexLimitedBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
-		// constructors.add(BloomIndexLinear.class.getConstructor(int.class));
+		for (String s : cmd.getOptionValues("r"))
+		{
+		    tests.add( constructors.get(s));
+		}
 
 		// read the test data.
 		final BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -62,7 +120,7 @@ public class Test {
 			filters[i] = new StandardBloomFilter( GeoNameFilterFactory.create(gn),bloomFilterConfig);
 		}
 
-		for (final Constructor<? extends BloomIndex> constructor : constructors) {
+		for (final Constructor<? extends BloomIndex> constructor : tests) {
 			for (final int i : RUNSIZE) {
 				final Stats[] stats = new Stats[RUN_COUNT];
 				for (int j = 0; j < RUN_COUNT; j++) {

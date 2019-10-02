@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
 
 /**
  * Plain ol' linear search.
@@ -12,12 +13,14 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 public class BloomIndexLinear extends BloomIndex {
 	BloomFilter[] index;
 	int idx;
+	BloomFilterConfiguration config;
 
-	public BloomIndexLinear(int limit)
+	public BloomIndexLinear(int limit,BloomFilterConfiguration config)
 	{
 		super(limit);
 		this.index = new BloomFilter[limit];
 		this.idx = 0;
+		this.config = config;
 	}
 
 	@Override

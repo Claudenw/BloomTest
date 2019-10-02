@@ -24,7 +24,7 @@ public class BloomIndexLimitedBTree extends BloomIndex {
 		super(limit);
 		this.bloomFilterConfig = bloomFilterConfig;
 		this.btree = new BTree(bloomFilterConfig);
-		linear = new BloomIndexLinear(limit);
+		linear = new BloomIndexLinear(limit, bloomFilterConfig);
 	}
 
 	@Override

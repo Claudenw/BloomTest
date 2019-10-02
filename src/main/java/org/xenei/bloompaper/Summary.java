@@ -1,4 +1,4 @@
-package org.xenei.bloompaper.test;
+package org.xenei.bloompaper;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
 
 
 /**
@@ -17,11 +18,13 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
  */
 public class BloomIndexHamming extends BloomIndex {
 	public Map<Integer,HammingList> index;
+	BloomFilterConfiguration config;
 
-	public BloomIndexHamming( int limit )
+	public BloomIndexHamming( int limit, BloomFilterConfiguration config )
 	{
 		super(limit);
 		this.index = new HashMap<Integer,HammingList>();
+		this.config = config;
 	}
 
 	@Override

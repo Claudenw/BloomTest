@@ -1,4 +1,4 @@
-package org.xenei.bloompaper.test;
+package org.xenei.bloompaper;
 
 public class Stats {
 	String type;
