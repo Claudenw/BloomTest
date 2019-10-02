@@ -2,13 +2,16 @@ package org.xenei.bloompaper;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,18 +48,19 @@ public class Test {
         constructors.put( "BtreeNoStack", BloomIndexBTreeNoStack.class.getConstructor(int.class,BloomFilterConfiguration.class));
         constructors.put( "Btree", BloomIndexBTree.class.getConstructor(int.class,BloomFilterConfiguration.class));
         constructors.put( "PartialBtree", BloomIndexPartialBTree.class.getConstructor(int.class,BloomFilterConfiguration.class));
-        constructors.put( "LimitedBTree", BloomIndexLimitedBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
+        constructors.put( "LimitedBtree", BloomIndexLimitedBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
         constructors.put( "Linear", BloomIndexLinear.class.getConstructor(int.class,BloomFilterConfiguration.class));
     }
 
     public static Options getOptions() {
-        StringBuffer sb = new StringBuffer("List of tests to run.  Valid test names are: ");
+        StringBuffer sb = new StringBuffer("List of tests to run.  Valid test names are: ALL, ");
         sb.append( String.join(", ", constructors.keySet()) );
 
         Options options = new Options();
         options.addRequiredOption( "r", "run", true, sb.toString());
         options.addOption( "d", "dense", false, "Use compact filters");
         options.addOption( "h", "help", false, "This help");
+        options.addOption( "o", "output", true, "Output directory.  If not specified results will not be preserved");
         return options;
     }
 
@@ -83,7 +87,7 @@ public class Test {
 
 	    if (cmd.hasOption("h"))
 	    {
-	        StringBuffer sb = new StringBuffer("Valid test names are: ");
+	        StringBuffer sb = new StringBuffer("Valid test names are: ALL, ");
 	        sb.append( String.join(", ", constructors.keySet()) );
 	        HelpFormatter formatter = new HelpFormatter();
 	        formatter.printHelp( "Test", "", getOptions(), sb.toString() );
@@ -98,17 +102,51 @@ public class Test {
 		    bloomFilterConfig = new BloomFilterConfiguration( 3, 1.0/100000 );
 		}
 
-		final List<Constructor<? extends BloomIndex>> tests = new ArrayList<Constructor<? extends BloomIndex>>();
+		File dir = null;
+        if (cmd.hasOption("o"))
+        {
+            dir = new File(cmd.getOptionValue("o"));
+            if (!dir.exists())
+            {
+                dir.mkdirs();
+            }
+            else if (!dir.isDirectory())
+            {
+                throw new IllegalArgumentException( dir.getAbsolutePath()+" is not a directory" );
+            }
+        }
+
+		final List<String> tests = new ArrayList<String>();
 		final List<Stats> table = new ArrayList<Stats>();
 		final BloomFilter[] filters = new BloomFilter[1000000]; // (1e6)
 		final URL inputFile = Test.class.getResource("/allCountries.txt");
 		final List<GeoName> sample = new ArrayList<GeoName>(1000); // (1e3)
 
+		boolean hasError = false;
 		for (String s : cmd.getOptionValues("r"))
 		{
-		    tests.add( constructors.get(s));
+		    if ("ALL".equals(s))
+		    {
+		        tests.clear();
+		        tests.addAll( constructors.keySet());
+		        break;
+		    }
+		    if (constructors.containsKey(s))
+		    {
+		        tests.add( s) ;
+		    }
+		    else
+		    {
+		        System.err.println( s+" is not a valid test name");
+		        hasError = true;
+		    }
 		}
-
+		if (hasError)
+		{
+		    System.exit(1);;
+		}
+		Collections.sort(tests);
+		System.out.println( "Reading test data");
 		// read the test data.
 		final BufferedReader br = new BufferedReader(new InputStreamReader(
 				inputFile.openStream()));
@@ -120,7 +158,9 @@ public class Test {
 			filters[i] = new StandardBloomFilter( GeoNameFilterFactory.create(gn),bloomFilterConfig);
 		}
 
-		for (final Constructor<? extends BloomIndex> constructor : tests) {
+		for (final String testName : tests ) {
+		    System.out.println( "Running "+testName );
+		    Constructor<? extends BloomIndex> constructor = constructors.get(testName);
 			for (final int i : RUNSIZE) {
 				final Stats[] stats = new Stats[RUN_COUNT];
 				for (int j = 0; j < RUN_COUNT; j++) {
@@ -131,15 +171,43 @@ public class Test {
 			}
 		}
 
+		PrintStream o = null;
+
 		System.out.println("===  data ===");
+		if (dir != null)
+        {
+            o = new PrintStream( new File( dir, "data.csv"));
+        }
+		System.out.println( Stats.getHeader() );
+		if (o != null) {
+		    o.println( Stats.getHeader() );
+		}
 		for (final Stats s : table) {
 			System.out.println(s.toString());
+	        if (o != null) {
+	            o.println( s.toString() );
+	        }
 		}
+
+
 		System.out.println("=== summary data ===");
+		if (dir != null)
+        {
+            o = new PrintStream( new File( dir, "summary.csv"));
+        } else {
+            o = null;
+        }
 		final Summary summary = new Summary(table);
 
+        System.out.println( Summary.getHeader());
+        if (o != null) {
+            o.println( Summary.getHeader() );
+        }
 		for (final Summary.Element e : summary.getTable()) {
 			System.out.println(e.toString());
+			if (o != null) {
+                o.println( e.toString() );
+            }
 		}
 
 	}

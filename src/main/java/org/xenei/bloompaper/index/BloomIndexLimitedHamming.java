@@ -170,7 +170,7 @@ public class BloomIndexLimitedHamming extends BloomIndex {
 
 	@Override
 	public String getName() {
-		return "Hamming";
+		return "LimitedHamming";
 	}
 
 }

@@ -20,7 +20,9 @@ public class Summary {
 			this.n = 0;
 		}
 
-		public String toString() {
+
+		@Override
+        public String toString() {
 			return String.format("'%s',%s,%s,%s,%s,%s", type, limit, load / n,
 					complete / n, name / n, feature / n);
 		}
@@ -38,6 +40,10 @@ public class Summary {
 
 		}
 	}
+
+	public static String getHeader() {
+        return "type, limit, Avg load, Avg complete, Avg name, Avg feature";
+    }
 
 	private List<Element> table = new ArrayList<Element>();
 

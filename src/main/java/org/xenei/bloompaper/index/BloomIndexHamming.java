@@ -111,10 +111,13 @@ public class BloomIndexHamming extends BloomIndex {
 				if (hList != null)
 				{
 					iter = hList.find(filter);
-					BloomFilter found = iter.next();
-					if (filter.match( found ))
+					while (iter.hasNext())
 					{
-						retval++;
+    					BloomFilter found = iter.next();
+    					if (filter.match( found ))
+    					{
+    						retval++;
+    					}
 					}
 				}
 			}
@@ -143,7 +146,13 @@ public class BloomIndexHamming extends BloomIndex {
 				lst.add(filter);
 			}
 			int i = Collections.binarySearch( lst, filter, BloomComparator.INSTANCE );
-			lst.add(i, filter);
+			if (i<0)
+			{
+			   lst.add(Math.abs(i+1), filter);
+			}
+			else {
+			    lst.add(i, filter);
+			}
 		}
 
 		public Iterator<BloomFilter> get(BloomFilter filter)
@@ -170,7 +179,7 @@ public class BloomIndexHamming extends BloomIndex {
 
 			@Override
 			public boolean hasNext() {
-				if (idx<0 || idx == lst.size())
+				if (idx<0 || idx >= lst.size())
 				{
 					return false;
 				}
@@ -183,7 +192,7 @@ public class BloomIndexHamming extends BloomIndex {
 
 			@Override
 			public BloomFilter next() {
-				if (hasNext())
+				if (!hasNext())
 				{
 					throw new NoSuchElementException();
 				}
@@ -201,7 +210,7 @@ public class BloomIndexHamming extends BloomIndex {
 
 		@Override
 		public int compare(BloomFilter o1, BloomFilter o2) {
-		   return  Integer.compare( o1.getHammingWeight(), o2.getHammingWeight());
+		   return  Double.compare( o1.getLog(), o2.getLog());
 		}
 	}
 

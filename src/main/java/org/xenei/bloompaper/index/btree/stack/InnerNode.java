@@ -32,7 +32,13 @@ public class InnerNode implements Node {
 
 	private NibbleInfo getNibble(BloomFilter filter, int level )
     {
-        byte b = filter.getBitSet().toByteArray()[level/2];
+	    int idx = level/2;
+	    byte[] buff = filter.getBitSet().toByteArray();
+	    if (idx>=buff.length)
+        {
+            return NibbleInfo.NIBBLE_INFO[0];
+        }
+        byte b = buff[idx];
         if ( level % 2  == 0)
         {
             int x = 0x0F & (b >> 4);
