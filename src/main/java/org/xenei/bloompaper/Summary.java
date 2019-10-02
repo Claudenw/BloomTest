@@ -42,7 +42,7 @@ public class Summary {
 	}
 
 	public static String getHeader() {
-        return "type, limit, Avg load, Avg complete, Avg name, Avg feature";
+        return "'Type', 'Limit', 'Avg Load Elapsed', 'Avg Complete Elapsed', 'Avg Name Elapsed', 'Avg Feature Elapsed'";
     }
 
 	private List<Element> table = new ArrayList<Element>();

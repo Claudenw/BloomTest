@@ -17,7 +17,7 @@ public class Stats {
 	}
 
 	public static String getHeader() {
-	    return "type, limit, load, complete, completeFound, name, nameFound, feature, featureFound";
+	    return "'Type', 'Limit', 'Load Elapsed', 'Complete Elapsed', 'Complete Found', 'Name Elapsed', 'Name Found', 'Feature Elapsed', 'Feature Found'";
 	}
 	@Override
     public String toString() {
