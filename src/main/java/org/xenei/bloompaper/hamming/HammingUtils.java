@@ -12,7 +12,7 @@ public class HammingUtils {
 	{
 		double logC = Math.log(nOfEntries)/Math.log(buckets);
 		double log2 = Math.log(nOfEntries/logC)/Math.log(2);
-		return Double.valueOf(Math.ceil( width - log2 )).intValue();
+		return (int) Math.ceil( width - log2 );
 	}
 
 }

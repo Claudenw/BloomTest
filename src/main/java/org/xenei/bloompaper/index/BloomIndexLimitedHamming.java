@@ -1,176 +1,72 @@
 package org.xenei.bloompaper.index;
 
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
 import org.xenei.bloompaper.hamming.HammingUtils;
-import org.xenei.bloompaper.index.BloomIndexHamming.HammingList;
 import org.xenei.bloompaper.index.btree.InnerNode;
 
 /**
  * Implementation that uses hamming based index.
  */
-public class BloomIndexLimitedHamming extends BloomIndex {
-	private Map<Integer,HammingList> index;
-	private int count;
-	private BloomFilterConfiguration bloomFilterConfig;
+public class BloomIndexLimitedHamming extends BloomIndexHamming {
+    private int count;
 
-	public BloomIndexLimitedHamming( int population,BloomFilterConfiguration bloomFilterConfig )
-	{
-		super(population, bloomFilterConfig);
-		this.bloomFilterConfig = bloomFilterConfig;
-		this.index = new HashMap<Integer,HammingList>();
-		this.count = 0;
-	}
+    public BloomIndexLimitedHamming(int population, BloomFilterConfiguration bloomFilterConfig) {
+        super(population, bloomFilterConfig);
+        this.count = 0;
+    }
 
-	@Override
-	public void add(BloomFilter filter)
-	{
-		Integer idx = filter.getHammingWeight();
-		HammingList hList = index.get(idx);
-		if (hList == null)
-		{
-			hList = new HammingList();
-			index.put(idx, hList);
-		}
-		hList.add( filter );
-		count++;
-	}
+    public int externalCount(BloomFilter filter, List<BloomFilter> lst) {
+        int count = 0;
+        for (BloomFilter other : lst) {
+            if (filter.matches(other)) {
+                count++;
+            }
+        }
+        return count;
+    }
 
-	@Override
-	public List<BloomFilter> get(BloomFilter filter)
-	{
-		List<BloomFilter> retval = new ArrayList<BloomFilter>();
-		// do direct check;
-		Integer hFilter = filter.getHammingWeight();
-		Iterator<BloomFilter> iter = null;
+    @Override
+    public List<BloomFilter> get(BloomFilter filter) {
+        int minHam = HammingUtils.minimumHamming(bloomFilterConfig.getNumberOfBits(), count, InnerNode.BUCKETS);
+        if (filter.getHammingWeight() >= minHam) {
+            return super.get(filter);
+        } else {
+            List<BloomFilter> retval = new ArrayList<BloomFilter>();
+            for (HammingList hList : index.values()) {
+                for (BloomFilter other : hList) {
+                    if (filter.matches(other)) {
+                        retval.add(other);
+                    }
+                }
+            }
+            return retval;
+        }
+    }
 
-		int minHam = HammingUtils.minimumHamming(bloomFilterConfig.getNumberOfBits(), count, InnerNode.BUCKETS);
-		if (filter.getHammingWeight() >= minHam)
-		{
-			HammingList hList = null;
-			for (Integer idx : index.keySet())
-			{
-				if (idx == hFilter)
-				{
-					hList = index.get(idx);
-					if (hList != null)
-					{
-						iter = hList.get(filter);
-						while (iter.hasNext())
-						{
-							retval.add( iter.next() );
-						}
-					}
-				}
-				if (idx > hFilter)
-				{
-					hList = index.get(idx);
-					if (hList != null)
-					{
-						iter = hList.find(filter);
-						while (iter.hasNext())
-						{
-							BloomFilter found = iter.next();
-							if (filter.matches( found ))
-							{
-								retval.add( found );
-							}
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			for (HammingList hList : index.values())
-			{
-				iter = hList.find(filter);
-				while (iter.hasNext())
-				{
-					BloomFilter found = iter.next();
-					if (filter.matches( found ))
-					{
-						retval.add( found );
-					}
-				}
-			}
-		}
-		return retval;
-	}
+    @Override
+    public int count(BloomFilter filter) {
+        int minHam = HammingUtils.minimumHamming(bloomFilterConfig.getNumberOfBits(), count, InnerNode.BUCKETS);
+        if (filter.getHammingWeight() >= minHam) {
+            return super.count(filter);
+        } else {
+            int retval = 0;
+            for (HammingList hList : index.values()) {
+                for (BloomFilter other : hList) {
+                    if (filter.matches(other)) {
+                        retval++;
+                    }
+                }
+            }
+            return retval;
+        }
+    }
 
-	@Override
-	public int count(BloomFilter filter)
-	{
-		int retval = 0;
-		// do direct check;
-		Integer hFilter = filter.getHammingWeight();
-		Iterator<BloomFilter> iter = null;
-
-		int minHam = HammingUtils.minimumHamming(bloomFilterConfig.getNumberOfBits(), count, InnerNode.BUCKETS);
-		if (filter.getHammingWeight() >= minHam)
-		{
-			HammingList hList = null;
-			for (Integer idx : index.keySet())
-			{
-				if (idx == hFilter)
-				{
-					hList = index.get(idx);
-					if (hList != null)
-					{
-						iter = hList.get(filter);
-						while (iter.hasNext())
-						{
-							retval++;
-							iter.next();
-						}
-					}
-				}
-				if (idx > hFilter)
-				{
-					hList = index.get(idx);
-					if (hList != null)
-					{
-						iter = hList.find(filter);
-						while (iter.hasNext())
-						{
-							BloomFilter found = iter.next();
-							if (filter.matches( found ))
-							{
-								retval++;
-							}
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			for (HammingList hList : index.values())
-			{
-				iter = hList.find(filter);
-				while (iter.hasNext())
-				{
-					BloomFilter found = iter.next();
-					if (filter.matches( found ))
-					{
-						retval++;
-					}
-				}
-			}
-		}
-		return retval;
-	}
-
-	@Override
-	public String getName() {
-		return "LimitedHamming";
-	}
+    @Override
+    public String getName() {
+        return "LimitedHamming";
+    }
 
 }
