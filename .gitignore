@@ -3,4 +3,4 @@
 .settings/
 /target/
 /src/main/resources/allCountries.txt
-
+**/.~lock*
