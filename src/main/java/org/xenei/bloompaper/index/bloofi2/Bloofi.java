@@ -49,9 +49,9 @@ public final class Bloofi extends BloomIndex {
     /**
      * Constructs an empty Bloom Filter Index with just the root
      */
-    public Bloofi(int limit, int order,
+    public Bloofi(int population, int order,
                             boolean splitFull, BloomFilterConfiguration config) {
-        super(limit);
+        super(population, config);
         root = null;
         this.order = order;
  //       this.idMap = new Hashtable<Integer, BFINode>();
@@ -71,14 +71,15 @@ public final class Bloofi extends BloomIndex {
      * param
      *
      */
-    public Bloofi(int limit, List<BloomFilter> bfList, int order,
-                            boolean splitFull) {
-        super(limit);
+    public Bloofi(int population, List<BloomFilter> bfList, int order,
+                            boolean splitFull,BloomFilterConfiguration config) {
+        super(population, config);
         this.order = order;
         this.splitFull = splitFull;
         this.stat = new InsDelUpdateStatistics();
       //  this.idMap = new Hashtable<Integer, BFINode>();
         this.bfList = bulkLoad(bfList);
+        this.config = config;
 
     }
 
