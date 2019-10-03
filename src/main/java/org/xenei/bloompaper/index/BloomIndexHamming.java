@@ -71,7 +71,7 @@ public class BloomIndexHamming extends BloomIndex {
 					while (iter.hasNext())
 					{
 						BloomFilter found = iter.next();
-						if (filter.match( found ))
+						if (filter.matches( found ))
 						{
 							retval.add( found );
 						}
@@ -114,7 +114,7 @@ public class BloomIndexHamming extends BloomIndex {
 					while (iter.hasNext())
 					{
     					BloomFilter found = iter.next();
-    					if (filter.match( found ))
+    					if (filter.matches( found ))
     					{
     						retval++;
     					}

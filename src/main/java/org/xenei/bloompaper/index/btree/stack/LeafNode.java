@@ -34,7 +34,7 @@ public class LeafNode implements Node {
 		{
 			for (BloomFilter candidate : lst)
 			{
-				if( entry.getFilter().match(candidate))
+				if( entry.getFilter().matches(candidate))
 				{
 					result.add( candidate );
 				}
@@ -53,7 +53,7 @@ public class LeafNode implements Node {
 			int retval = 0;
 			for (BloomFilter candidate : lst)
 			{
-				if( entry.getFilter().match(candidate))
+				if( entry.getFilter().matches(candidate))
 				{
 					retval++;
 				}

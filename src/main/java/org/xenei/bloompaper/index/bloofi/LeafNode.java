@@ -39,7 +39,7 @@ public class LeafNode implements Node {
 
 	@Override
 	public void search(List<BloomFilter> result, BloomFilter filter) {
-		if (filter.match(this.filter))
+		if (filter.matches(this.filter))
 		{
 			for (int i=0;i<count;i++)
 			{
@@ -50,7 +50,7 @@ public class LeafNode implements Node {
 
 	@Override
 	public int count(BloomFilter filter) {
-		if (filter.match(this.filter))
+		if (filter.matches(this.filter))
 		{
 			return count;
 		}

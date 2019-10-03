@@ -203,7 +203,7 @@ public class InnerNode implements Node {
 
 	@Override
 	public void search(List<BloomFilter> results, BloomFilter filter) {
-		if (filter.match(this.filter))
+		if (filter.matches(this.filter))
 		{
 			for (int i=0;i<used;i++ )
 			{
@@ -215,7 +215,7 @@ public class InnerNode implements Node {
 	@Override
 	public int count(BloomFilter filter) {
 		int retval = 0;
-		if (filter.match(this.filter))
+		if (filter.matches(this.filter))
 		{
 			for (int i=0;i<used;i++ )
 			{

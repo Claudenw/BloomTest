@@ -449,7 +449,7 @@ public final class Bloofi extends BloomIndex {
 //        stat.nbBFChecks++;
         // if node does not matches the object,
         // return empty set, else check the descendants
-        if (!filter.match( node.value )) {
+        if (!filter.matches( node.value )) {
             return result;
         }
 

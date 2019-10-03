@@ -36,7 +36,7 @@ public class BloomIndexLinear extends BloomIndex {
 				// searching entire list
 				for (BloomFilter candidate : index)
 				{
-					if (filter.match(candidate))
+					if (filter.matches(candidate))
 					{
 						result.add(candidate);
 					}
@@ -52,7 +52,7 @@ public class BloomIndexLinear extends BloomIndex {
 				// searching entire list
 				for (BloomFilter candidate : index)
 				{
-					if (filter.match(candidate))
+					if (filter.matches(candidate))
 					{
 						result++;
 					}
