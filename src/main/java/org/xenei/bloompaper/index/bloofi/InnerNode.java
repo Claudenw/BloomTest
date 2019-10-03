@@ -14,16 +14,14 @@ public class InnerNode implements Node {
 	private Node[] buckets;
 	private int used = 0;
 	private InnerNode parent;
-	private int width;
 	private BloomFilterConfiguration bloomFilterConfig;
 
-	public InnerNode( InnerNode parent, BloomFilterConfiguration bloomFilterConfig, int width) {
+	public InnerNode( InnerNode parent, BloomFilterConfiguration bloomFilterConfig) {
 	    this.bloomFilterConfig = bloomFilterConfig;
 		filter = StandardBloomFilter.EMPTY;
 		buckets = new Node[16]; // number of children of the the node.
 		used = 0;
 		this.parent = parent;
-		this.width = width;
 	}
 
 	public InnerNode getParent()
@@ -40,17 +38,21 @@ public class InnerNode implements Node {
 	@Override
     public void add( BloomFilter candidate )
 	{
-		filter.merge(candidate);
+		filter = filter.merge(candidate);
+
 		int closest = 0;
-		int closestDistance = bloomFilterConfig.getNumberOfBits();
-		for (int i=0;i<used;i++)
+		if (used > 1)
 		{
-			int dist = candidate.distance(buckets[i].getFilter());
-			if (dist<closestDistance)
-			{
-				closestDistance = dist;
-				closest = i;
-			}
+    		int closestDistance = candidate.distance( buckets[0].getFilter());
+    		for (int i=1;i<used;i++)
+    		{
+    			int dist = candidate.distance(buckets[i].getFilter());
+    			if (dist<closestDistance)
+    			{
+    				closestDistance = dist;
+    				closest = i;
+    			}
+    		}
 		}
 		insert( closest, candidate );
 	}
@@ -85,10 +87,12 @@ public class InnerNode implements Node {
 				InnerNode sibling = split(candidate);
 				if (position < used)
 				{
+				    filter = filter.merge(candidate);
 					this.insert(position, candidate);
 				}
 				else
 				{
+				    sibling.filter = sibling.filter.merge(candidate);
 					sibling.insert( position-used, candidate );
 				}
 			}
@@ -98,7 +102,7 @@ public class InnerNode implements Node {
 	private InnerNode split( BloomFilter candidate )
 	{
 		// we are full so so split this node and return the result
-		InnerNode sibling = new InnerNode( parent, bloomFilterConfig, width );
+		InnerNode sibling = new InnerNode( parent, bloomFilterConfig );
 		int splitPoint = buckets.length/2;
 		sibling.used = buckets.length-splitPoint;
 		System.arraycopy(buckets, splitPoint, sibling.buckets, 0, sibling.used);
@@ -109,22 +113,22 @@ public class InnerNode implements Node {
 		filter = StandardBloomFilter.EMPTY;
 		for (int i=0;i<used;i++)
 		{
-			filter.merge( buckets[i].getFilter());
+			filter = filter.merge( buckets[i].getFilter());
 		}
 
 		// populate the sibling filter
 		for (int i=0;i<sibling.used;i++)
 		{
-			sibling.filter.merge( sibling.buckets[i].getFilter());
+			sibling.filter = sibling.filter.merge( sibling.buckets[i].getFilter());
 			sibling.buckets[i].setParent( sibling );
 		}
 
 		// if we are the root create a new root.
 		if (parent == null)
 		{
-			parent = new InnerNode( null, bloomFilterConfig, width );
+			parent = new InnerNode( null, bloomFilterConfig );
 			parent.insert( this );
-			parent.filter.merge( candidate );
+			parent.filter = parent.filter.merge( candidate );
 		}
 
 		// add the sibling to the parent
@@ -135,7 +139,7 @@ public class InnerNode implements Node {
 	private void insert(InnerNode newNode)
 	{
 		// this only gets called on a child split.
-		filter.merge(newNode.getFilter());
+		filter = filter.merge(newNode.getFilter());
 
 		if (used == 0)
 		{
@@ -146,8 +150,8 @@ public class InnerNode implements Node {
 		}
 
 		int position = 0;
-		int closestDistance = bloomFilterConfig.getNumberOfBits();
-		for (int i=0;i<used;i++)
+		int closestDistance = newNode.filter.distance(buckets[0].getFilter());
+		for (int i=1;i<used;i++)
 		{
 			int dist = newNode.filter.distance(buckets[i].getFilter());
 			if (dist<closestDistance)
@@ -163,6 +167,13 @@ public class InnerNode implements Node {
 			buckets[position]=newNode;
 			newNode.setParent(this);
 			used++;
+			for (int i=0;i<used;i++)
+			{
+			    if (buckets[position] == null)
+			    {
+			        throw new IllegalStateException();
+			    }
+			}
 		}
 		else
 		{
@@ -213,4 +224,5 @@ public class InnerNode implements Node {
 		}
 		return retval;
 	}
+
 }

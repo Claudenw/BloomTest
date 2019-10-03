@@ -11,8 +11,8 @@ public class Bloofi {
 
 	private InnerNode root;
 
-	public Bloofi(int width, BloomFilterConfiguration bloomFilterConfig) {
-		root = new InnerNode( null, bloomFilterConfig, width );
+	public Bloofi(int limit, BloomFilterConfiguration bloomFilterConfig) {
+		root = new InnerNode( null, bloomFilterConfig );
 	}
 
 

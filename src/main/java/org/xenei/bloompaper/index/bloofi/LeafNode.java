@@ -7,15 +7,18 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 public class LeafNode implements Node {
 	private final BloomFilter filter;
 	private int count;
+	private InnerNode parent;
 
 	public LeafNode(InnerNode parent, BloomFilter candidate) {
 		this.filter = candidate;
 		this.count = 1;
+		this.parent = parent;
 	}
 
 	@Override
 	public void setParent(InnerNode parent)
 	{
+	    this.parent = parent;
 	}
 
 	@Override
@@ -26,8 +29,12 @@ public class LeafNode implements Node {
 
 	@Override
 	public boolean remove(BloomFilter filter) {
-		count = count>0?count-1:0;
-		return count == 0;
+	    if (count>0)
+	    {
+	        count--;
+	        return true;
+	    }
+		return false;
 	}
 
 	@Override
@@ -60,4 +67,5 @@ public class LeafNode implements Node {
 	public BloomFilter getFilter() {
 		return filter;
 	}
+
 }
