@@ -51,9 +51,9 @@ public class Test {
                 BloomIndexLimitedHamming.class.getConstructor(int.class, BloomFilterConfiguration.class));
         constructors.put("Bloofi", BloomIndexBloofi.class.getConstructor(int.class, BloomFilterConfiguration.class));
         constructors.put("BloofiR", BloomIndexBloofiR.class.getConstructor(int.class, BloomFilterConfiguration.class));
+        constructors.put("Btree", BloomIndexBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
         constructors.put("BtreeNoStack",
                 BloomIndexBTreeNoStack.class.getConstructor(int.class, BloomFilterConfiguration.class));
-        constructors.put("Btree", BloomIndexBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
         constructors.put("PartialBtree",
                 BloomIndexPartialBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
         constructors.put("LimitedBtree",
@@ -65,7 +65,9 @@ public class Test {
 
     public static Options getOptions() {
         StringBuffer sb = new StringBuffer("List of tests to run.  Valid test names are: ALL, ");
-        sb.append(String.join(", ", constructors.keySet()));
+        List<String> tests = new ArrayList<String>( constructors.keySet() );
+        Collections.sort(tests);
+        sb.append(String.join(", ", tests));
 
         Options options = new Options();
         options.addRequiredOption("r", "run", true, sb.toString());
