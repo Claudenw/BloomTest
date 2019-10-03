@@ -14,9 +14,9 @@ import org.xenei.bloompaper.index.btree.stack.BTree;
 public class BloomIndexBTree extends BloomIndex {
 	private BTree btree;
 
-	public BloomIndexBTree(int limit, BloomFilterConfiguration bloomFilterConfig)
+	public BloomIndexBTree(int population, BloomFilterConfiguration bloomFilterConfig)
 	{
-		super(limit);
+		super(population, bloomFilterConfig);
 		this.btree = new BTree(bloomFilterConfig);
 	}
 

@@ -8,7 +8,7 @@ public class Summary {
 	public class Element {
 		int n;
 		String type;
-		int limit;
+		int population;
 		double load;
 		double complete;
 		double name;
@@ -16,19 +16,19 @@ public class Summary {
 
 		public Element(Stats stat) {
 			this.type = stat.type;
-			this.limit = stat.limit;
+			this.population = stat.population;
 			this.n = 0;
 		}
 
 
 		@Override
         public String toString() {
-			return String.format("'%s',%s,%s,%s,%s,%s", type, limit, load / n,
+			return String.format("'%s',%s,%s,%s,%s,%s", type, population, load / n,
 					complete / n, name / n, feature / n);
 		}
 
 		public boolean add(Stats stat) {
-			if (stat.type.equals(type) && stat.limit == limit) {
+			if (stat.type.equals(type) && stat.population == population) {
 				load += stat.load;
 				complete += stat.complete;
 				name += stat.name;
@@ -42,7 +42,7 @@ public class Summary {
 	}
 
 	public static String getHeader() {
-        return "'Type', 'Limit', 'Avg Load Elapsed', 'Avg Complete Elapsed', 'Avg Name Elapsed', 'Avg Feature Elapsed'";
+        return "'Type', 'Population', 'Avg Load Elapsed', 'Avg Complete Elapsed', 'Avg Name Elapsed', 'Avg Feature Elapsed'";
     }
 
 	private List<Element> table = new ArrayList<Element>();

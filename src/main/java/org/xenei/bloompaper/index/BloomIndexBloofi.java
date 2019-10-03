@@ -8,16 +8,17 @@ import org.xenei.bloompaper.index.bloofi.Bloofi;
 
 
 /**
- * Implementation of BTree Nibble search.
+ * Implementation of BT
+ * ree Nibble search.
  *
  */
 public class BloomIndexBloofi extends BloomIndex {
 	private Bloofi bloofi;
 
-	public BloomIndexBloofi(int limit, BloomFilterConfiguration bloomFilterConfig)
+	public BloomIndexBloofi(int population, BloomFilterConfiguration bloomFilterConfig)
 	{
-		super(limit);
-		this.bloofi = new Bloofi(limit, bloomFilterConfig);
+		super(population, bloomFilterConfig);
+		this.bloofi = new Bloofi(population, bloomFilterConfig);
 	}
 
 	@Override
@@ -42,4 +43,5 @@ public class BloomIndexBloofi extends BloomIndex {
 	public String getName() {
 		return "Bloofi Impl";
 	}
+
 }

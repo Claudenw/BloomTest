@@ -20,11 +20,11 @@ public class BloomIndexHamming extends BloomIndex {
 	public Map<Integer,HammingList> index;
 	BloomFilterConfiguration config;
 
-	public BloomIndexHamming( int limit, BloomFilterConfiguration config )
+	public BloomIndexHamming( int population, BloomFilterConfiguration bloomFilterConfig )
 	{
-		super(limit);
+		super(population, bloomFilterConfig);
 		this.index = new HashMap<Integer,HammingList>();
-		this.config = config;
+		this.config = bloomFilterConfig;
 	}
 
 	@Override

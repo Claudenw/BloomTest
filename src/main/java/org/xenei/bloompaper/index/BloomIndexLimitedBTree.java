@@ -19,12 +19,12 @@ public class BloomIndexLimitedBTree extends BloomIndex {
 	BloomIndexLinear linear;
 	BloomFilterConfiguration bloomFilterConfig;
 
-	public BloomIndexLimitedBTree(int limit, BloomFilterConfiguration bloomFilterConfig)
+	public BloomIndexLimitedBTree(int population, BloomFilterConfiguration bloomFilterConfig)
 	{
-		super(limit);
+		super(population, bloomFilterConfig);
 		this.bloomFilterConfig = bloomFilterConfig;
 		this.btree = new BTree(bloomFilterConfig);
-		linear = new BloomIndexLinear(limit, bloomFilterConfig);
+		linear = new BloomIndexLinear(population, bloomFilterConfig);
 	}
 
 	@Override

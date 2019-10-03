@@ -15,12 +15,12 @@ public class BloomIndexLinear extends BloomIndex {
 	int idx;
 	BloomFilterConfiguration config;
 
-	public BloomIndexLinear(int limit,BloomFilterConfiguration config)
+	public BloomIndexLinear(int population,BloomFilterConfiguration bloomFilterConfig)
 	{
-		super(limit);
-		this.index = new BloomFilter[limit];
+		super(population, bloomFilterConfig);
+		this.index = new BloomFilter[population];
 		this.idx = 0;
-		this.config = config;
+		this.config = bloomFilterConfig;
 	}
 
 	@Override

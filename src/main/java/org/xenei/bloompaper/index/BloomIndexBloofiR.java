@@ -14,10 +14,10 @@ import org.xenei.bloompaper.index.bloofi2.Bloofi;
 public class BloomIndexBloofiR extends BloomIndex {
 	private Bloofi bloofi;
 
-	public BloomIndexBloofiR(int limit, BloomFilterConfiguration bloomFilterConfig)
+	public BloomIndexBloofiR(int population, BloomFilterConfiguration bloomFilterConfig)
 	{
-		super(limit);
-		this.bloofi = new Bloofi(limit, bloomFilterConfig);
+		super(population, bloomFilterConfig);
+		this.bloofi = new Bloofi(population, bloomFilterConfig);
 	}
 
 	@Override

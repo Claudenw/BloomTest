@@ -21,9 +21,9 @@ public class BloomIndexLimitedHamming extends BloomIndex {
 	private int count;
 	private BloomFilterConfiguration bloomFilterConfig;
 
-	public BloomIndexLimitedHamming( int limit,BloomFilterConfiguration bloomFilterConfig )
+	public BloomIndexLimitedHamming( int population,BloomFilterConfiguration bloomFilterConfig )
 	{
-		super(limit);
+		super(population, bloomFilterConfig);
 		this.bloomFilterConfig = bloomFilterConfig;
 		this.index = new HashMap<Integer,HammingList>();
 		this.count = 0;

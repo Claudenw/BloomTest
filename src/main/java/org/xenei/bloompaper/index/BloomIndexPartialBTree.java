@@ -17,9 +17,9 @@ public class BloomIndexPartialBTree extends BloomIndex {
 	BTree btree;
 	BloomFilterConfiguration bloomFilterConfig;
 
-	public BloomIndexPartialBTree(int limit,BloomFilterConfiguration bloomFilterConfig)
+	public BloomIndexPartialBTree(int population,BloomFilterConfiguration bloomFilterConfig)
 	{
-		super(limit);
+		super(population, bloomFilterConfig);
 		this.bloomFilterConfig = bloomFilterConfig;
 		int depth = (bloomFilterConfig.getNumberOfBits()/InnerNode.WIDTH) /2;
 		this.btree = new BTree( bloomFilterConfig, depth );

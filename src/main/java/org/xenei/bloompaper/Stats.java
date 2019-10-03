@@ -2,7 +2,7 @@ package org.xenei.bloompaper;
 
 public class Stats {
 	String type;
-	int limit;
+	int population;
 	long load;
 	long complete;
 	long completeFound;
@@ -11,16 +11,16 @@ public class Stats {
 	long feature;
 	long featureFound;
 
-	public Stats( int limit)
+	public Stats( int population)
 	{
-		this.limit = limit;
+		this.population = population;
 	}
 
 	public static String getHeader() {
-	    return "'Type', 'Limit', 'Load Elapsed', 'Complete Elapsed', 'Complete Found', 'Name Elapsed', 'Name Found', 'Feature Elapsed', 'Feature Found'";
+	    return "'Type', 'Population', 'Load Elapsed', 'Complete Elapsed', 'Complete Found', 'Name Elapsed', 'Name Found', 'Feature Elapsed', 'Feature Found'";
 	}
 	@Override
     public String toString() {
-		return String.format( "'%s',%s,%s,%s,%s,%s,%s,%s,%s", type, limit, load, complete,completeFound, name,nameFound, feature,featureFound);
+		return String.format( "'%s',%s,%s,%s,%s,%s,%s,%s,%s", type, population, load, complete,completeFound, name,nameFound, feature,featureFound);
 	}
 }

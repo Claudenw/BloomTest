@@ -33,6 +33,7 @@ import org.xenei.bloompaper.index.BloomIndexBloofiR;
 import org.xenei.bloompaper.index.BloomIndexHamming;
 import org.xenei.bloompaper.index.BloomIndexLimitedBTree;
 import org.xenei.bloompaper.index.BloomIndexLinear;
+import org.xenei.bloompaper.index.BloomIndexLinearList;
 import org.xenei.bloompaper.index.BloomIndexPartialBTree;
 
 public class Test {
@@ -56,6 +57,7 @@ public class Test {
         constructors.put( "PartialBtree", BloomIndexPartialBTree.class.getConstructor(int.class,BloomFilterConfiguration.class));
         constructors.put( "LimitedBtree", BloomIndexLimitedBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
         constructors.put( "Linear", BloomIndexLinear.class.getConstructor(int.class,BloomFilterConfiguration.class));
+        constructors.put( "LinearList", BloomIndexLinearList.class.getConstructor(int.class,BloomFilterConfiguration.class));
     }
 
     public static Options getOptions() {
@@ -162,8 +164,8 @@ public class Test {
             System.exit(1);;
         }
         Collections.sort(tests);
+
         System.out.println( "Reading test data");
-        // read the test data.
         final BufferedReader br = new BufferedReader(new InputStreamReader(
                 inputFile.openStream()));
         for (int i = 0; i < 1000000; i++) {
@@ -174,16 +176,16 @@ public class Test {
             filters[i] = new StandardBloomFilter( GeoNameFilterFactory.create(gn),bloomFilterConfig);
         }
 
+        // run the tests
         for (final String testName : tests ) {
             System.out.println( "Running "+testName );
             Constructor<? extends BloomIndex> constructor = constructors.get(testName);
-            for (final int i : RUNSIZE) {
+            for (final int population : RUNSIZE) {
                 final Stats[] stats = new Stats[RUN_COUNT];
-                for (int j = 0; j < RUN_COUNT; j++) {
-                    stats[j] = new Stats(i);
+                for (int run = 0; run < RUN_COUNT; run++) {
+                    stats[run] = new Stats(population);
                 }
-                table.addAll(runTest(bloomFilterConfig, constructor, sample, filters, i,
-                        stats));
+                table.addAll(runTest(bloomFilterConfig, constructor, sample, filters, stats));
             }
         }
 
@@ -232,96 +234,97 @@ public class Test {
     private static List<Stats> runTest(final BloomFilterConfiguration bloomFilterConfig,
             final Constructor<? extends BloomIndex> constructor,
             final List<GeoName> sample, final BloomFilter[] filters,
-            final int limit, final Stats[] stats) throws IOException,
+            final Stats[] stats) throws IOException,
     InstantiationException, IllegalAccessException,
     IllegalArgumentException, InvocationTargetException {
-        final BloomIndex bi = doLoad(constructor, filters, bloomFilterConfig,limit, stats);
+
+        final BloomIndex bi = doLoad(constructor, filters, bloomFilterConfig, stats);
         final int sampleSize = sample.size();
         BloomFilter[] bfSample = new BloomFilter[sampleSize];
         for (int i = 0; i < sample.size(); i++) {
             bfSample[i] = new StandardBloomFilter( GeoNameFilterFactory.create(sample.get(i)),bloomFilterConfig);
         }
-        doCount(1, bi, bfSample, limit, stats);
+        doCount(1, bi, bfSample, stats);
 
         bfSample = new BloomFilter[sampleSize];
         for (int i = 0; i < sample.size(); i++) {
 
             bfSample[i] = new StandardBloomFilter( GeoNameFilterFactory.create(sample.get(i).name), bloomFilterConfig );
         }
-        doCount(2, bi, bfSample, limit, stats);
+        doCount(2, bi, bfSample, stats);
 
         bfSample = new BloomFilter[sampleSize];
         for (int i = 0; i < sample.size(); i++) {
             bfSample[i] = new StandardBloomFilter( GeoNameFilterFactory.create(sample.get(i).feature_code), bloomFilterConfig );
         }
-        doCount(3, bi, bfSample, limit, stats);
+        doCount(3, bi, bfSample, stats);
         return Arrays.asList(stats);
     }
 
     private static BloomIndex doLoad(
             final Constructor<? extends BloomIndex> constructor,
-            final BloomFilter[] filters, final BloomFilterConfiguration bloomFilterConfig,final int limit, final Stats[] stats)
+            final BloomFilter[] filters, final BloomFilterConfiguration bloomFilterConfig,final Stats[] stats)
                     throws InstantiationException, IllegalAccessException,
                     IllegalArgumentException, InvocationTargetException {
         BloomIndex bi = null;
 
-        for (int j = 0; j < RUN_COUNT; j++) {
-            bi = constructor.newInstance(limit, bloomFilterConfig);
-            stats[j].type = bi.getName();
+        for (int run = 0; run < RUN_COUNT; run++) {
+            bi = constructor.newInstance(stats[run].population, bloomFilterConfig);
+            stats[run].type = bi.getName();
             final long start = System.currentTimeMillis();
-            for (int i = 0; i < limit; i++) {
+            for (int i = 0; i < stats[run].population; i++) {
                 bi.add(filters[i]);
             }
             final long end = System.currentTimeMillis();
-            stats[j].load = end - start;
+            stats[run].load = end - start;
             System.out.println(String.format(
-                    "%s 0 limit %s run %s  load time %s", bi.getName(), limit,
-                    j, end - start));
+                    "%s 0 population %s run %s  load time %s", bi.getName(), stats[run].population,
+                    run, end - start));
         }
         return bi;
     }
 
     private static void doSearch(final int pos, final BloomIndex bi,
-            final BloomFilter[] bfSample, final int limit, final Stats[] stats) {
+            final BloomFilter[] bfSample, final Stats[] stats) {
         final int sampleSize = bfSample.length;
-        for (int j = 0; j < RUN_COUNT; j++) {
-            long total = 0;
+        for (int run = 0; run < RUN_COUNT; run++) {
+            long elapsed = 0;
             long start = 0;
             long found = 0;
             List<BloomFilter> result;
             for (int i = 0; i < sampleSize; i++) {
                 start = System.currentTimeMillis();
                 result = bi.get(bfSample[i]);
-                total += (System.currentTimeMillis() - start);
+                elapsed += (System.currentTimeMillis() - start);
                 found += result.size();
             }
-            registerResult(stats[j], pos, total, found);
+            registerResult(stats[run], pos, elapsed, found);
 
             System.out.println(String.format(
-                    "%s %s limit %s run %s  search time %s (%s)", bi.getName(),
-                    pos, limit, j, total, found));
+                    "%s %s population %s run %s  search time %s (%s)", bi.getName(),
+                    pos, stats[run].population, run, elapsed, found));
         }
 
     }
 
     private static void doCount(final int pos, final BloomIndex bi,
-            final BloomFilter[] bfSample, final int limit, final Stats[] stats) {
+            final BloomFilter[] bfSample, final Stats[] stats) {
         final int sampleSize = bfSample.length;
-        for (int j = 0; j < RUN_COUNT; j++) {
-            long total = 0;
+        for (int run = 0; run < RUN_COUNT; run++) {
+            long elapsed = 0;
             long start = 0;
             long found = 0;
 
             for (int i = 0; i < sampleSize; i++) {
                 start = System.currentTimeMillis();
                 found += bi.count(bfSample[i]);
-                total += (System.currentTimeMillis() - start);
+                elapsed += (System.currentTimeMillis() - start);
             }
-            registerResult(stats[j], pos, total, found);
+            registerResult(stats[run], pos, elapsed, found);
 
             System.out.println(String.format(
-                    "%s %s limit %s run %s  count time %s (%s)", bi.getName(),
-                    pos, limit, j, total, found));
+                    "%s %s population %s run %s  count time %s (%s)", bi.getName(),
+                    pos, stats[run].population, run, elapsed, found));
         }
 
     }
