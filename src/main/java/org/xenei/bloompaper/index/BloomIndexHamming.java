@@ -45,16 +45,17 @@ public class BloomIndexHamming extends BloomIndex {
         int hFilter = filter.getHammingWeight();
         Iterator<BloomFilter> iter = null;
         for (Integer idx : index.keySet()) {
-            if (idx == hFilter) {
-                iter = index.get(idx).get(filter);
-            }
-            if (idx > hFilter) {
-                iter = index.get(idx).find(filter);
-            }
-            while (iter.hasNext()) {
-                BloomFilter found = iter.next();
-                if (filter.matches(found)) {
-                    retval.add(found);
+            if (idx >= hFilter) {
+                if (idx == hFilter) {
+                    iter = index.get(idx).get(filter);
+                } else {
+                    iter = index.get(idx).find(filter);
+                }
+                while (iter.hasNext()) {
+                    BloomFilter found = iter.next();
+                    if (filter.matches(found)) {
+                        retval.add(found);
+                    }
                 }
             }
         }
@@ -67,16 +68,18 @@ public class BloomIndexHamming extends BloomIndex {
         int hFilter = filter.getHammingWeight();
         Iterator<BloomFilter> iter = null;
         for (Integer idx : index.keySet()) {
-            if (idx == hFilter) {
-                iter = index.get(idx).get(filter);
-            }
-            if (idx > hFilter) {
-                iter = index.get(idx).find(filter);
-            }
-            while (iter.hasNext()) {
-                BloomFilter found = iter.next();
-                if (filter.matches(found)) {
-                    retval++;
+            if (idx >= hFilter) {
+                if (idx == hFilter) {
+                    iter = index.get(idx).get(filter);
+                }
+                else {
+                    iter = index.get(idx).find(filter);
+                }
+                while (iter.hasNext()) {
+                    BloomFilter found = iter.next();
+                    if (filter.matches(found)) {
+                        retval++;
+                    }
                 }
             }
         }
