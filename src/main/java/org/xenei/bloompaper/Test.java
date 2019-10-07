@@ -149,7 +149,6 @@ public class Test {
         }
         if (hasError) {
             System.exit(1);
-            ;
         }
         Collections.sort(tests);
 
