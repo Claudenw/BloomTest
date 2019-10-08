@@ -1,0 +1,6 @@
+'Type', 'Population', 'Avg Load Elapsed', 'Avg Complete Elapsed', 'Avg Name Elapsed', 'Avg Feature Elapsed'
+'Hamming',100,0.6,7.0,7.6,5.0
+'Hamming',1000,0.8,10.6,25.8,20.8
+'Hamming',10000,2.6,97.2,237.6,283.4
+'Hamming',100000,48.6,2511.4,6725.0,7909.4
+'Hamming',1000000,2611.8,31490.0,78464.8,88420.0

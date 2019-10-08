@@ -39,23 +39,53 @@ public class BloomIndexHamming extends BloomIndex {
         hammingList.add(filter);
     }
 
+    protected List<BloomFilter> pageGet( BloomFilter filter, int hFilter, Map.Entry<Integer,HammingList> entry )
+    {
+        List<BloomFilter> retval = new ArrayList<BloomFilter>();
+        Iterator<BloomFilter> iter = null;
+        if (entry.getKey() >= hFilter) {
+            if (entry.getKey() == hFilter) {
+                iter = entry.getValue().get(filter);
+            }
+            else {
+                iter = entry.getValue().find(filter);
+            }
+            while (iter.hasNext()) {
+                BloomFilter found = iter.next();
+                if (filter.matches(found)) {
+                    retval.add( found );
+                }
+            }
+        }
+        return retval;
+    }
+
     @Override
     public List<BloomFilter> get(BloomFilter filter) {
         List<BloomFilter> retval = new ArrayList<BloomFilter>();
         int hFilter = filter.getHammingWeight();
+
+        for (Map.Entry<Integer,BloomIndexHamming.HammingList> entry : index.entrySet()) {
+            retval.addAll( pageGet( filter, hFilter, entry ) );
+        }
+        return retval;
+    }
+
+    protected int pageCount( BloomFilter filter, int hFilter, Map.Entry<Integer,HammingList> entry )
+    {
+        int retval = 0;
         Iterator<BloomFilter> iter = null;
-        for (Integer idx : index.keySet()) {
-            if (idx >= hFilter) {
-                if (idx == hFilter) {
-                    iter = index.get(idx).get(filter);
-                } else {
-                    iter = index.get(idx).find(filter);
-                }
-                while (iter.hasNext()) {
-                    BloomFilter found = iter.next();
-                    if (filter.matches(found)) {
-                        retval.add(found);
-                    }
+        if (entry.getKey() >= hFilter) {
+            if (entry.getKey() == hFilter) {
+                iter = entry.getValue().get(filter);
+            }
+            else {
+                iter = entry.getValue().find(filter);
+            }
+            while (iter.hasNext()) {
+                BloomFilter found = iter.next();
+                if (filter.matches(found)) {
+                    retval++;
                 }
             }
         }
@@ -66,22 +96,9 @@ public class BloomIndexHamming extends BloomIndex {
     public int count(BloomFilter filter) {
         int retval = 0;
         int hFilter = filter.getHammingWeight();
-        Iterator<BloomFilter> iter = null;
-        for (Integer idx : index.keySet()) {
-            if (idx >= hFilter) {
-                if (idx == hFilter) {
-                    iter = index.get(idx).get(filter);
-                }
-                else {
-                    iter = index.get(idx).find(filter);
-                }
-                while (iter.hasNext()) {
-                    BloomFilter found = iter.next();
-                    if (filter.matches(found)) {
-                        retval++;
-                    }
-                }
-            }
+
+        for (Map.Entry<Integer,BloomIndexHamming.HammingList> entry : index.entrySet()) {
+            retval += pageCount( filter, hFilter, entry );
         }
         return retval;
     }
@@ -105,14 +122,25 @@ public class BloomIndexHamming extends BloomIndex {
             return new BloomIterator(filter, false);
         }
 
+        public Iterator<BloomFilter> find(BloomFilter filter, double logLimit) {
+            return new BloomIterator(filter, false, logLimit);
+        }
+
         public class BloomIterator implements Iterator<BloomFilter> {
             private BloomFilter limit;
             private boolean limited;
             private int idx;
+            private double logLimit;
 
-            BloomIterator(BloomFilter start, boolean limited) {
+            BloomIterator(BloomFilter start, boolean limited)
+            {
+                this(start, limited, Double.MAX_VALUE);
+            }
+
+            BloomIterator(BloomFilter start, boolean limited, double logLimit) {
                 this.limit = start;
                 this.limited = limited;
+                this.logLimit = logLimit;
                 this.idx = getSearchPoint(start);
             }
 
@@ -124,7 +152,7 @@ public class BloomIndexHamming extends BloomIndex {
                 if (limited) {
                     return (0 == BloomComparator.INSTANCE.compare(limit, get(idx)));
                 }
-                return true;
+                return logLimit > get(idx).getLog();
             }
 
             @Override

@@ -2,17 +2,10 @@ package org.xenei.bloompaper;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
@@ -24,17 +17,6 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
 import org.apache.commons.collections4.bloomfilter.StandardBloomFilter;
 import org.xenei.bloompaper.geoname.GeoName;
-import org.xenei.bloompaper.index.BloomIndex;
-import org.xenei.bloompaper.index.BloomIndexBTree;
-import org.xenei.bloompaper.index.BloomIndexBTreeNoStack;
-import org.xenei.bloompaper.index.BloomIndexBloofi;
-import org.xenei.bloompaper.index.BloomIndexBloofiR;
-import org.xenei.bloompaper.index.BloomIndexHamming;
-import org.xenei.bloompaper.index.BloomIndexLimitedBTree;
-import org.xenei.bloompaper.index.BloomIndexLimitedHamming;
-import org.xenei.bloompaper.index.BloomIndexLinear;
-import org.xenei.bloompaper.index.BloomIndexLinearList;
-import org.xenei.bloompaper.index.BloomIndexPartialBTree;
 
 public class Density {
 
@@ -57,13 +39,13 @@ public class Density {
             cmd = parser.parse(getOptions(), args);
         } catch (Exception e) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("Test", "", getOptions(), e.getMessage());
+            formatter.printHelp("Density", "", getOptions(), e.getMessage());
             System.exit(1);
         }
 
         if (cmd.hasOption("h")) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("Test", getOptions() );
+            formatter.printHelp("Density", getOptions() );
         }
 
 
@@ -78,7 +60,7 @@ public class Density {
                 throw new IllegalArgumentException(dir.getAbsolutePath() + " is not a directory");
             }
         }
-        BloomFilterConfiguration bloomFilterConfig = bloomFilterConfig = new BloomFilterConfiguration(3, 1.0 / 100000);
+        BloomFilterConfiguration bloomFilterConfig = new BloomFilterConfiguration(3, 1.0 / 100000);
         BloomFilter[] filters = new BloomFilter[SAMPLE_SIZE];
         final URL inputFile = Density.class.getResource("/allCountries.txt");
         Status status = new Status(bloomFilterConfig);

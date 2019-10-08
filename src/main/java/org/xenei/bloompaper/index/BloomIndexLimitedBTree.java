@@ -34,16 +34,24 @@ public class BloomIndexLimitedBTree extends BloomIndex {
 		linear.add( filter );
 	}
 
+	private int minimumHamming(int width, int nOfEntries, int buckets)
+    {
+	    // linear or btree search
+        // H >= W - log2( N / logC(N) )
+        // W = BloomFilter.WIDTH
+        // H = filter.getHammingWeight()
+        // N = btree.getN()
+        // C = InnerNode.BUCKETS
+        double logC = Math.log(nOfEntries)/Math.log(buckets);
+        double log2 = Math.log(nOfEntries/logC)/Math.log(2);
+        return (int) Math.ceil( width - log2 );
+    }
+
 	@Override
 	public List<BloomFilter> get(BloomFilter filter)
 	{
-		// linear or btree search
-		// H >= W - log2( N / logC(N) )
-		// W = BloomFilter.WIDTH
-		// H = filter.getHammingWeight()
-		// N = btree.getN()
-		// C = InnerNode.BUCKETS
-		int minHam = HammingUtils.minimumHamming(bloomFilterConfig.getNumberOfBits(), btree.getN(), InnerNode.BUCKETS);
+
+		int minHam = minimumHamming(bloomFilterConfig.getNumberOfBits(), btree.getN(), InnerNode.BUCKETS);
 
 		if (filter.getHammingWeight() >= minHam)
 		{
@@ -59,14 +67,7 @@ public class BloomIndexLimitedBTree extends BloomIndex {
 	@Override
 	public int count(BloomFilter filter)
 	{
-		// linear or btree search
-		// H >= W - log2( N / logC(N) )
-		// W = BloomFilter.WIDTH
-		// H = filter.getHammingWeight()
-		// N = btree.getN()
-		// C = InnerNode.BUCKETS
-
-		int minHam = HammingUtils.minimumHamming(bloomFilterConfig.getNumberOfBits(), btree.getN(), InnerNode.BUCKETS);
+		int minHam = minimumHamming(bloomFilterConfig.getNumberOfBits(), btree.getN(), InnerNode.BUCKETS);
 
 		if (filter.getHammingWeight() >= minHam)
 		{
