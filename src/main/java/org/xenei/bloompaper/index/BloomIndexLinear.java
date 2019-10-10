@@ -13,36 +13,18 @@ import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
 public class BloomIndexLinear extends BloomIndex {
 	BloomFilter[] index;
 	int idx;
-	BloomFilterConfiguration config;
 
 	public BloomIndexLinear(int population,BloomFilterConfiguration bloomFilterConfig)
 	{
 		super(population, bloomFilterConfig);
 		this.index = new BloomFilter[population];
 		this.idx = 0;
-		this.config = bloomFilterConfig;
 	}
 
 	@Override
 	public void add(BloomFilter filter)
 	{
 		index[idx++] = filter;
-	}
-
-	@Override
-	public List<BloomFilter> get(BloomFilter filter)
-	{
-		List<BloomFilter> result = new ArrayList<BloomFilter>();
-				// searching entire list
-				for (BloomFilter candidate : index)
-				{
-					if (filter.matches(candidate))
-					{
-						result.add(candidate);
-					}
-				}
-			return result;
-
 	}
 
 	@Override

@@ -33,28 +33,6 @@ public class BloomIndexLimitedHamming extends BloomIndexHamming {
         return count;
     }
 
-    @Override
-    public List<BloomFilter> get(BloomFilter filter) {
-        int hT = filter.getHammingWeight();
-        List<BloomFilter> retval = new ArrayList<BloomFilter>();
-        for (Entry<Integer,HammingList> entry : index.entrySet()) {
-            if (entry.getKey() == hT)
-            {
-                retval.addAll( pageGet( filter, hT, entry) );
-            } else if (entry.getKey() > hT)
-            {
-                Iterator<BloomFilter> iter = filterByLimit( filter, entry, bloomFilterConfig);
-                while (iter.hasNext()) {
-                    BloomFilter other = iter.next();
-                    if (filter.matches(other)) {
-                        retval.add(other);
-                    }
-                }
-            }
-        }
-        return retval;
-    }
-
     private Iterator<BloomFilter> filterByLimit(BloomFilter filter, Entry<Integer,HammingList> entry, BloomFilterConfiguration config)
     {
         BitSet t = filter.getBitSet();

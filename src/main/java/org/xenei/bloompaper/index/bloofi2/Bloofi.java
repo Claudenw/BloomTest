@@ -1036,9 +1036,32 @@ public final class Bloofi extends BloomIndex {
     }
 
 
-    @Override
     public List<BloomFilter> get(BloomFilter filter) {
         return findMatches(this.root, filter);
+    }
+
+
+    public int countMatches(BFINode node, BloomFilter filter) {
+        int result = 0;
+
+//        stat.nbBFChecks++;
+        // if node does not matches the object,
+        // return empty set, else check the descendants
+        if (!filter.matches( node.value )) {
+            return result;
+        }
+
+        // if this node is a leaf, just return the value
+        if (node.isLeaf()) {
+            return 1;
+        }
+
+        // if not leaf, check the descendants
+        for (int i = 0; i < node.children.size(); i++) {
+            result = countMatches(node.children.get(i), filter);
+        }
+
+        return result;
     }
 
     @Override

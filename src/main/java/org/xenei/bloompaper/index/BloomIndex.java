@@ -8,13 +8,16 @@ import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
 
 
 public abstract class BloomIndex {
+    protected final BloomFilterConfiguration bloomFilterConfig;
+    protected final int population;
 	/** Constructor to force limit argument in constructor **/
 	protected BloomIndex( int population, BloomFilterConfiguration bloomFilterConfig )
 	{
-		// do nothing
+		this.bloomFilterConfig = bloomFilterConfig;
+		this.population = population;
 	}
 	abstract public void add(BloomFilter filter);
-	abstract public List<BloomFilter> get(BloomFilter filter);
+
 	abstract public int count(BloomFilter filter);
 	abstract public String getName();
 }

@@ -15,12 +15,10 @@ import org.xenei.bloompaper.index.btree.stack.InnerNode;
  */
 public class BloomIndexPartialBTree extends BloomIndex {
 	BTree btree;
-	BloomFilterConfiguration bloomFilterConfig;
 
 	public BloomIndexPartialBTree(int population,BloomFilterConfiguration bloomFilterConfig)
 	{
 		super(population, bloomFilterConfig);
-		this.bloomFilterConfig = bloomFilterConfig;
 		int depth = (bloomFilterConfig.getNumberOfBits()/InnerNode.WIDTH) /2;
 		this.btree = new BTree( bloomFilterConfig, depth );
 	}
@@ -29,12 +27,6 @@ public class BloomIndexPartialBTree extends BloomIndex {
 	public void add(BloomFilter filter)
 	{
 		btree.add( filter );;
-	}
-
-	@Override
-	public List<BloomFilter> get(BloomFilter filter)
-	{
-		return btree.search(filter);
 	}
 
 	@Override

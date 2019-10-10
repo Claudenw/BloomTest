@@ -27,12 +27,6 @@ public class BloomIndexBTreeNoStack extends BloomIndex {
 	}
 
 	@Override
-	public List<BloomFilter> get(BloomFilter filter)
-	{
-		return btree.search(filter);
-	}
-
-	@Override
 	public int count(BloomFilter filter)
 	{
 		return btree.count(filter);

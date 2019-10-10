@@ -20,12 +20,10 @@ import org.xenei.bloompaper.SortedList;
  */
 public class BloomIndexHamming extends BloomIndex {
     protected Map<Integer, HammingList> index;
-    protected BloomFilterConfiguration bloomFilterConfig;
 
     public BloomIndexHamming(int population, BloomFilterConfiguration bloomFilterConfig) {
         super(population, bloomFilterConfig);
         this.index = new HashMap<Integer, HammingList>();
-        this.bloomFilterConfig = bloomFilterConfig;
     }
 
     @Override
@@ -60,16 +58,6 @@ public class BloomIndexHamming extends BloomIndex {
         return retval;
     }
 
-    @Override
-    public List<BloomFilter> get(BloomFilter filter) {
-        List<BloomFilter> retval = new ArrayList<BloomFilter>();
-        int hFilter = filter.getHammingWeight();
-
-        for (Map.Entry<Integer,BloomIndexHamming.HammingList> entry : index.entrySet()) {
-            retval.addAll( pageGet( filter, hFilter, entry ) );
-        }
-        return retval;
-    }
 
     protected int pageCount( BloomFilter filter, int hFilter, Map.Entry<Integer,HammingList> entry )
     {

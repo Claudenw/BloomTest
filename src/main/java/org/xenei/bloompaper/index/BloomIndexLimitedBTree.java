@@ -17,12 +17,10 @@ import org.xenei.bloompaper.index.btree.InnerNode;
 public class BloomIndexLimitedBTree extends BloomIndex {
 	BTree btree;
 	BloomIndexLinear linear;
-	BloomFilterConfiguration bloomFilterConfig;
 
 	public BloomIndexLimitedBTree(int population, BloomFilterConfiguration bloomFilterConfig)
 	{
 		super(population, bloomFilterConfig);
-		this.bloomFilterConfig = bloomFilterConfig;
 		this.btree = new BTree(bloomFilterConfig);
 		linear = new BloomIndexLinear(population, bloomFilterConfig);
 	}
@@ -46,23 +44,6 @@ public class BloomIndexLimitedBTree extends BloomIndex {
         double log2 = Math.log(nOfEntries/logC)/Math.log(2);
         return (int) Math.ceil( width - log2 );
     }
-
-	@Override
-	public List<BloomFilter> get(BloomFilter filter)
-	{
-
-		int minHam = minimumHamming(bloomFilterConfig.getNumberOfBits(), btree.getN(), InnerNode.BUCKETS);
-
-		if (filter.getHammingWeight() >= minHam)
-		{
-			return btree.search(filter);
-		}
-		else
-		{
-			return linear.get( filter );
-		}
-
-	}
 
 	@Override
 	public int count(BloomFilter filter)

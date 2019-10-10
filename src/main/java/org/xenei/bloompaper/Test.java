@@ -29,6 +29,7 @@ import org.xenei.bloompaper.index.BloomIndexBTree;
 import org.xenei.bloompaper.index.BloomIndexBTreeNoStack;
 import org.xenei.bloompaper.index.BloomIndexBloofi;
 import org.xenei.bloompaper.index.BloomIndexBloofiR;
+import org.xenei.bloompaper.index.BloomIndexFlatBloofi;
 import org.xenei.bloompaper.index.BloomIndexHamming;
 import org.xenei.bloompaper.index.BloomIndexLimitedBTree;
 import org.xenei.bloompaper.index.BloomIndexLimitedHamming;
@@ -51,6 +52,7 @@ public class Test {
                 BloomIndexLimitedHamming.class.getConstructor(int.class, BloomFilterConfiguration.class));
         constructors.put("Bloofi", BloomIndexBloofi.class.getConstructor(int.class, BloomFilterConfiguration.class));
         constructors.put("BloofiR", BloomIndexBloofiR.class.getConstructor(int.class, BloomFilterConfiguration.class));
+        constructors.put("FlatBloofi", BloomIndexFlatBloofi.class.getConstructor(int.class, BloomFilterConfiguration.class));
         constructors.put("Btree", BloomIndexBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
         constructors.put("BtreeNoStack",
                 BloomIndexBTreeNoStack.class.getConstructor(int.class, BloomFilterConfiguration.class));
@@ -261,28 +263,6 @@ public class Test {
                     stats[run].population, run, end - start));
         }
         return bi;
-    }
-
-    private static void doSearch(final int pos, final BloomIndex bi, final BloomFilter[] bfSample,
-            final Stats[] stats) {
-        final int sampleSize = bfSample.length;
-        for (int run = 0; run < RUN_COUNT; run++) {
-            long elapsed = 0;
-            long start = 0;
-            long found = 0;
-            List<BloomFilter> result;
-            for (int i = 0; i < sampleSize; i++) {
-                start = System.currentTimeMillis();
-                result = bi.get(bfSample[i]);
-                elapsed += (System.currentTimeMillis() - start);
-                found += result.size();
-            }
-            registerResult(stats[run], pos, elapsed, found);
-
-            System.out.println(String.format("%s %s population %s run %s  search time %s (%s)", bi.getName(), pos,
-                    stats[run].population, run, elapsed, found));
-        }
-
     }
 
     private static void doCount(final int pos, final BloomIndex bi, final BloomFilter[] bfSample, final Stats[] stats) {

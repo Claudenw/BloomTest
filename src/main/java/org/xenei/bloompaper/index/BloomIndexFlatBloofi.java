@@ -4,36 +4,39 @@ import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
-import org.xenei.bloompaper.index.btree.stack.BTree;
+import org.xenei.bloompaper.index.bloofi2.Bloofi;
+import org.xenei.bloompaper.index.flatbloofi.FlatBloofi;
 
 
 /**
  * Implementation of BTree Nibble search.
  *
  */
-public class BloomIndexBTree extends BloomIndex {
-	private BTree btree;
+public class BloomIndexFlatBloofi extends BloomIndex {
+	private FlatBloofi bloofi;
 
-	public BloomIndexBTree(int population, BloomFilterConfiguration bloomFilterConfig)
+	public BloomIndexFlatBloofi(int population, BloomFilterConfiguration bloomFilterConfig)
 	{
 		super(population, bloomFilterConfig);
-		this.btree = new BTree(bloomFilterConfig);
+		this.bloofi = new FlatBloofi(population, bloomFilterConfig);
 	}
 
 	@Override
 	public void add(BloomFilter filter)
 	{
-		btree.add( filter );;
+	    bloofi.add( filter );;
 	}
+
+
 
 	@Override
 	public int count(BloomFilter filter)
 	{
-		return btree.count(filter);
+		return bloofi.count(filter);
 	}
 
 	@Override
 	public String getName() {
-		return "Btree";
+		return "Flat Bloofi";
 	}
 }

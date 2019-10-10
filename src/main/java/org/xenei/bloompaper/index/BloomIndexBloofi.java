@@ -27,11 +27,6 @@ public class BloomIndexBloofi extends BloomIndex {
 	    bloofi.add( filter );;
 	}
 
-	@Override
-	public List<BloomFilter> get(BloomFilter filter)
-	{
-		return bloofi.get(filter);
-	}
 
 	@Override
 	public int count(BloomFilter filter)
