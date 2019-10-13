@@ -1,6 +1,7 @@
 package org.xenei.bloompaper.index;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,6 +11,7 @@ import java.util.NoSuchElementException;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
+import org.apache.commons.collections4.bloomfilter.BloomFilterFunctions;
 import org.xenei.bloompaper.SortedList;
 
 /**
@@ -34,7 +36,7 @@ public class BloomIndexHamming extends BloomIndex {
             hammingList = new HammingList();
             index.put(idx, hammingList);
         }
-        hammingList.add(filter);
+        hammingList.add(new HammingEntry(filter));
     }
 
     protected List<BloomFilter> pageGet( BloomFilter filter, int hFilter, Map.Entry<Integer,HammingList> entry )
@@ -96,7 +98,48 @@ public class BloomIndexHamming extends BloomIndex {
         return "Hamming";
     }
 
-    public static class HammingList extends SortedList<BloomFilter> {
+    public static class HammingEntry implements BloomFilter {
+        BloomFilter wrapped;
+        double log;
+
+        HammingEntry(BloomFilter filter)
+        {
+            wrapped = filter;
+            log = BloomFilterFunctions.getApproximateLog(filter);
+        }
+
+        @Override
+        public boolean inverseMatches(BloomFilter other) {
+            return wrapped.inverseMatches(other);
+        }
+
+        @Override
+        public boolean matches(BloomFilter other) {
+            return wrapped.matches(other);
+        }
+
+        @Override
+        public int getHammingWeight() {
+            return wrapped.getHammingWeight();
+        }
+
+        @Override
+        public BloomFilter merge(BloomFilter other) {
+            return wrapped.merge(other);
+        }
+
+        @Override
+        public BitSet getBitSet() {
+            return wrapped.getBitSet();
+        }
+
+        public double getLog() {
+            return log;
+        }
+
+    }
+
+    public static class HammingList extends SortedList<HammingEntry> {
 
         public HammingList() {
             super(BloomComparator.INSTANCE);
@@ -115,7 +158,7 @@ public class BloomIndexHamming extends BloomIndex {
         }
 
         public class BloomIterator implements Iterator<BloomFilter> {
-            private BloomFilter limit;
+            private HammingEntry limit;
             private boolean limited;
             private int idx;
             private double logLimit;
@@ -126,10 +169,10 @@ public class BloomIndexHamming extends BloomIndex {
             }
 
             BloomIterator(BloomFilter start, boolean limited, double logLimit) {
-                this.limit = start;
+                this.limit = new HammingEntry(start);
                 this.limited = limited;
                 this.logLimit = logLimit;
-                this.idx = getSearchPoint(start);
+                this.idx = getSearchPoint(limit);
             }
 
             @Override
@@ -155,14 +198,14 @@ public class BloomIndexHamming extends BloomIndex {
 
     }
 
-    public static class BloomComparator implements Comparator<BloomFilter> {
+    public static class BloomComparator implements Comparator<HammingEntry> {
         public static BloomComparator INSTANCE = new BloomComparator();
 
         private BloomComparator() {
         }
 
         @Override
-        public int compare(BloomFilter o1, BloomFilter o2) {
+        public int compare(HammingEntry o1, HammingEntry o2) {
             return Double.compare(o1.getLog(), o2.getLog());
         }
     }

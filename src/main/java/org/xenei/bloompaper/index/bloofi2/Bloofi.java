@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
+import org.apache.commons.collections4.bloomfilter.BloomFilterFunctions;
 import org.apache.commons.collections4.bloomfilter.StandardBloomFilter;
 import org.xenei.bloompaper.index.BloomIndex;
 
@@ -585,13 +586,13 @@ public final class Bloofi extends BloomIndex {
             return -1;
 
         // initialize min distance to be distance to first element
-        double minDistance = bf.distance(bfList.get(0));
+        double minDistance = BloomFilterFunctions.getHammingDistance(bf, bfList.get(0));
         int minIndex = 0;
         double currentDistance;
 
         // loop through all elements to find the closest
         for (int i = 1; i < bfList.size(); i++) {
-            currentDistance = bf.distance(bfList.get(i));
+            currentDistance = BloomFilterFunctions.getHammingDistance(bf, bfList.get(i));
             if (currentDistance < minDistance) {
                 minDistance = currentDistance;
                 minIndex = i;
@@ -1253,7 +1254,7 @@ public final class Bloofi extends BloomIndex {
             // initialize min distance to be distance to first
             // element
             currentNode = nodeList.get(0);
-            double minDistance = this.value.distance(currentNode.value);
+            double minDistance = BloomFilterFunctions.getHammingDistance(this.value,currentNode.value);
             stat.nbBFAccessed += 2; // this value and currentNode
             // value
             int minIndex = 0;
@@ -1262,7 +1263,7 @@ public final class Bloofi extends BloomIndex {
             // loop through all elements to find the closest
             for (int i = 1; i < nodeList.size(); i++) {
                 currentNode = nodeList.get(i);
-                currentDistance = this.value.distance(currentNode.value);
+                currentDistance = BloomFilterFunctions.getHammingDistance(this.value,currentNode.value);
                 stat.nbBFAccessed += 2; // this value and
                 // currentNode value
 

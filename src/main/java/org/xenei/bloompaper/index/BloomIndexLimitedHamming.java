@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
+import org.apache.commons.collections4.bloomfilter.BloomFilterFunctions;
 import org.apache.commons.collections4.bloomfilter.StandardBloomFilter;
 import org.xenei.bloompaper.hamming.HammingUtils;
 import org.xenei.bloompaper.index.btree.InnerNode;
@@ -55,7 +56,7 @@ public class BloomIndexLimitedHamming extends BloomIndexHamming {
                 t.set(config.getNumberOfBits());
             }
         }
-        return entry.getValue().find(filter, new StandardBloomFilter( t ).getLog());
+        return entry.getValue().find(filter, BloomFilterFunctions.getApproximateLog( t ));
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
+import org.apache.commons.collections4.bloomfilter.BloomFilterFunctions;
 import org.apache.commons.collections4.bloomfilter.StandardBloomFilter;
 
 
@@ -43,10 +44,10 @@ public class InnerNode implements Node {
 		int closest = 0;
 		if (used > 1)
 		{
-    		int closestDistance = candidate.distance( buckets[0].getFilter());
+    		int closestDistance = BloomFilterFunctions.getHammingDistance(candidate, buckets[0].getFilter());
     		for (int i=1;i<used;i++)
     		{
-    			int dist = candidate.distance(buckets[i].getFilter());
+    			int dist = BloomFilterFunctions.getHammingDistance(candidate,buckets[i].getFilter());
     			if (dist<closestDistance)
     			{
     				closestDistance = dist;
@@ -150,10 +151,10 @@ public class InnerNode implements Node {
 		}
 
 		int position = 0;
-		int closestDistance = newNode.filter.distance(buckets[0].getFilter());
+		int closestDistance = BloomFilterFunctions.getHammingDistance(newNode.filter, buckets[0].getFilter());
 		for (int i=1;i<used;i++)
 		{
-			int dist = newNode.filter.distance(buckets[i].getFilter());
+			int dist = BloomFilterFunctions.getHammingDistance(newNode.filter,buckets[i].getFilter());
 			if (dist<closestDistance)
 			{
 				closestDistance = dist;
