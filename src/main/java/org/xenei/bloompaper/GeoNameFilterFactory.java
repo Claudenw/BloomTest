@@ -19,7 +19,7 @@ public class GeoNameFilterFactory {
     }
 
     public static ProtoBloomFilter create(String text) {
-        return ProtoBloomFilter.builder().build( text );
+        return ProtoBloomFilter.builder().with( text ).build();
     }
 
 
