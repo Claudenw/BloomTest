@@ -88,11 +88,11 @@ public class Density {
 
 
         PrintStream o = null;
-
         System.out.println("=== results ===");
         if (dir != null) {
             o = new PrintStream(new File(dir, "density.csv"));
         }
+
         System.out.println(status.getHeader());
         if (o != null) {
             o.println(status.getHeader());
@@ -106,6 +106,7 @@ public class Density {
             }
         }
 
+
         System.out.println("=== run complete ===");
 
         if ( o != null)
@@ -114,24 +115,50 @@ public class Density {
         }
     }
 
+    private static class SD {
+        double sd;
+        long mean;
+
+        @Override
+        public String toString() {
+            return String.format( "%s,%s", mean, sd);
+        }
+    }
     private static class Status {
         Map<Integer,int[]> counts;
         int dim;
+        Map<Integer,SD> sds;
 
         public Status( BloomFilterConfiguration config )
         {
             counts = new HashMap<Integer,int[]>();
             dim = config.getNumberOfBits();
+            sds = new HashMap<Integer,SD>();
         }
 
         public void record( int density, BloomFilter[] filters )
         {
+            SD sd = new SD();
+
             int[] c = new int[dim];
             for (BloomFilter f : filters)
             {
+                sd.mean += f.getHammingWeight();
                 c[f.getHammingWeight()-1]++;
             }
             counts.put( density,  c );
+
+            // calculate standard defiation
+            sd.mean /= filters.length;
+            long sum=0;
+            for (int i=0;i<dim;i++) {
+                if (c[i]>0)
+                {
+                    sum += c[i]*Math.pow(i+1-sd.mean,2);
+                }
+            }
+            sd.sd = Math.sqrt( sum/(filters.length-1) );
+            sds.put( density,  sd );
         }
 
         public String getHeader() {
@@ -140,6 +167,7 @@ public class Density {
             {
                 sb.append( ",").append(i+1);
             }
+            sb.append(",,Mean,Standard Deviation");
             return sb.toString();
         }
 
@@ -151,8 +179,10 @@ public class Density {
             {
                 sb.append( ",").append( c[i]==0?" ":c[i]);
             }
+            sb.append(",,").append( sds.get(density));
             return sb.toString();
         }
+
 
     }
 }
