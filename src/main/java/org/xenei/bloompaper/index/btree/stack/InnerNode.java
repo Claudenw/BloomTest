@@ -56,7 +56,7 @@ public class InnerNode implements Node {
 		{
 			if ((level+1) == maxDepth)
 			{
-				nodes[nibble.getVal()] = new LeafNode( maxDepth==(bloomFilterConfig.getNumberOfBits()/WIDTH));;
+				nodes[nibble.getVal()] = new LeafNode( maxDepth==(bloomFilterConfig.getNumberOfBits()/WIDTH));
 			}
 			else
 			{
