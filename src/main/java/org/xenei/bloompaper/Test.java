@@ -73,8 +73,9 @@ public class Test {
 
         Options options = new Options();
         options.addRequiredOption("r", "run", true, sb.toString());
-        options.addOption("d", "dense", false, "Use compact filters");
         options.addOption("h", "help", false, "This help");
+        options.addOption( "n", "number", true, "The number of items in the filter (defaults to 3)");
+        options.addOption( "p", "probability", true, "The probability of collisions (defaults to 1/100000).  May be specified as x/y or double format");
         options.addOption("o", "output", true, "Output directory.  If not specified results will not be preserved");
         options.addOption("i", "iterations", true, "The number of iterations defualt=" + RUN_COUNT);
         return options;
@@ -84,6 +85,8 @@ public class Test {
         init();
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
+        int n = 3;
+        double p = 1.0/100000;
         try {
             cmd = parser.parse(getOptions(), args);
         } catch (Exception e) {
@@ -112,12 +115,24 @@ public class Test {
         }
 
         BloomFilterConfiguration bloomFilterConfig;
-        if (cmd.hasOption("d")) {
-            bloomFilterConfig = new BloomFilterConfiguration(1, 11, 8);
-        } else {
-            // 3 items 1/100,000
-            bloomFilterConfig = new BloomFilterConfiguration(3, 1.0 / 100000);
+        if (cmd.hasOption("n")) {
+            n = Integer.valueOf(cmd.getOptionValue("n"));
         }
+
+        if (cmd.hasOption("p"))
+        {
+            String pStr = cmd.getOptionValue("p");
+            String[] parts = pStr.split( "/");
+            if (parts.length == 1)
+            {
+                p = Double.parseDouble( parts[0] );
+            }
+            else
+            {
+                p = Double.parseDouble( parts[0] ) / Double.parseDouble( parts[1] );
+            }
+        }
+        bloomFilterConfig = new BloomFilterConfiguration( n, p );
 
         File dir = null;
         if (cmd.hasOption("o")) {
