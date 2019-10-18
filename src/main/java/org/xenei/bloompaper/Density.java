@@ -39,13 +39,13 @@ public class Density {
             cmd = parser.parse(getOptions(), args);
         } catch (Exception e) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("Density", "", getOptions(), e.getMessage());
+            formatter.printHelp("Saturation", "", getOptions(), e.getMessage());
             System.exit(1);
         }
 
         if (cmd.hasOption("h")) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("Density", getOptions() );
+            formatter.printHelp("Saturation", getOptions() );
         }
 
 
@@ -69,7 +69,7 @@ public class Density {
         final BufferedReader br = new BufferedReader(new InputStreamReader(inputFile.openStream()));
         for (int density = 0;density<MAX_DENSITY;density++)
         {
-            System.out.println( "Density "+(density+1));
+            System.out.println( "Saturation "+(density+1));
             for (int i = 0; i < SAMPLE_SIZE; i++) {
                 final GeoName gn = GeoName.parse(br.readLine());
                 if (density > 0)
@@ -81,7 +81,8 @@ public class Density {
                     filters[i] = new StandardBloomFilter(GeoNameFilterFactory.create(gn), bloomFilterConfig);
                 }
             }
-            status.record( density, filters );
+            double effectiveP = new BloomFilterConfiguration( bloomFilterConfig.getNumberOfItems()*(density+1), bloomFilterConfig.getNumberOfBits(), bloomFilterConfig.getNumberOfHashFunctions() ).getProbability();
+            status.record( density, filters, effectiveP );
         }
 
         br.close();
@@ -118,10 +119,11 @@ public class Density {
     private static class SD {
         double sd;
         long mean;
+        double p;
 
         @Override
         public String toString() {
-            return String.format( "%s,%s", mean, sd);
+            return String.format( "%s,%s,%s", mean, sd,p);
         }
     }
     private static class Status {
@@ -136,7 +138,7 @@ public class Density {
             sds = new HashMap<Integer,SD>();
         }
 
-        public void record( int density, BloomFilter[] filters )
+        public void record( int density, BloomFilter[] filters, double probability )
         {
             SD sd = new SD();
 
@@ -158,22 +160,23 @@ public class Density {
                 }
             }
             sd.sd = Math.sqrt( sum/(filters.length-1) );
+            sd.p = probability;
             sds.put( density,  sd );
         }
 
         public String getHeader() {
-            StringBuilder sb = new StringBuilder( "'Density'");
+            StringBuilder sb = new StringBuilder( "'Saturation'");
             for (int i=0;i<dim;i++)
             {
                 sb.append( ",").append(i+1);
             }
-            sb.append(",,Mean,Standard Deviation");
+            sb.append(",,Mean,Standard Deviation,p");
             return sb.toString();
         }
 
         public String getData( int density )
         {
-            StringBuilder sb = new StringBuilder( String.format( "'Density %s'", density+1));
+            StringBuilder sb = new StringBuilder( String.format( "'Sat. %s'", density+1));
             int[] c = counts.get(density);
             for (int i=0;i<dim;i++)
             {
