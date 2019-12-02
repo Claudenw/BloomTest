@@ -1,51 +1,49 @@
 package org.xenei.bloompaper.index;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
+import org.xenei.bloompaper.InstrumentedBloomFilter;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
 
 /**
  * Plain ol' linear search.
  *
  */
 public class BloomIndexLinear extends BloomIndex {
-	BloomFilter[] index;
-	int idx;
+    private InstrumentedBloomFilter[] index;
+    private int idx;
 
-	public BloomIndexLinear(int population,BloomFilterConfiguration bloomFilterConfig)
-	{
-		super(population, bloomFilterConfig);
-		this.index = new BloomFilter[population];
-		this.idx = 0;
-	}
+    public BloomIndexLinear(int population,Shape bloomFilterConfig)
+    {
+        super(population, bloomFilterConfig);
+        this.index = new InstrumentedBloomFilter[population];
+        this.idx = 0;
+    }
 
-	@Override
-	public void add(BloomFilter filter)
-	{
-		index[idx++] = filter;
-	}
+    @Override
+    public void add(InstrumentedBloomFilter filter)
+    {
+        index[idx++] = filter;
+    }
 
-	@Override
-	public int count(BloomFilter filter)
-	{
-		int result = 0;
-				// searching entire list
-				for (BloomFilter candidate : index)
-				{
-					if (filter.matches(candidate))
-					{
-						result++;
-					}
-				}
-			return result;
+    @Override
+    public int count(InstrumentedBloomFilter filter)
+    {
+        int result = 0;
+        // searching entire list
+        for (InstrumentedBloomFilter candidate : index)
+        {
+            if (candidate.contains(filter))
+            {
+                result++;
+            }
+        }
+        return result;
 
-	}
+    }
 
-	@Override
-	public String getName() {
-		return "Linear";
-	}
+    @Override
+    public String getName() {
+        return "Linear";
+    }
 
 }

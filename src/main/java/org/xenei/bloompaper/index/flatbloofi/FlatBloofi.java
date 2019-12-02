@@ -3,16 +3,9 @@ package org.xenei.bloompaper.index.flatbloofi;
 
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
+import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
+import org.xenei.bloompaper.InstrumentedBloomFilter;
 import org.xenei.bloompaper.index.BloomIndex;
-import org.xenei.bloompaper.index.bloofi2.InsDelUpdateStatistics;
-
 
 /**
  * This is what Daniel called Bloofi2. Basically, instead of using a tree
@@ -29,30 +22,29 @@ public final class FlatBloofi extends BloomIndex {
     ArrayList<long[]> buffer;
     BitSet busy;
 
-    public FlatBloofi(int population, BloomFilterConfiguration bloomFilterConfig) {
-        super(population, bloomFilterConfig);
+    public FlatBloofi(int population, Shape shape) {
+        super(population, shape);
         buffer = new ArrayList<long[]>(0);
-//        buffer.add( new long[bloomFilterConfig.getNumberOfBits()+1]);
+        //        buffer.add( new long[shape.getNumberOfBits()+1]);
         busy = new BitSet(0);
     }
 
     @Override
-    public void add(BloomFilter bf) {
-
+    public void add(InstrumentedBloomFilter bf) {
         int i = busy.nextClearBit(0);
-        BitSet bs = bf.getBitSet();
+        BitSet bs = BitSet.valueOf( bf.getBits() );
         if (buffer.size()-1 < i/Long.SIZE)
         {
-            buffer.add(new long[bloomFilterConfig.getNumberOfBits()+1]);
+            buffer.add(new long[shape.getNumberOfBits()+1]);
         }
         setBloomAt(i, bs);
         busy.set(i);
     }
 
     @Override
-    public int count(BloomFilter bf) {
+    public int count(InstrumentedBloomFilter bf) {
         int count = 0;
-        BitSet bs = bf.getBitSet();
+        BitSet bs = BitSet.valueOf( bf.getBits() );
 
         for (int i = 0; i < buffer.size(); i++) {
             long w = ~0l;

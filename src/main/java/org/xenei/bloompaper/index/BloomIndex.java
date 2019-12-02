@@ -1,23 +1,21 @@
 package org.xenei.bloompaper.index;
 
-import java.util.List;
-
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
+import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
+import org.xenei.bloompaper.InstrumentedBloomFilter;
 
 
 
 public abstract class BloomIndex {
-    protected final BloomFilterConfiguration bloomFilterConfig;
+    protected final Shape shape;
     protected final int population;
-	/** Constructor to force limit argument in constructor **/
-	protected BloomIndex( int population, BloomFilterConfiguration bloomFilterConfig )
-	{
-		this.bloomFilterConfig = bloomFilterConfig;
-		this.population = population;
-	}
-	abstract public void add(BloomFilter filter);
+    /** Constructor to force limit argument in constructor **/
+    protected BloomIndex( int population, Shape shape )
+    {
+        this.shape = shape;
+        this.population = population;
+    }
+    abstract public void add(InstrumentedBloomFilter filter);
 
-	abstract public int count(BloomFilter filter);
-	abstract public String getName();
+    abstract public int count(InstrumentedBloomFilter filter);
+    abstract public String getName();
 }

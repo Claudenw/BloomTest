@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
+import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
+import org.xenei.bloompaper.InstrumentedBloomFilter;
 import org.xenei.bloompaper.SortedList;
 
 /**
@@ -21,14 +21,14 @@ import org.xenei.bloompaper.SortedList;
 public class BloomIndexHamming extends BloomIndex {
     protected Map<Integer, HammingList> index;
 
-    public BloomIndexHamming(int population, BloomFilterConfiguration bloomFilterConfig) {
+    public BloomIndexHamming(int population, Shape bloomFilterConfig) {
         super(population, bloomFilterConfig);
         this.index = new HashMap<Integer, HammingList>();
     }
 
     @Override
-    public void add(BloomFilter filter) {
-        Integer idx = filter.getHammingWeight();
+    public void add(InstrumentedBloomFilter filter) {
+        Integer idx = filter.hammingValue();
         HammingList hammingList = index.get(idx);
         if (hammingList == null) {
             hammingList = new HammingList();
@@ -37,10 +37,10 @@ public class BloomIndexHamming extends BloomIndex {
         hammingList.add(filter);
     }
 
-    protected List<BloomFilter> pageGet( BloomFilter filter, int hFilter, Map.Entry<Integer,HammingList> entry )
+    protected List<InstrumentedBloomFilter> pageGet( InstrumentedBloomFilter filter, int hFilter, Map.Entry<Integer,HammingList> entry )
     {
-        List<BloomFilter> retval = new ArrayList<BloomFilter>();
-        Iterator<BloomFilter> iter = null;
+        List<InstrumentedBloomFilter> retval = new ArrayList<InstrumentedBloomFilter>();
+        Iterator<InstrumentedBloomFilter> iter = null;
         if (entry.getKey() >= hFilter) {
             if (entry.getKey() == hFilter) {
                 iter = entry.getValue().get(filter);
@@ -49,8 +49,8 @@ public class BloomIndexHamming extends BloomIndex {
                 iter = entry.getValue().find(filter);
             }
             while (iter.hasNext()) {
-                BloomFilter found = iter.next();
-                if (filter.matches(found)) {
+                InstrumentedBloomFilter found = iter.next();
+                if (found.contains(filter)) {
                     retval.add( found );
                 }
             }
@@ -59,10 +59,10 @@ public class BloomIndexHamming extends BloomIndex {
     }
 
 
-    protected int pageCount( BloomFilter filter, int hFilter, Map.Entry<Integer,HammingList> entry )
+    protected int pageCount( InstrumentedBloomFilter filter, int hFilter, Map.Entry<Integer,HammingList> entry )
     {
         int retval = 0;
-        Iterator<BloomFilter> iter = null;
+        Iterator<InstrumentedBloomFilter> iter = null;
         if (entry.getKey() >= hFilter) {
             if (entry.getKey() == hFilter) {
                 iter = entry.getValue().get(filter);
@@ -71,8 +71,8 @@ public class BloomIndexHamming extends BloomIndex {
                 iter = entry.getValue().find(filter);
             }
             while (iter.hasNext()) {
-                BloomFilter found = iter.next();
-                if (filter.matches(found)) {
+                InstrumentedBloomFilter found = iter.next();
+                if (found.contains(filter)) {
                     retval++;
                 }
             }
@@ -81,9 +81,9 @@ public class BloomIndexHamming extends BloomIndex {
     }
 
     @Override
-    public int count(BloomFilter filter) {
+    public int count(InstrumentedBloomFilter filter) {
         int retval = 0;
-        int hFilter = filter.getHammingWeight();
+        int hFilter = filter.hammingValue();
 
         for (Map.Entry<Integer,BloomIndexHamming.HammingList> entry : index.entrySet()) {
             retval += pageCount( filter, hFilter, entry );
@@ -96,36 +96,36 @@ public class BloomIndexHamming extends BloomIndex {
         return "Hamming";
     }
 
-    public static class HammingList extends SortedList<BloomFilter> {
+    public static class HammingList extends SortedList<InstrumentedBloomFilter> {
 
         public HammingList() {
             super(BloomComparator.INSTANCE);
         }
 
-        public Iterator<BloomFilter> get(BloomFilter filter) {
+        public Iterator<InstrumentedBloomFilter> get(InstrumentedBloomFilter filter) {
             return new BloomIterator(filter, true);
         }
 
-        public Iterator<BloomFilter> find(BloomFilter filter) {
+        public Iterator<InstrumentedBloomFilter> find(InstrumentedBloomFilter filter) {
             return new BloomIterator(filter, false);
         }
 
-        public Iterator<BloomFilter> find(BloomFilter filter, double logLimit) {
+        public Iterator<InstrumentedBloomFilter> find(InstrumentedBloomFilter filter, double logLimit) {
             return new BloomIterator(filter, false, logLimit);
         }
 
-        public class BloomIterator implements Iterator<BloomFilter> {
-            private BloomFilter limit;
+        public class BloomIterator implements Iterator<InstrumentedBloomFilter> {
+            private InstrumentedBloomFilter limit;
             private boolean limited;
             private int idx;
             private double logLimit;
 
-            BloomIterator(BloomFilter start, boolean limited)
+            BloomIterator(InstrumentedBloomFilter start, boolean limited)
             {
                 this(start, limited, Double.MAX_VALUE);
             }
 
-            BloomIterator(BloomFilter start, boolean limited, double logLimit) {
+            BloomIterator(InstrumentedBloomFilter start, boolean limited, double logLimit) {
                 this.limit = start;
                 this.limited = limited;
                 this.logLimit = logLimit;
@@ -144,7 +144,7 @@ public class BloomIndexHamming extends BloomIndex {
             }
 
             @Override
-            public BloomFilter next() {
+            public InstrumentedBloomFilter next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
@@ -153,18 +153,20 @@ public class BloomIndexHamming extends BloomIndex {
 
         }
 
+
     }
 
-    public static class BloomComparator implements Comparator<BloomFilter> {
+    public static class BloomComparator implements Comparator<InstrumentedBloomFilter> {
         public static BloomComparator INSTANCE = new BloomComparator();
 
         private BloomComparator() {
         }
 
         @Override
-        public int compare(BloomFilter o1, BloomFilter o2) {
-            return Double.compare(o1.getLog(), o2.getLog());
+        public int compare(InstrumentedBloomFilter o1, InstrumentedBloomFilter o2) {
+            return Double.compare(o1.getLog(), o2.getLog() );
         }
     }
+
 
 }

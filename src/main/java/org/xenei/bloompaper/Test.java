@@ -20,22 +20,15 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.BloomFilterConfiguration;
-import org.apache.commons.collections4.bloomfilter.StandardBloomFilter;
+import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
+import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128;
 import org.xenei.bloompaper.geoname.GeoName;
 import org.xenei.bloompaper.index.BloomIndex;
-import org.xenei.bloompaper.index.BloomIndexBTree;
-import org.xenei.bloompaper.index.BloomIndexBTreeNoStack;
+import org.xenei.bloompaper.index.BloomIndexBFTrie;
 import org.xenei.bloompaper.index.BloomIndexBloofi;
-import org.xenei.bloompaper.index.BloomIndexBloofiR;
 import org.xenei.bloompaper.index.BloomIndexFlatBloofi;
 import org.xenei.bloompaper.index.BloomIndexHamming;
-import org.xenei.bloompaper.index.BloomIndexLimitedBTree;
-import org.xenei.bloompaper.index.BloomIndexLimitedHamming;
 import org.xenei.bloompaper.index.BloomIndexLinear;
-import org.xenei.bloompaper.index.BloomIndexLinearList;
-import org.xenei.bloompaper.index.BloomIndexPartialBTree;
 
 public class Test {
 
@@ -47,22 +40,11 @@ public class Test {
     private static int[] RUNSIZE = { 100, 1000, 10000, 100000, 1000000 };
 
     private static void init() throws NoSuchMethodException, SecurityException {
-        constructors.put("Hamming", BloomIndexHamming.class.getConstructor(int.class, BloomFilterConfiguration.class));
-        constructors.put("LimitedHamming",
-                BloomIndexLimitedHamming.class.getConstructor(int.class, BloomFilterConfiguration.class));
-        constructors.put("Bloofi", BloomIndexBloofi.class.getConstructor(int.class, BloomFilterConfiguration.class));
-        constructors.put("BloofiR", BloomIndexBloofiR.class.getConstructor(int.class, BloomFilterConfiguration.class));
-        constructors.put("FlatBloofi", BloomIndexFlatBloofi.class.getConstructor(int.class, BloomFilterConfiguration.class));
-        constructors.put("Btree", BloomIndexBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
-        constructors.put("BtreeNoStack",
-                BloomIndexBTreeNoStack.class.getConstructor(int.class, BloomFilterConfiguration.class));
-        constructors.put("PartialBtree",
-                BloomIndexPartialBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
-        constructors.put("LimitedBtree",
-                BloomIndexLimitedBTree.class.getConstructor(int.class, BloomFilterConfiguration.class));
-        constructors.put("Linear", BloomIndexLinear.class.getConstructor(int.class, BloomFilterConfiguration.class));
-        constructors.put("LinearList",
-                BloomIndexLinearList.class.getConstructor(int.class, BloomFilterConfiguration.class));
+        constructors.put("Hamming", BloomIndexHamming.class.getConstructor(int.class, Shape.class));
+        constructors.put("Bloofi", BloomIndexBloofi.class.getConstructor(int.class, Shape.class));
+        constructors.put("FlatBloofi", BloomIndexFlatBloofi.class.getConstructor(int.class, Shape.class));
+        constructors.put("BF-Trie", BloomIndexBFTrie.class.getConstructor(int.class, Shape.class));
+        constructors.put("Linear", BloomIndexLinear.class.getConstructor(int.class, Shape.class));
     }
 
     public static Options getOptions() {
@@ -114,7 +96,7 @@ public class Test {
             }
         }
 
-        BloomFilterConfiguration bloomFilterConfig;
+        Shape shape;
         if (cmd.hasOption("n")) {
             n = Integer.valueOf(cmd.getOptionValue("n"));
         }
@@ -132,7 +114,7 @@ public class Test {
                 p = Double.parseDouble( parts[0] ) / Double.parseDouble( parts[1] );
             }
         }
-        bloomFilterConfig = new BloomFilterConfiguration( n, p );
+        shape = new Shape(Murmur128.NAME, n, p );
 
         File dir = null;
         if (cmd.hasOption("o")) {
@@ -146,7 +128,7 @@ public class Test {
 
         final List<String> tests = new ArrayList<String>();
         final List<Stats> table = new ArrayList<Stats>();
-        final BloomFilter[] filters = new BloomFilter[1000000]; // (1e6)
+        final InstrumentedBloomFilter[] filters = new InstrumentedBloomFilter[1000000]; // (1e6)
         final URL inputFile = Test.class.getResource("/allCountries.txt");
         final List<GeoName> sample = new ArrayList<GeoName>(1000); // (1e3)
 
@@ -176,7 +158,7 @@ public class Test {
             if ((i % 1000) == 0) {
                 sample.add(gn);
             }
-            filters[i] = new StandardBloomFilter(GeoNameFilterFactory.create(gn), bloomFilterConfig);
+            filters[i] = new InstrumentedBloomFilter(GeoNameFilterFactory.create(gn), shape);
         }
 
         // run the tests
@@ -188,7 +170,7 @@ public class Test {
                 for (int run = 0; run < RUN_COUNT; run++) {
                     stats[run] = new Stats(population);
                 }
-                table.addAll(runTest(bloomFilterConfig, constructor, sample, filters, stats));
+                table.addAll(runTest(shape, constructor, sample, filters, stats));
             }
         }
 
@@ -231,42 +213,42 @@ public class Test {
         System.out.println("=== run complete ===");
     }
 
-    private static List<Stats> runTest(final BloomFilterConfiguration bloomFilterConfig,
+    private static List<Stats> runTest(final Shape shape,
             final Constructor<? extends BloomIndex> constructor, final List<GeoName> sample,
-            final BloomFilter[] filters, final Stats[] stats) throws IOException, InstantiationException,
+            final InstrumentedBloomFilter[] filters, final Stats[] stats) throws IOException, InstantiationException,
     IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
-        final BloomIndex bi = doLoad(constructor, filters, bloomFilterConfig, stats);
+        final BloomIndex bi = doLoad(constructor, filters, shape, stats);
         final int sampleSize = sample.size();
-        BloomFilter[] bfSample = new BloomFilter[sampleSize];
+        InstrumentedBloomFilter[] bfSample = new InstrumentedBloomFilter[sampleSize];
         for (int i = 0; i < sample.size(); i++) {
-            bfSample[i] = new StandardBloomFilter(GeoNameFilterFactory.create(sample.get(i)), bloomFilterConfig);
+            bfSample[i] = new InstrumentedBloomFilter(GeoNameFilterFactory.create(sample.get(i)), shape);
         }
         doCount(1, bi, bfSample, stats);
 
-        bfSample = new BloomFilter[sampleSize];
+        bfSample = new InstrumentedBloomFilter[sampleSize];
         for (int i = 0; i < sample.size(); i++) {
 
-            bfSample[i] = new StandardBloomFilter(GeoNameFilterFactory.create(sample.get(i).name), bloomFilterConfig);
+            bfSample[i] = new InstrumentedBloomFilter(GeoNameFilterFactory.create(sample.get(i).name), shape);
         }
         doCount(2, bi, bfSample, stats);
 
-        bfSample = new BloomFilter[sampleSize];
+        bfSample = new InstrumentedBloomFilter[sampleSize];
         for (int i = 0; i < sample.size(); i++) {
-            bfSample[i] = new StandardBloomFilter(GeoNameFilterFactory.create(sample.get(i).feature_code),
-                    bloomFilterConfig);
+            bfSample[i] = new InstrumentedBloomFilter(GeoNameFilterFactory.create(sample.get(i).feature_code),
+                    shape);
         }
         doCount(3, bi, bfSample, stats);
         return Arrays.asList(stats);
     }
 
-    private static BloomIndex doLoad(final Constructor<? extends BloomIndex> constructor, final BloomFilter[] filters,
-            final BloomFilterConfiguration bloomFilterConfig, final Stats[] stats)
+    private static BloomIndex doLoad(final Constructor<? extends BloomIndex> constructor, final InstrumentedBloomFilter[] filters,
+            final Shape shape, final Stats[] stats)
                     throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi = null;
 
         for (int run = 0; run < RUN_COUNT; run++) {
-            bi = constructor.newInstance(stats[run].population, bloomFilterConfig);
+            bi = constructor.newInstance(stats[run].population, shape);
             stats[run].type = bi.getName();
             final long start = System.currentTimeMillis();
             for (int i = 0; i < stats[run].population; i++) {
@@ -280,7 +262,7 @@ public class Test {
         return bi;
     }
 
-    private static void doCount(final int pos, final BloomIndex bi, final BloomFilter[] bfSample, final Stats[] stats) {
+    private static void doCount(final int pos, final BloomIndex bi, final InstrumentedBloomFilter[] bfSample, final Stats[] stats) {
         final int sampleSize = bfSample.length;
         for (int run = 0; run < RUN_COUNT; run++) {
             long elapsed = 0;

@@ -2,38 +2,36 @@ package org.xenei.bloompaper.index;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
 import org.xenei.bloompaper.InstrumentedBloomFilter;
-import org.xenei.bloompaper.index.flatbloofi.FlatBloofi;
+import org.xenei.bloompaper.index.bftrie.BFTrie4;
 
 
 /**
  * Implementation of BTree Nibble search.
  *
  */
-public class BloomIndexFlatBloofi extends BloomIndex {
-    private FlatBloofi bloofi;
+public class BloomIndexBFTrie extends BloomIndex {
+    private BFTrie4 bftrie;
 
-    public BloomIndexFlatBloofi(int population, Shape shape)
+    public BloomIndexBFTrie(int population, Shape shape)
     {
         super(population, shape);
-        this.bloofi = new FlatBloofi(population, shape);
+        this.bftrie = new BFTrie4(shape);
     }
 
     @Override
     public void add(InstrumentedBloomFilter filter)
     {
-        bloofi.add( filter );;
+        bftrie.add( filter );;
     }
-
-
 
     @Override
     public int count(InstrumentedBloomFilter filter)
     {
-        return bloofi.count(filter);
+        return bftrie.count(filter);
     }
 
     @Override
     public String getName() {
-        return "Flat Bloofi";
+        return "BF-Trie";
     }
 }
