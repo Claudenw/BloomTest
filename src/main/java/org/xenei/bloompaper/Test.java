@@ -21,7 +21,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128;
+import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.xenei.bloompaper.geoname.GeoName;
 import org.xenei.bloompaper.index.BloomIndex;
 import org.xenei.bloompaper.index.BloomIndexBFTrie;
@@ -114,7 +114,7 @@ public class Test {
                 p = Double.parseDouble( parts[0] ) / Double.parseDouble( parts[1] );
             }
         }
-        shape = new Shape(Murmur128.NAME, n, p );
+        shape = new Shape(new Murmur128x86Cyclic(), n, p );
 
         File dir = null;
         if (cmd.hasOption("o")) {

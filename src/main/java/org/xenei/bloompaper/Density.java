@@ -21,7 +21,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.BitSetBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128;
+import org.apache.commons.collections4.bloomfilter.hasher.HashFunction;
+import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.xenei.bloompaper.geoname.GeoName;
 
 public class Density {
@@ -43,6 +44,7 @@ public class Density {
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
+        HashFunction hashFunction = new Murmur128x86Cyclic();
         try {
             cmd = parser.parse(getOptions(), args);
         } catch (Exception e) {
@@ -65,7 +67,7 @@ public class Density {
                 throw new IllegalArgumentException(dir.getAbsolutePath() + " is not a directory");
             }
         }
-        Shape bloomFilterConfig = new Shape(Murmur128.NAME, 3, 1.0 / 100000);
+        Shape bloomFilterConfig = new Shape( hashFunction, 3, 1.0 / 100000);
         BloomFilter[] filters = new BloomFilter[SAMPLE_SIZE];
         final URL inputFile = Density.class.getResource("/allCountries.txt");
         Status status = new Status(bloomFilterConfig);
@@ -82,7 +84,7 @@ public class Density {
                     filters[i] = new BitSetBloomFilter(GeoNameFilterFactory.create(gn), bloomFilterConfig);
                 }
             }
-            double effectiveP = new Shape( Murmur128.NAME, bloomFilterConfig.getNumberOfItems() * (density + 1),
+            double effectiveP = new Shape( hashFunction, bloomFilterConfig.getNumberOfItems() * (density + 1),
                     bloomFilterConfig.getNumberOfBits(), bloomFilterConfig.getNumberOfHashFunctions()).getProbability();
             Map<Integer,Map<Double,Integer>> points = new HashMap<Integer,Map<Double,Integer>>();
             status.record(points, density, filters, effectiveP);
@@ -137,11 +139,13 @@ public class Density {
     private static class SaturationStats {
         double sd;
         long mean;
+        int median;
+        int mode;
         double p;
 
         @Override
         public String toString() {
-            return String.format("%s,%s,%s", mean, sd, p);
+            return String.format("%s,%s,%s,%s,%s", mean, median, mode, sd, p);
         }
     }
 
@@ -176,10 +180,12 @@ public class Density {
             LogStats log = new LogStats();
 
             int[] c = new int[dim];
+            long count = 0;
             for (BloomFilter f : filters) {
                 log.mean += logValue(f);
                 sat.mean += f.hammingValue();
                 c[f.hammingValue() - 1]++;
+                count++;
             }
             counts.put(density, c);
 
@@ -187,11 +193,24 @@ public class Density {
             sat.mean /= filters.length;
             log.mean /= filters.length;
             long satSum = 0;
+            long satCount = 0;
+            int modeCount = 0;
             for (int i = 0; i < dim; i++) {
                 if (c[i] > 0) {
                     satSum += c[i] * Math.pow(i + 1 - sat.mean, 2);
+                    satCount += c[i];
+                    if (c[i] > modeCount)
+                    {
+                        sat.mode = i;
+                        modeCount = c[i];
+                    }
+                }
+                if (satCount >= count/2 && sat.median == 0)
+                {
+                    sat.median = i;
                 }
             }
+
             sat.sd = Math.sqrt(satSum / (filters.length - 1));
             sat.p = probability;
             satStats.put(density, sat);
@@ -225,7 +244,7 @@ public class Density {
             for (int i = 0; i < dim; i++) {
                 sb.append(",").append(i + 1);
             }
-            sb.append(",,Mean,Standard Deviation,p");
+            sb.append(",,Mean,Median,Mode,Standard Deviation,p");
             sb.append(",,Min,Mean,Max,Standard Deviation");
             return sb.toString();
         }

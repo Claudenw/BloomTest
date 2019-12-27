@@ -2,7 +2,7 @@ package org.xenei.bloompaper;
 
 import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.hasher.DynamicHasher;
-import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128;
+import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.xenei.bloompaper.geoname.GeoName;
 
 
@@ -15,13 +15,13 @@ public class GeoNameFilterFactory {
      * @param gn
      */
     public static Hasher create(GeoName gn) {
-        return new DynamicHasher.Builder( new Murmur128() ).with( gn.name )
+        return new DynamicHasher.Builder( new Murmur128x86Cyclic() ).with( gn.name )
                 .with( gn.country_code)
                 .with( gn.feature_code ).build();
     }
 
     public static Hasher create(String text) {
-        return new DynamicHasher.Builder( new Murmur128() ).with( text ).build();
+        return new DynamicHasher.Builder( new Murmur128x86Cyclic() ).with( text ).build();
     }
 
 
