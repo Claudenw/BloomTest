@@ -201,13 +201,13 @@ public class Density {
                     satCount += c[i];
                     if (c[i] > modeCount)
                     {
-                        sat.mode = i;
+                        sat.mode = i+1;
                         modeCount = c[i];
                     }
                 }
                 if (satCount >= count/2 && sat.median == 0)
                 {
-                    sat.median = i;
+                    sat.median = i+1;
                 }
             }
 
