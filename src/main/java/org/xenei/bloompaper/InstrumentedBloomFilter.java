@@ -54,13 +54,6 @@ public class InstrumentedBloomFilter extends AbstractBloomFilter {
     }
 
     @Override
-    public void merge(BloomFilter other) {
-        verifyShape(other);
-        bitSet.or(BitSet.valueOf(other.getBits()));
-        reset();
-    }
-
-    @Override
     public boolean contains(Hasher hasher) {
         verifyHasher(hasher);
         OfInt iter = hasher.getBits(getShape());
@@ -86,16 +79,15 @@ public class InstrumentedBloomFilter extends AbstractBloomFilter {
         return bitSet.toString();
     }
 
-    /**
-     * Merge another InstrumentedBloomFilter into this one. <p> This method takes advantage of
-     * internal structures of InstrumentedBloomFilter. </p>
-     *
-     * @param other the other InstrumentedBloomFilter.
-     * @see #merge(AbstractBloomFilter)
-     */
-    public void merge(InstrumentedBloomFilter other) {
+    @Override
+    public void merge(BloomFilter other) {
         verifyShape(other);
-        bitSet.or(other.bitSet);
+        if (other instanceof InstrumentedBloomFilter)
+        {
+            bitSet.or(((InstrumentedBloomFilter)other).bitSet);
+        } else {
+            bitSet.or(BitSet.valueOf(other.getBits()));
+        }
         reset();
     }
 
@@ -106,49 +98,39 @@ public class InstrumentedBloomFilter extends AbstractBloomFilter {
         reset();
     }
 
-    /**
-     * Calculates the andCardinality with another InstrumentedBloomFilter. <p> This method takes
-     * advantage of internal structures of InstrumentedBloomFilter. </p>
-     *
-     * @param other the other InstrumentedBloomFilter.
-     * @return the cardinality of the result of {@code ( this AND other )}.
-     * @see #andCardinality(AbstractBloomFilter)
-     */
-    public int andCardinality(InstrumentedBloomFilter other) {
-        verifyShape(other);
-        BitSet result = (BitSet) bitSet.clone();
-        result.and(other.bitSet);
-        return result.cardinality();
+    @Override
+    public int andCardinality(BloomFilter other) {
+        if (other instanceof InstrumentedBloomFilter) {
+            verifyShape(other);
+            BitSet result = (BitSet) bitSet.clone();
+            result.and(((InstrumentedBloomFilter)other).bitSet);
+            return result.cardinality();
+        }
+        return super.andCardinality(other);
     }
 
-    /**
-     * Calculates the orCardinality with another InstrumentedBloomFilter. <p> This method takes
-     * advantage of internal structures of InstrumentedBloomFilter. </p>
-     *
-     * @param other the other InstrumentedBloomFilter.
-     * @return the cardinality of the result of {@code ( this OR other )}.
-     * @see #orCardinality(AbstractBloomFilter)
-     */
-    public int orCardinality(InstrumentedBloomFilter other) {
-        verifyShape(other);
-        BitSet result = (BitSet) bitSet.clone();
-        result.or(other.bitSet);
-        return result.cardinality();
+    @Override
+    public int orCardinality(BloomFilter other) {
+        if (other instanceof InstrumentedBloomFilter)
+        {
+            verifyShape(other);
+            BitSet result = (BitSet) bitSet.clone();
+            result.or(((InstrumentedBloomFilter)other).bitSet);
+            return result.cardinality();
+        }
+        return super.orCardinality(other);
     }
 
-    /**
-     * Calculates the xorCardinality with another InstrumentedBloomFilter. <p> This method takes
-     * advantage of internal structures of InstrumentedBloomFilter. </p>
-     *
-     * @param other the other InstrumentedBloomFilter.
-     * @return the cardinality of the result of {@code( this XOR other )}
-     * @see #xorCardinality(AbstractBloomFilter)
-     */
-    public int xorCardinality(InstrumentedBloomFilter other) {
-        verifyShape(other);
-        BitSet result = (BitSet) bitSet.clone();
-        result.xor(other.bitSet);
-        return result.cardinality();
+    @Override
+    public int xorCardinality(BloomFilter other) {
+        if (other instanceof InstrumentedBloomFilter)
+        {
+            verifyShape(other);
+            BitSet result = (BitSet) bitSet.clone();
+            result.xor(((InstrumentedBloomFilter)other).bitSet);
+            return result.cardinality();
+        }
+        return super.xorCardinality(other);
     }
 
     private void reset() {
@@ -179,8 +161,6 @@ public class InstrumentedBloomFilter extends AbstractBloomFilter {
      * depth argument indicates how many extra bits are to be considered in the log
      * calculation. At least one bit must be considered. If there are no bits on
      * then the log value is 0.
-     *
-     * @see AbstractBloomFilter.getApproximateLog()
      * @param depth the number of bits to consider.
      * @return the approximate log.
      */

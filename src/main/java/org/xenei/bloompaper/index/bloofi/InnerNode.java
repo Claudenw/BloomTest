@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.commons.collections4.bloomfilter.BitSetBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.SetOperations;
-import org.apache.commons.collections4.bloomfilter.AbstractBloomFilter;
 
 
 public class InnerNode implements Node {
@@ -37,7 +36,7 @@ public class InnerNode implements Node {
     }
 
     @Override
-    public void add( AbstractBloomFilter candidate )
+    public void add( BloomFilter candidate )
     {
         filter.merge(candidate);
 
@@ -58,7 +57,7 @@ public class InnerNode implements Node {
         insert( closest, candidate );
     }
 
-    private void insert( int position, AbstractBloomFilter candidate)
+    private void insert( int position, BloomFilter candidate)
     {
         if (buckets[position] instanceof InnerNode)
         {
@@ -203,7 +202,7 @@ public class InnerNode implements Node {
     }
 
     @Override
-    public void search(List<AbstractBloomFilter> results, BloomFilter filter) {
+    public void search(List<BloomFilter> results, BloomFilter filter) {
         if (this.filter.contains(filter))
         {
             for (int i=0;i<used;i++ )

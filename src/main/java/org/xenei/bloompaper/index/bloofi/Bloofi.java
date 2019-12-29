@@ -3,7 +3,6 @@ package org.xenei.bloompaper.index.bloofi;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections4.bloomfilter.AbstractBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 
 
@@ -16,7 +15,7 @@ public class Bloofi {
     }
 
 
-    public void add(AbstractBloomFilter candidate)
+    public void add(BloomFilter candidate)
     {
         root.add(candidate);
         while (root.getParent() != null)
@@ -25,9 +24,9 @@ public class Bloofi {
         }
     }
 
-    public List<AbstractBloomFilter> get(BloomFilter filter)
+    public List<BloomFilter> get(BloomFilter filter)
     {
-        List<AbstractBloomFilter> retval = new ArrayList<AbstractBloomFilter>();
+        List<BloomFilter> retval = new ArrayList<BloomFilter>();
         root.search(retval, filter);
         return retval;
     }

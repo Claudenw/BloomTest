@@ -2,15 +2,14 @@ package org.xenei.bloompaper.index.bloofi;
 
 import java.util.List;
 
-import org.apache.commons.collections4.bloomfilter.AbstractBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 
 public class LeafNode implements Node {
-    private final AbstractBloomFilter filter;
+    private final BloomFilter filter;
     private int count;
     private InnerNode parent;
 
-    public LeafNode(InnerNode parent, AbstractBloomFilter candidate) {
+    public LeafNode(InnerNode parent, BloomFilter candidate) {
         this.filter = candidate;
         this.count = 1;
         this.parent = parent;
@@ -23,7 +22,7 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public void add(AbstractBloomFilter filter)
+    public void add(BloomFilter filter)
     {
         ++count;
     }
@@ -39,7 +38,7 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public void search(List<AbstractBloomFilter> result, BloomFilter filter) {
+    public void search(List<BloomFilter> result, BloomFilter filter) {
         if (this.filter.contains(filter))
         {
             for (int i=0;i<count;i++)
