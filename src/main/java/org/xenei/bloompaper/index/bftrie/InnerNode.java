@@ -3,7 +3,6 @@ package org.xenei.bloompaper.index.bftrie;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
 import org.xenei.bloompaper.hamming.NibbleInfo;
 
 
@@ -13,14 +12,14 @@ public class InnerNode implements Node {
     private final Node[] nodes;
     private final int level;
     private final int maxDepth;
-    private final Shape bloomFilterConfig;
+    private final BloomFilter.Shape bloomFilterConfig;
 
-    public InnerNode(int level, Shape bloomFilterConfig)
+    public InnerNode(int level, BloomFilter.Shape bloomFilterConfig)
     {
         this( level, bloomFilterConfig, bloomFilterConfig.getNumberOfBits()/WIDTH);
     }
 
-    public InnerNode(int level, Shape bloomFilterConfig, int maxDepth)
+    public InnerNode(int level, BloomFilter.Shape bloomFilterConfig, int maxDepth)
     {
         this.bloomFilterConfig = bloomFilterConfig;
         this.level = level;

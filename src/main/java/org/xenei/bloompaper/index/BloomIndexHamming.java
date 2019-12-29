@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
+import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.xenei.bloompaper.InstrumentedBloomFilter;
 import org.xenei.bloompaper.SortedList;
 
@@ -21,14 +21,14 @@ import org.xenei.bloompaper.SortedList;
 public class BloomIndexHamming extends BloomIndex {
     protected Map<Integer, HammingList> index;
 
-    public BloomIndexHamming(int population, Shape bloomFilterConfig) {
+    public BloomIndexHamming(int population, BloomFilter.Shape bloomFilterConfig) {
         super(population, bloomFilterConfig);
         this.index = new HashMap<Integer, HammingList>();
     }
 
     @Override
     public void add(InstrumentedBloomFilter filter) {
-        Integer idx = filter.hammingValue();
+        Integer idx = filter.cardinality();
         HammingList hammingList = index.get(idx);
         if (hammingList == null) {
             hammingList = new HammingList();
@@ -83,7 +83,7 @@ public class BloomIndexHamming extends BloomIndex {
     @Override
     public int count(InstrumentedBloomFilter filter) {
         int retval = 0;
-        int hFilter = filter.hammingValue();
+        int hFilter = filter.cardinality();
 
         for (Map.Entry<Integer,BloomIndexHamming.HammingList> entry : index.entrySet()) {
             retval += pageCount( filter, hFilter, entry );

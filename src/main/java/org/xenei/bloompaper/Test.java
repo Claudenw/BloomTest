@@ -20,7 +20,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
-import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
+import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.xenei.bloompaper.geoname.GeoName;
 import org.xenei.bloompaper.index.BloomIndex;
@@ -40,11 +40,11 @@ public class Test {
     private static int[] RUNSIZE = { 100, 1000, 10000, 100000, 1000000 };
 
     private static void init() throws NoSuchMethodException, SecurityException {
-        constructors.put("Hamming", BloomIndexHamming.class.getConstructor(int.class, Shape.class));
-        constructors.put("Bloofi", BloomIndexBloofi.class.getConstructor(int.class, Shape.class));
-        constructors.put("FlatBloofi", BloomIndexFlatBloofi.class.getConstructor(int.class, Shape.class));
-        constructors.put("BF-Trie", BloomIndexBFTrie.class.getConstructor(int.class, Shape.class));
-        constructors.put("Linear", BloomIndexLinear.class.getConstructor(int.class, Shape.class));
+        constructors.put("Hamming", BloomIndexHamming.class.getConstructor(int.class, BloomFilter.Shape.class));
+        constructors.put("Bloofi", BloomIndexBloofi.class.getConstructor(int.class, BloomFilter.Shape.class));
+        constructors.put("FlatBloofi", BloomIndexFlatBloofi.class.getConstructor(int.class, BloomFilter.Shape.class));
+        constructors.put("BF-Trie", BloomIndexBFTrie.class.getConstructor(int.class, BloomFilter.Shape.class));
+        constructors.put("Linear", BloomIndexLinear.class.getConstructor(int.class, BloomFilter.Shape.class));
     }
 
     public static Options getOptions() {
@@ -96,7 +96,7 @@ public class Test {
             }
         }
 
-        Shape shape;
+        BloomFilter.Shape shape;
         if (cmd.hasOption("n")) {
             n = Integer.valueOf(cmd.getOptionValue("n"));
         }
@@ -114,7 +114,7 @@ public class Test {
                 p = Double.parseDouble( parts[0] ) / Double.parseDouble( parts[1] );
             }
         }
-        shape = new Shape(new Murmur128x86Cyclic(), n, p );
+        shape = new BloomFilter.Shape(new Murmur128x86Cyclic(), n, p );
 
         File dir = null;
         if (cmd.hasOption("o")) {
@@ -213,7 +213,7 @@ public class Test {
         System.out.println("=== run complete ===");
     }
 
-    private static List<Stats> runTest(final Shape shape,
+    private static List<Stats> runTest(final BloomFilter.Shape shape,
             final Constructor<? extends BloomIndex> constructor, final List<GeoName> sample,
             final InstrumentedBloomFilter[] filters, final Stats[] stats) throws IOException, InstantiationException,
     IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -243,7 +243,7 @@ public class Test {
     }
 
     private static BloomIndex doLoad(final Constructor<? extends BloomIndex> constructor, final InstrumentedBloomFilter[] filters,
-            final Shape shape, final Stats[] stats)
+            final BloomFilter.Shape shape, final Stats[] stats)
                     throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi = null;
 

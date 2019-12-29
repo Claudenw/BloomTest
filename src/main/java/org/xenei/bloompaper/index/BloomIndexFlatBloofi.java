@@ -1,6 +1,6 @@
 package org.xenei.bloompaper.index;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
+import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.xenei.bloompaper.InstrumentedBloomFilter;
 import org.xenei.bloompaper.index.flatbloofi.FlatBloofi;
 
@@ -12,7 +12,7 @@ import org.xenei.bloompaper.index.flatbloofi.FlatBloofi;
 public class BloomIndexFlatBloofi extends BloomIndex {
     private FlatBloofi bloofi;
 
-    public BloomIndexFlatBloofi(int population, Shape shape)
+    public BloomIndexFlatBloofi(int population, BloomFilter.Shape shape)
     {
         super(population, shape);
         this.bloofi = new FlatBloofi(population, shape);

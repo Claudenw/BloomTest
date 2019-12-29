@@ -20,7 +20,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.BitSetBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.HashFunction;
 import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.xenei.bloompaper.geoname.GeoName;
@@ -67,7 +66,7 @@ public class Density {
                 throw new IllegalArgumentException(dir.getAbsolutePath() + " is not a directory");
             }
         }
-        Shape bloomFilterConfig = new Shape( hashFunction, 3, 1.0 / 100000);
+        BloomFilter.Shape bloomFilterConfig = new BloomFilter.Shape( hashFunction, 3, 1.0 / 100000);
         BloomFilter[] filters = new BloomFilter[SAMPLE_SIZE];
         final URL inputFile = Density.class.getResource("/allCountries.txt");
         Status status = new Status(bloomFilterConfig);
@@ -84,7 +83,7 @@ public class Density {
                     filters[i] = new BitSetBloomFilter(GeoNameFilterFactory.create(gn), bloomFilterConfig);
                 }
             }
-            double effectiveP = new Shape( hashFunction, bloomFilterConfig.getNumberOfItems() * (density + 1),
+            double effectiveP = new BloomFilter.Shape( hashFunction, bloomFilterConfig.getNumberOfItems() * (density + 1),
                     bloomFilterConfig.getNumberOfBits(), bloomFilterConfig.getNumberOfHashFunctions()).getProbability();
             Map<Integer,Map<Double,Integer>> points = new HashMap<Integer,Map<Double,Integer>>();
             status.record(points, density, filters, effectiveP);
@@ -167,7 +166,7 @@ public class Density {
         Map<Integer, SaturationStats> satStats;
         Map<Integer, LogStats> logStats;
 
-        public Status(Shape config) {
+        public Status(BloomFilter.Shape config) {
             counts = new HashMap<Integer, int[]>();
             dim = config.getNumberOfBits();
             satStats = new HashMap<Integer, SaturationStats>();
@@ -183,8 +182,8 @@ public class Density {
             long count = 0;
             for (BloomFilter f : filters) {
                 log.mean += logValue(f);
-                sat.mean += f.hammingValue();
-                c[f.hammingValue() - 1]++;
+                sat.mean += f.cardinality();
+                c[f.cardinality() - 1]++;
                 count++;
             }
             counts.put(density, c);
@@ -221,11 +220,11 @@ public class Density {
                 log.min = Double.min( log.min, logV );
                 log.max = Double.max( log.max, logV );
                 logSum += Math.pow(logValue(f) - log.mean, 2);
-                Map<Double,Integer> m = points.get(f.hammingValue());
+                Map<Double,Integer> m = points.get(f.cardinality());
                 if (m == null)
                 {
                     m = new HashMap<Double,Integer>();
-                    points.put( f.hammingValue(), m);
+                    points.put( f.cardinality(), m);
                 }
                 Integer cnt = m.get(logV);
                 if (cnt == null)

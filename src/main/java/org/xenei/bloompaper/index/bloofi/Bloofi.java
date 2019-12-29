@@ -3,20 +3,20 @@ package org.xenei.bloompaper.index.bloofi;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections4.bloomfilter.AbstractBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
 
 
 public class Bloofi {
 
     private InnerNode root;
 
-    public Bloofi(int limit, Shape shape) {
+    public Bloofi(int limit, BloomFilter.Shape shape) {
         root = new InnerNode( null, shape );
     }
 
 
-    public void add(BloomFilter candidate)
+    public void add(AbstractBloomFilter candidate)
     {
         root.add(candidate);
         while (root.getParent() != null)
@@ -25,9 +25,9 @@ public class Bloofi {
         }
     }
 
-    public List<BloomFilter> get(BloomFilter filter)
+    public List<AbstractBloomFilter> get(BloomFilter filter)
     {
-        List<BloomFilter> retval = new ArrayList<BloomFilter>();
+        List<AbstractBloomFilter> retval = new ArrayList<AbstractBloomFilter>();
         root.search(retval, filter);
         return retval;
     }

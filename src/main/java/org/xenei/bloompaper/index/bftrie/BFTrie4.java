@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
 
 public class BFTrie4   {
     public static final int[][] nibbleTable = {
@@ -29,9 +28,9 @@ public class BFTrie4   {
 
     private InnerNode root;
     private int count;
-    private final Shape shape;
+    private final BloomFilter.Shape shape;
 
-    public BFTrie4(Shape shape)
+    public BFTrie4(BloomFilter.Shape shape)
     {
         this.shape = shape;
         root = new InnerNode(0, shape);
@@ -58,7 +57,7 @@ public class BFTrie4   {
 
     public List<BloomFilter> search(BloomFilter filter) {
         // estimate result size as % of key space.
-        int f = shape.getNumberOfBits()-filter.hammingValue();
+        int f = shape.getNumberOfBits()-filter.cardinality();
         int initSize = count * f / shape.getNumberOfBits();
         List<BloomFilter> retval = new ArrayList<BloomFilter>(initSize);
         root.search( retval, filter);

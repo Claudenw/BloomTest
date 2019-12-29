@@ -5,7 +5,8 @@ import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BitSetBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
+import org.apache.commons.collections4.bloomfilter.SetOperations;
+import org.apache.commons.collections4.bloomfilter.AbstractBloomFilter;
 
 
 public class InnerNode implements Node {
@@ -14,9 +15,9 @@ public class InnerNode implements Node {
     private Node[] buckets;
     private int used = 0;
     private InnerNode parent;
-    private Shape shape;
+    private BloomFilter.Shape shape;
 
-    public InnerNode( InnerNode parent, Shape shape) {
+    public InnerNode( InnerNode parent, BloomFilter.Shape shape) {
         this.shape = shape;
         filter = new BitSetBloomFilter(shape);
         buckets = new Node[16]; // number of children of the the node.
@@ -36,17 +37,17 @@ public class InnerNode implements Node {
     }
 
     @Override
-    public void add( BloomFilter candidate )
+    public void add( AbstractBloomFilter candidate )
     {
         filter.merge(candidate);
 
         int closest = 0;
         if (used > 1)
         {
-            int closestDistance = candidate.hammingDistance( buckets[0].getFilter());
+            int closestDistance = SetOperations.hammingDistance( candidate, buckets[0].getFilter());
             for (int i=1;i<used;i++)
             {
-                int dist = candidate.hammingDistance(buckets[i].getFilter());
+                int dist = SetOperations.hammingDistance( candidate, buckets[i].getFilter());
                 if (dist<closestDistance)
                 {
                     closestDistance = dist;
@@ -57,7 +58,7 @@ public class InnerNode implements Node {
         insert( closest, candidate );
     }
 
-    private void insert( int position, BloomFilter candidate)
+    private void insert( int position, AbstractBloomFilter candidate)
     {
         if (buckets[position] instanceof InnerNode)
         {
@@ -150,10 +151,10 @@ public class InnerNode implements Node {
         }
 
         int position = 0;
-        int closestDistance = newNode.filter.hammingDistance(buckets[0].getFilter());
+        int closestDistance = SetOperations.hammingDistance( newNode.filter, buckets[0].getFilter());
         for (int i=1;i<used;i++)
         {
-            int dist = newNode.filter.hammingDistance(buckets[i].getFilter());
+            int dist = SetOperations.hammingDistance(newNode.filter, buckets[i].getFilter());
             if (dist<closestDistance)
             {
                 closestDistance = dist;
@@ -202,7 +203,7 @@ public class InnerNode implements Node {
     }
 
     @Override
-    public void search(List<BloomFilter> results, BloomFilter filter) {
+    public void search(List<AbstractBloomFilter> results, BloomFilter filter) {
         if (this.filter.contains(filter))
         {
             for (int i=0;i<used;i++ )

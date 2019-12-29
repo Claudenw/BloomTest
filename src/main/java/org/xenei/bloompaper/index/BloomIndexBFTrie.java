@@ -1,6 +1,6 @@
 package org.xenei.bloompaper.index;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter.Shape;
+import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.xenei.bloompaper.InstrumentedBloomFilter;
 import org.xenei.bloompaper.index.bftrie.BFTrie4;
 
@@ -12,7 +12,7 @@ import org.xenei.bloompaper.index.bftrie.BFTrie4;
 public class BloomIndexBFTrie extends BloomIndex {
     private BFTrie4 bftrie;
 
-    public BloomIndexBFTrie(int population, Shape shape)
+    public BloomIndexBFTrie(int population, BloomFilter.Shape shape)
     {
         super(population, shape);
         this.bftrie = new BFTrie4(shape);

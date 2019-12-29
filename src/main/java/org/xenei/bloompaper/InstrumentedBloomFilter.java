@@ -4,11 +4,12 @@ import java.util.BitSet;
 import java.util.PrimitiveIterator.OfInt;
 import java.util.function.IntConsumer;
 
+import org.apache.commons.collections4.bloomfilter.AbstractBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.hasher.StaticHasher;
 
-public class InstrumentedBloomFilter extends BloomFilter {
+public class InstrumentedBloomFilter extends AbstractBloomFilter {
 
     private Integer hamming;
     private Double log;
@@ -24,7 +25,7 @@ public class InstrumentedBloomFilter extends BloomFilter {
      * @param hasher the Hasher to use.
      * @param shape the desired shape of the filter.
      */
-    public InstrumentedBloomFilter(Hasher hasher, Shape shape) {
+    public InstrumentedBloomFilter(Hasher hasher, BloomFilter.Shape shape) {
         this(shape);
         verifyHasher(hasher);
         hasher.getBits(shape).forEachRemaining((IntConsumer) bitSet::set);
@@ -36,7 +37,7 @@ public class InstrumentedBloomFilter extends BloomFilter {
      *
      * @param shape the desired shape of the filter.
      */
-    public InstrumentedBloomFilter(Shape shape) {
+    public InstrumentedBloomFilter(BloomFilter.Shape shape) {
         super(shape);
         this.bitSet = new BitSet();
         reset();
@@ -72,7 +73,7 @@ public class InstrumentedBloomFilter extends BloomFilter {
     }
 
     @Override
-    public int hammingValue() {
+    public int cardinality() {
         if (hamming == null)
         {
             hamming = bitSet.cardinality();
@@ -90,7 +91,7 @@ public class InstrumentedBloomFilter extends BloomFilter {
      * internal structures of InstrumentedBloomFilter. </p>
      *
      * @param other the other InstrumentedBloomFilter.
-     * @see #merge(BloomFilter)
+     * @see #merge(AbstractBloomFilter)
      */
     public void merge(InstrumentedBloomFilter other) {
         verifyShape(other);
@@ -111,7 +112,7 @@ public class InstrumentedBloomFilter extends BloomFilter {
      *
      * @param other the other InstrumentedBloomFilter.
      * @return the cardinality of the result of {@code ( this AND other )}.
-     * @see #andCardinality(BloomFilter)
+     * @see #andCardinality(AbstractBloomFilter)
      */
     public int andCardinality(InstrumentedBloomFilter other) {
         verifyShape(other);
@@ -126,7 +127,7 @@ public class InstrumentedBloomFilter extends BloomFilter {
      *
      * @param other the other InstrumentedBloomFilter.
      * @return the cardinality of the result of {@code ( this OR other )}.
-     * @see #orCardinality(BloomFilter)
+     * @see #orCardinality(AbstractBloomFilter)
      */
     public int orCardinality(InstrumentedBloomFilter other) {
         verifyShape(other);
@@ -141,7 +142,7 @@ public class InstrumentedBloomFilter extends BloomFilter {
      *
      * @param other the other InstrumentedBloomFilter.
      * @return the cardinality of the result of {@code( this XOR other )}
-     * @see #xorCardinality(BloomFilter)
+     * @see #xorCardinality(AbstractBloomFilter)
      */
     public int xorCardinality(InstrumentedBloomFilter other) {
         verifyShape(other);
