@@ -1,16 +1,16 @@
 package org.xenei.bloompaper.index;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 
 public class BloomIndexConfiguration {
-    private final BloomFilter.Shape config;
+    private final Shape config;
 
-    public BloomIndexConfiguration( BloomFilter.Shape config)
+    public BloomIndexConfiguration( Shape config)
     {
         this.config = config;
     }
 
-    public BloomFilter.Shape getConfig() {
+    public Shape getConfig() {
         return config;
     }
 

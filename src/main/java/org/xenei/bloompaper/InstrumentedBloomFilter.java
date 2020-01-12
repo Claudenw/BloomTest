@@ -6,7 +6,8 @@ import java.util.function.IntConsumer;
 
 import org.apache.commons.collections4.bloomfilter.AbstractBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.Hasher;
+import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.StaticHasher;
 
 public class InstrumentedBloomFilter extends AbstractBloomFilter {
@@ -25,7 +26,7 @@ public class InstrumentedBloomFilter extends AbstractBloomFilter {
      * @param hasher the Hasher to use.
      * @param shape the desired shape of the filter.
      */
-    public InstrumentedBloomFilter(Hasher hasher, BloomFilter.Shape shape) {
+    public InstrumentedBloomFilter(Hasher hasher, Shape shape) {
         this(shape);
         verifyHasher(hasher);
         hasher.getBits(shape).forEachRemaining((IntConsumer) bitSet::set);
@@ -37,7 +38,7 @@ public class InstrumentedBloomFilter extends AbstractBloomFilter {
      *
      * @param shape the desired shape of the filter.
      */
-    public InstrumentedBloomFilter(BloomFilter.Shape shape) {
+    public InstrumentedBloomFilter(Shape shape) {
         super(shape);
         this.bitSet = new BitSet();
         reset();

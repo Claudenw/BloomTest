@@ -1,15 +1,15 @@
 package org.xenei.bloompaper.index;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.xenei.bloompaper.InstrumentedBloomFilter;
 
 
 
 public abstract class BloomIndex {
-    protected final BloomFilter.Shape shape;
+    protected final Shape shape;
     protected final int population;
     /** Constructor to force limit argument in constructor **/
-    protected BloomIndex( int population, BloomFilter.Shape shape )
+    protected BloomIndex( int population, Shape shape )
     {
         this.shape = shape;
         this.population = population;

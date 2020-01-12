@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.xenei.bloompaper.InstrumentedBloomFilter;
 import org.xenei.bloompaper.SortedList;
 
@@ -21,7 +21,7 @@ import org.xenei.bloompaper.SortedList;
 public class BloomIndexHamming extends BloomIndex {
     protected Map<Integer, HammingList> index;
 
-    public BloomIndexHamming(int population, BloomFilter.Shape bloomFilterConfig) {
+    public BloomIndexHamming(int population, Shape bloomFilterConfig) {
         super(population, bloomFilterConfig);
         this.index = new HashMap<Integer, HammingList>();
     }

@@ -4,7 +4,7 @@ package org.xenei.bloompaper.index.flatbloofi;
 import java.util.ArrayList;
 import java.util.BitSet;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.xenei.bloompaper.InstrumentedBloomFilter;
 import org.xenei.bloompaper.index.BloomIndex;
 
@@ -23,7 +23,7 @@ public final class FlatBloofi extends BloomIndex {
     ArrayList<long[]> buffer;
     BitSet busy;
 
-    public FlatBloofi(int population, BloomFilter.Shape shape) {
+    public FlatBloofi(int population, Shape shape) {
         super(population, shape);
         buffer = new ArrayList<long[]>(0);
         //        buffer.add( new long[shape.getNumberOfBits()+1]);

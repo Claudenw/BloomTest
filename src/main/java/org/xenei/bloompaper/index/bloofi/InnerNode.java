@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.collections4.bloomfilter.BitSetBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.SetOperations;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 
 
 public class InnerNode implements Node {
@@ -14,9 +15,9 @@ public class InnerNode implements Node {
     private Node[] buckets;
     private int used = 0;
     private InnerNode parent;
-    private BloomFilter.Shape shape;
+    private Shape shape;
 
-    public InnerNode( InnerNode parent, BloomFilter.Shape shape) {
+    public InnerNode( InnerNode parent, Shape shape) {
         this.shape = shape;
         filter = new BitSetBloomFilter(shape);
         buckets = new Node[16]; // number of children of the the node.

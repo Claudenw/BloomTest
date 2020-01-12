@@ -21,6 +21,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.BitSetBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.HashFunction;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.xenei.bloompaper.geoname.GeoName;
 
@@ -66,7 +67,7 @@ public class Density {
                 throw new IllegalArgumentException(dir.getAbsolutePath() + " is not a directory");
             }
         }
-        BloomFilter.Shape bloomFilterConfig = new BloomFilter.Shape( hashFunction, 3, 1.0 / 100000);
+        Shape bloomFilterConfig = new Shape( hashFunction, 3, 1.0 / 100000);
         BloomFilter[] filters = new BloomFilter[SAMPLE_SIZE];
         final URL inputFile = Density.class.getResource("/allCountries.txt");
         Status status = new Status(bloomFilterConfig);
@@ -83,7 +84,7 @@ public class Density {
                     filters[i] = new BitSetBloomFilter(GeoNameFilterFactory.create(gn), bloomFilterConfig);
                 }
             }
-            double effectiveP = new BloomFilter.Shape( hashFunction, bloomFilterConfig.getNumberOfItems() * (density + 1),
+            double effectiveP = new Shape( hashFunction, bloomFilterConfig.getNumberOfItems() * (density + 1),
                     bloomFilterConfig.getNumberOfBits(), bloomFilterConfig.getNumberOfHashFunctions()).getProbability();
             Map<Integer,Map<Double,Integer>> points = new HashMap<Integer,Map<Double,Integer>>();
             status.record(points, density, filters, effectiveP);
@@ -166,7 +167,7 @@ public class Density {
         Map<Integer, SaturationStats> satStats;
         Map<Integer, LogStats> logStats;
 
-        public Status(BloomFilter.Shape config) {
+        public Status(Shape config) {
             counts = new HashMap<Integer, int[]>();
             dim = config.getNumberOfBits();
             satStats = new HashMap<Integer, SaturationStats>();

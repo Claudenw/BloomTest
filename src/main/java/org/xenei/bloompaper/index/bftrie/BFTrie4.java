@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 
 public class BFTrie4   {
     public static final int[][] nibbleTable = {
@@ -28,9 +29,9 @@ public class BFTrie4   {
 
     private InnerNode root;
     private int count;
-    private final BloomFilter.Shape shape;
+    private final Shape shape;
 
-    public BFTrie4(BloomFilter.Shape shape)
+    public BFTrie4(Shape shape)
     {
         this.shape = shape;
         root = new InnerNode(0, shape);

@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 
 
 public class Bloofi {
 
     private InnerNode root;
 
-    public Bloofi(int limit, BloomFilter.Shape shape) {
+    public Bloofi(int limit, Shape shape) {
         root = new InnerNode( null, shape );
     }
 

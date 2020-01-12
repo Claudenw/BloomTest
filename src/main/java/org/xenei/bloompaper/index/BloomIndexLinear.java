@@ -1,6 +1,6 @@
 package org.xenei.bloompaper.index;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.xenei.bloompaper.InstrumentedBloomFilter;
 
 
@@ -12,7 +12,7 @@ public class BloomIndexLinear extends BloomIndex {
     private InstrumentedBloomFilter[] index;
     private int idx;
 
-    public BloomIndexLinear(int population,BloomFilter.Shape bloomFilterConfig)
+    public BloomIndexLinear(int population,Shape bloomFilterConfig)
     {
         super(population, bloomFilterConfig);
         this.index = new InstrumentedBloomFilter[population];
