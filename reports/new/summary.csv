@@ -1,0 +1,11 @@
+'Type', 'Population', 'Avg Load Elapsed', 'Avg Complete Elapsed', 'Avg Name Elapsed', 'Avg Feature Elapsed'
+'Flat Bloofi',100,1.4,12.4,7.4,4.2
+'Flat Bloofi',1000,4.2,31.8,16.2,7.8
+'Flat Bloofi',10000,17.4,235.8,191.4,104.6
+'Flat Bloofi',100000,273.8,3837.8,2318.2,2125.0
+'Flat Bloofi',1000000,7847.0,40225.6,23362.6,21400.6
+'Hamming',100,1.0,5.6,43.0,41.0
+'Hamming',1000,0.4,16.0,377.8,435.4
+'Hamming',10000,7.6,169.4,5439.2,6094.8
+'Hamming',100000,318.6,1762.2,51948.2,62750.2
+'Hamming',1000000,39907.0,28631.0,536241.4,599965.4

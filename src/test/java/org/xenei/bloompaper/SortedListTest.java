@@ -3,6 +3,7 @@ package org.xenei.bloompaper;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.xenei.bloom.speedTest.SortedList;
 
 public class SortedListTest {
 
