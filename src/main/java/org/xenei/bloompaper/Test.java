@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -44,7 +45,7 @@ public class Test {
     // 9,772,346 max lines
     private static int RUN_COUNT = 5;
 
-    private static int[] POPULATIONS = { 100, 1000, 10000, 100000, 1000000 };
+    static int[] POPULATIONS = { 100, 1000, 10000, 100000, 1000000 };
 
     private static void init() throws NoSuchMethodException, SecurityException {
         constructors.put("Hamming", BloomIndexHamming.class.getConstructor(int.class, Shape.class));
@@ -179,6 +180,14 @@ public class Test {
         }
 
         PrintStream o = null;
+
+        System.out.println( "=== verification ===" );
+        if (dir != null) {
+            o = new PrintStream(new File(dir, "verification.txt"));
+        }
+
+        Verifier verifier = new Verifier( o );
+        verifier.verify( table );
 
         System.out.println("===  data ===");
         if (dir != null) {
@@ -325,4 +334,6 @@ public class Test {
         }
 
     }
+
+
 }

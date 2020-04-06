@@ -17,7 +17,7 @@ public class Stats {
 
 
     public static String getHeader() {
-        return "'Type', 'Population', 'Load Elapsed', 'Complete Elapsed', 'Complete Found', 'Name Elapsed', 'Name Found', 'Feature Elapsed', 'Feature Found', 'Delete Elapsed',  'Delete Count'";
+        return "'Type', 'Phase', 'Population', 'Load Elapsed', 'Complete Elapsed', 'Complete Found', 'Name Elapsed', 'Name Found', 'Feature Elapsed', 'Feature Found', 'Delete Elapsed',  'Delete Count'";
     }
 
 
@@ -39,6 +39,10 @@ public class Stats {
 
     public String getName() {
         return indexName;
+    }
+
+    public int getRun() {
+        return run;
     }
 
     public long getCount( Phase phase, Type type) {

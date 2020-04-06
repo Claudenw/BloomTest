@@ -8,14 +8,13 @@ import org.xenei.bloompaper.index.BloomFilterIndexer;
 
 public class Node {
     private final BloomFilter filter;
-    private int count;
-    private Double log;
-    private Integer hamming;
+    protected int count;
+    protected Double log;
+    protected Integer hamming;
 
-    public Node( BloomFilter filter )
-    {
+    public Node(BloomFilter filter) {
         this.filter = filter;
-        this.count = 0;
+        this.count = 1;
         reset();
     }
 
@@ -25,21 +24,20 @@ public class Node {
 
     public void decrement() {
         this.count--;
-        if (this.count < 0)
-        {
+        if (this.count < 0) {
             this.count = 0;
         }
     }
 
-    public void merge( Node otherNode ) {
-        this.filter.merge( otherNode.filter );
+    public void merge(Node otherNode) {
+        this.filter.merge(otherNode.filter);
         this.count += otherNode.count;
         reset();
     }
 
     private void reset() {
-        this.log = -1.0;
-        this.hamming = -1;
+        this.log = null;
+        this.hamming = null;
     }
 
     public int getCount() {
@@ -54,16 +52,15 @@ public class Node {
     }
 
     /**
-     * The the log2 of this bloom filter. This is the base 2 logarithm of this
-     * bloom filter if thie bits in this filter were considers the bits in an
-     * unsigned integer.
+     * The the log2 of this bloom filter. This is the base 2 logarithm of this bloom
+     * filter if thie bits in this filter were considers the bits in an unsigned
+     * integer.
      *
      * @return the base 2 logarithm
      */
     public Double getLog() {
-        if (log == null)
-        {
-            log = getApproximateLog( filter.getShape().getNumberOfBits());
+        if (log == null) {
+            log = getApproximateLog(filter.getShape().getNumberOfBits());
         }
         return log;
     }
@@ -74,11 +71,12 @@ public class Node {
      * depth argument indicates how many extra bits are to be considered in the log
      * calculation. At least one bit must be considered. If there are no bits on
      * then the log value is 0.
+     *
      * @param depth the number of bits to consider.
      * @return the approximate log.
      */
     private double getApproximateLog(int depth) {
-        int[] exp = getApproximateLogExponents( depth);
+        int[] exp = getApproximateLogExponents(depth);
         /*
          * this approximation is calculated using a derivation of
          * http://en.wikipedia.org/wiki/Binary_logarithm#Algorithm
@@ -114,13 +112,13 @@ public class Node {
 
         long[] bits = filter.getBits();
 
-        exp[0] = BloomFilterIndexer.maxSet( bits );
+        exp[0] = BloomFilterIndexer.maxSet(bits);
         if (exp[0] < 0) {
             return exp;
         }
 
         for (int i = 1; i < depth; i++) {
-            exp[i] = BloomFilterIndexer.maxSetBefore( bits, exp[i - 1]);
+            exp[i] = BloomFilterIndexer.maxSetBefore(bits, exp[i - 1]);
             if (exp[i] - exp[0] < -25) {
                 exp[i] = -1;
             }
@@ -132,55 +130,75 @@ public class Node {
     }
 
     /**
-     * Construct a node that searches for the next higher hamming value.
+     * Construct a node that searches for the next higher hamming value and the
+     * hamming value of this node. If this node is a search node it returns a node
+     * with the same hamming and the calculated log.
+     *
      * @return a search node.
      */
     public Node lowerLimitNode() {
-        Node searchNode = new Node( filter );
-        searchNode.hamming = getHamming()+1;
-        searchNode.log = getLog();
-        return searchNode;
+        return new LowerLimitNode(this);
     }
 
     /**
-     * Construct a node that searches for the next higher hamming value.
+     * Construct a node that searches for the next higher hamming value and a log of
+     * 0.0.
+     *
      * @return a search node.
      */
     public Node upperLimitNode() {
-        Node searchNode = new Node( filter );
-        searchNode.hamming = getHamming()+1;
-        searchNode.log = Double.valueOf(0.0);
-        return searchNode;
+        return new UpperLimitNode(this);
     }
 
-    public interface NodeComparator  {
+    public interface NodeComparator {
 
         public static Comparator<Node> COMPLETE = new Comparator<Node>() {
             @Override
             public int compare(Node o1, Node o2) {
-                int result = SEARCH.compare( o1,  o2 );
+                if (o1 == o2) {
+                    return 0;
+                }
+                int result = Integer.compare(o1.getHamming(), o2.getHamming());
                 if (result == 0) {
-                    result = Arrays.compare(o1.filter.getBits(), o2.filter.getBits());
+                    result = Double.compare(o1.getLog(), o2.getLog());
+                    if (result == 0) {
+                        result = Arrays.compare(o1.filter.getBits(), o2.filter.getBits());
+                    }
                 }
                 return result;
             }
         };
-
-        public static Comparator<Node> SEARCH = new Comparator<Node>() {
-            @Override
-            public int compare(Node o1, Node o2) {
-                int result = Integer.compare( o1.getHamming(), o2.getHamming() );
-                if (result == 0)
-                {
-                    result = Double.compare(o1.getLog(), o2.getLog() );
-                }
-                return result;
-            }
-        };
-
-
 
     }
 
+    private class LowerLimitNode extends Node {
+
+        public LowerLimitNode(Node node) {
+            super(node.filter);
+            this.hamming = node.getHamming();
+            this.log = node.getLog();
+            this.count = 0;
+        }
+    }
+
+    private class UpperLimitNode extends Node {
+
+        private final Double previousLog;
+
+        public UpperLimitNode(Node node) {
+            super(node.filter);
+            this.hamming = node.getHamming() + 1;
+            this.log = 0.0;
+            this.previousLog = node.getLog();
+            this.count = 0;
+        }
+
+        @Override
+        public Node lowerLimitNode() {
+            Node retval = new LowerLimitNode(this);
+            retval.log = previousLog;
+            return retval;
+        }
+    }
 
 }

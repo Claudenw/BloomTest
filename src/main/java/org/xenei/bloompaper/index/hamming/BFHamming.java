@@ -20,7 +20,7 @@ public class BFHamming  {
     }
 
     private boolean equals(Node n1, Node n2) {
-        return NodeComparator.COMPLETE.compare(n1, n1) == 0;
+        return NodeComparator.COMPLETE.compare(n1, n2) == 0;
     }
 
     public void add(BloomFilter filter) {
@@ -28,8 +28,7 @@ public class BFHamming  {
         SortedSet<Node> tailSet = index.tailSet( node );
         if (tailSet.isEmpty() || ! equals( node, tailSet.first()))
         {
-            // not found
-            index.add( node );
+            tailSet.add( node );
         }
         else {
             tailSet.first().merge( node );
@@ -67,7 +66,7 @@ public class BFHamming  {
 
         Node lowerLimit = node.lowerLimitNode();
         Node upperLimit;
-        while (NodeComparator.COMPLETE.compare( index.last(), lowerLimit ) <= 0)
+        while (NodeComparator.COMPLETE.compare( lowerLimit, index.last() ) <= 0)
         {
             upperLimit = lowerLimit.upperLimitNode();
             retval += tailSet.tailSet( lowerLimit ).headSet( upperLimit ).stream()

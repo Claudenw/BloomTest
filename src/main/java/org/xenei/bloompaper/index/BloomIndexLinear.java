@@ -50,7 +50,6 @@ public class BloomIndexLinear extends BloomIndex {
         {
             if (Arrays.compare(index[i].getBits(), bits) == 0)
             {
-                System.out.println( "Deleting "+BloomFilterIndexer.format( filter.getBits() ));
                 if (i < idx-1)
                 {
                     System.arraycopy( index, i+1, index, i, idx-i-1);
