@@ -4,6 +4,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.xenei.bloompaper.index.BitUtils;
+import org.xenei.bloompaper.index.NumericBloomFilter;
 import org.xenei.bloompaper.index.hamming.Node.NodeComparator;
 
 /**
@@ -14,9 +17,10 @@ import org.xenei.bloompaper.index.hamming.Node.NodeComparator;
  */
 public class BFHamming  {
 
-    TreeSet<Node> index = new TreeSet<Node>( NodeComparator.COMPLETE );
+    private TreeSet<Node> index = new TreeSet<Node>( NodeComparator.COMPLETE );
 
-    public BFHamming() {
+    public BFHamming(Shape shape) {
+        Node.setEmpty( shape );
     }
 
     private boolean equals(Node n1, Node n2) {
@@ -41,19 +45,17 @@ public class BFHamming  {
         SortedSet<Node> tailSet = index.tailSet( node );
         if (!tailSet.isEmpty() && equals( node, tailSet.first()))
         {
-            tailSet.first().decrement();
-            if (tailSet.first().getCount() == 0)
+            if (tailSet.first().decrement())
             {
                 tailSet.remove(tailSet.first());
-                return true;
             }
+            return true;
         }
         return false;
     }
 
     public int count(BloomFilter filter) {
         int retval = 0;
-
         Node node = new Node(filter);
         SortedSet<Node> tailSet = index.tailSet( new Node( filter ));
         if (tailSet.isEmpty()) {
@@ -79,5 +81,18 @@ public class BFHamming  {
     }
 
 
+    public int scan( BloomFilter bf )
+    {
+        int count = 0;
+        for (Node test : index )
+        {
+            if ( test.getFilter().contains( bf ))
+            {
+                count += test.getCount();
+            }
+        }
+        return count;
+
+    }
 
 }

@@ -11,14 +11,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -29,14 +24,14 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.xenei.bloompaper.geoname.GeoName;
-import org.xenei.bloompaper.index.BloomFilterIndexer;
+import org.xenei.bloompaper.index.BitUtils;
 import org.xenei.bloompaper.index.BloomIndex;
 import org.xenei.bloompaper.index.BloomIndexBFTrie;
 import org.xenei.bloompaper.index.BloomIndexBloofi;
 import org.xenei.bloompaper.index.BloomIndexFlatBloofi;
 import org.xenei.bloompaper.index.BloomIndexHamming;
 import org.xenei.bloompaper.index.BloomIndexLinear;
-import org.xenei.bloompaper.index.bftrie.BFTrie4;
+import org.xenei.bloompaper.index.NumericBloomFilter;
 
 public class Test {
 
@@ -45,7 +40,8 @@ public class Test {
     // 9,772,346 max lines
     private static int RUN_COUNT = 5;
 
-    static int[] POPULATIONS = { 100, 1000, 10000, 100000, 1000000 };
+    //static int[] POPULATIONS = { 100, 1000, 10000, 100000, 1000000 };
+    static int[] POPULATIONS = {  10000 };
 
     private static void init() throws NoSuchMethodException, SecurityException {
         constructors.put("Hamming", BloomIndexHamming.class.getConstructor(int.class, Shape.class));
@@ -233,7 +229,7 @@ public class Test {
 
     private static void doDelete(Stats.Type type, final Constructor<? extends BloomIndex> constructor,
             final BloomFilter[] filters, final BloomFilter[] bfSample, final List<Stats> stats, Shape shape)
-            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi;
         for (int run = 0; run < RUN_COUNT; run++) {
             /* setup */
@@ -278,13 +274,17 @@ public class Test {
 
     private static List<Stats> runTest(final Shape shape, final Constructor<? extends BloomIndex> constructor,
             final List<GeoName> sample, final BloomFilter[] filters, List<Stats> stats) throws IOException,
-            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
         BloomIndex bi = doLoad(constructor, filters, shape, stats);
 
         for (Stats.Type type : Stats.Type.values()) {
             BloomFilter[] bfSample = createSample(shape, type, sample);
             doCount(type, bi, bfSample, stats);
+            if (type == Stats.Type.COMPLETE) {
+                BloomFilter target = new NumericBloomFilter( shape, 1637679572263190729L, 147 );
+                System.out.println( "Scan returned "+((BloomIndexHamming)bi).scan( target ));
+            }
         }
 
         for (Stats.Type type : Stats.Type.values()) {
@@ -297,7 +297,7 @@ public class Test {
 
     private static BloomIndex doLoad(final Constructor<? extends BloomIndex> constructor, final BloomFilter[] filters,
             final Shape shape, final List<Stats> stats)
-            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi = null;
 
         for (int run = 0; run < RUN_COUNT; run++) {

@@ -6,14 +6,14 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.junit.Test;
-import org.xenei.bloompaper.index.BloomFilterIndexer;
+import org.xenei.bloompaper.index.BitUtils;
 import org.xenei.bloompaper.index.NumericBloomFilter;
 
 public class InnerNodeTest {
 
     private long getMask( int idx )
     {
-        return BloomFilterIndexer.getLongBit( idx-1 );
+        return BitUtils.getLongBit( idx-1 );
     }
     @Test
     public void nibbleTest() {

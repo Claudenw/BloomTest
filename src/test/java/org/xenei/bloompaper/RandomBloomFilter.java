@@ -10,7 +10,7 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.StaticHasher;
-import org.xenei.bloompaper.index.BloomFilterIndexer;
+import org.xenei.bloompaper.index.BitUtils;
 
 
 public class RandomBloomFilter extends AbstractBloomFilter {
@@ -33,7 +33,7 @@ public class RandomBloomFilter extends AbstractBloomFilter {
         long mask = 0;
         for (int i=0;i<lastBits;i++)
         {
-            mask |= BloomFilterIndexer.getLongBit(i);
+            mask |= BitUtils.getLongBit(i);
         }
         bits[len-1] &= mask;
     }

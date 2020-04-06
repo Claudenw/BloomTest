@@ -17,7 +17,7 @@ public class BloomIndexHamming extends BloomIndex {
 
     public BloomIndexHamming(int population, Shape bloomFilterConfig) {
         super(population, bloomFilterConfig);
-        this.index = new BFHamming();
+        this.index = new BFHamming(shape);
     }
 
     @Override
@@ -48,5 +48,9 @@ public class BloomIndexHamming extends BloomIndex {
     @Override
     public int count() {
         return count;
+    }
+
+    public int scan( BloomFilter filter ) {
+        return index.scan( filter );
     }
 }

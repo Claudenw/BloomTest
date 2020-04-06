@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.xenei.bloompaper.index.BloomFilterIndexer;
+import org.xenei.bloompaper.index.BitUtils;
 
 
 public class InnerNode implements Node {
@@ -52,7 +52,7 @@ public class InnerNode implements Node {
 
 
 
-        int idx = BloomFilterIndexer.getLongIndex(startBit);
+        int idx = BitUtils.getLongIndex(startBit);
         // buffer may  be short if upper values are zero
         if (idx >= buffer.length) {
             return (byte)0;

@@ -3,14 +3,21 @@ package org.xenei.bloompaper.index.hamming;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import org.apache.commons.collections4.bloomfilter.BitSetBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.xenei.bloompaper.index.BloomFilterIndexer;
+import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.xenei.bloompaper.index.BitUtils;
 
 public class Node {
+    protected static BloomFilter empty;
     private final BloomFilter filter;
     protected int count;
     protected Double log;
     protected Integer hamming;
+
+    static void setEmpty( Shape shape ) {
+        empty = new BitSetBloomFilter( shape );
+    }
 
     public Node(BloomFilter filter) {
         this.filter = filter;
@@ -22,11 +29,9 @@ public class Node {
         return filter;
     }
 
-    public void decrement() {
+    public boolean decrement() {
         this.count--;
-        if (this.count < 0) {
-            this.count = 0;
-        }
+        return this.count <= 0;
     }
 
     public void merge(Node otherNode) {
@@ -49,6 +54,12 @@ public class Node {
             hamming = filter.cardinality();
         }
         return hamming;
+    }
+
+    @Override
+    public String toString() {
+        return String.format( "%s n=%s h=%s l=%s", BitUtils.format( filter.getBits()),
+                count, getHamming(), getLog());
     }
 
     /**
@@ -112,13 +123,13 @@ public class Node {
 
         long[] bits = filter.getBits();
 
-        exp[0] = BloomFilterIndexer.maxSet(bits);
+        exp[0] = BitUtils.maxSet(bits);
         if (exp[0] < 0) {
             return exp;
         }
 
         for (int i = 1; i < depth; i++) {
-            exp[i] = BloomFilterIndexer.maxSetBefore(bits, exp[i - 1]);
+            exp[i] = BitUtils.maxSetBefore(bits, exp[i - 1]);
             if (exp[i] - exp[0] < -25) {
                 exp[i] = -1;
             }
@@ -174,8 +185,8 @@ public class Node {
     private class LowerLimitNode extends Node {
 
         public LowerLimitNode(Node node) {
-            super(node.filter);
-            this.hamming = node.getHamming();
+            super(empty);
+            this.hamming = node.getHamming()+1;
             this.log = node.getLog();
             this.count = 0;
         }
@@ -186,7 +197,7 @@ public class Node {
         private final Double previousLog;
 
         public UpperLimitNode(Node node) {
-            super(node.filter);
+            super(empty);
             this.hamming = node.getHamming() + 1;
             this.log = 0.0;
             this.previousLog = node.getLog();
@@ -196,6 +207,7 @@ public class Node {
         @Override
         public Node lowerLimitNode() {
             Node retval = new LowerLimitNode(this);
+            retval.hamming--;
             retval.log = previousLog;
             return retval;
         }

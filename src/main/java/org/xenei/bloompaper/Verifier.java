@@ -1,16 +1,8 @@
 package org.xenei.bloompaper;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Verifier {
@@ -62,12 +54,11 @@ public class Verifier {
 
     private void err( String s )
     {
-        System.err.println( s );
+        System.out.println( s );
         if (o!= null)
         {
             o.println( s );
         }
-
     }
     private void display( String s )
     {

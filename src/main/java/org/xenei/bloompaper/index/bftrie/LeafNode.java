@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.xenei.bloompaper.index.BloomFilterIndexer;
+import org.xenei.bloompaper.index.BitUtils;
 
 public class LeafNode implements Node {
     private final List<BloomFilter> lst;

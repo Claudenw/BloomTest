@@ -24,12 +24,12 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 /**
  * Contains functions to convert {@code int} indices into Bloom filter bit positions.
  */
-public final class BloomFilterIndexer {
+public final class BitUtils {
     /** A bit shift to apply to an integer to divided by 64 (2^6). */
     private static final int DIVIDE_BY_64 = 6;
 
     /** Do not instantiate. */
-    private BloomFilterIndexer() {}
+    private BitUtils() {}
 
     /**
      * Check the index is positive.

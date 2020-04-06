@@ -10,7 +10,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.xenei.bloompaper.index.BloomFilterIndexer;
+import org.xenei.bloompaper.index.BitUtils;
 import org.xenei.bloompaper.index.BloomIndex;
 import org.xenei.bloompaper.index.NumericBloomFilter;
 
@@ -67,7 +67,7 @@ toDelete.add( new NumericBloomFilter( shape, 1229782938247303441l, 17));
     @Override
     public void add(BloomFilter bf) {
         int i = busy.nextClearBit(0);
-        if (buffer.size()-1 < BloomFilterIndexer.getLongIndex(i))
+        if (buffer.size()-1 < BitUtils.getLongIndex(i))
         {
             buffer.add(new long[shape.getNumberOfBits()+1]);
         }
@@ -96,10 +96,10 @@ toDelete.add( new NumericBloomFilter( shape, 1229782938247303441l, 17));
     }
 
     private void setBloomAt(int i, long[] bits) {
-        final long[] mybuffer = buffer.get( BloomFilterIndexer.getLongIndex(i));
-        final long mask = BloomFilterIndexer.getLongBit(i);
+        final long[] mybuffer = buffer.get( BitUtils.getLongIndex(i));
+        final long mask = BitUtils.getLongBit(i);
         for (int k=0;k<mybuffer.length;k++) {
-            if (BloomFilterIndexer.isSet( bits, k ))
+            if (BitUtils.isSet( bits, k ))
             {
                 mybuffer[k] |= mask;
             } else {
@@ -111,7 +111,7 @@ toDelete.add( new NumericBloomFilter( shape, 1229782938247303441l, 17));
         {
             for (int k=0;k<mybuffer.length;k++)
             {
-                if (BloomFilterIndexer.isSet(bits, k))
+                if (BitUtils.isSet(bits, k))
                 {
                     if ((mybuffer[k] & mask)==0)
                     {
@@ -171,7 +171,7 @@ toDelete.add( new NumericBloomFilter( shape, 1229782938247303441l, 17));
 
 
             for (int idx=0;idx<shape.getNumberOfBits();idx++) {
-                if (BloomFilterIndexer.isSet( bits, idx ))
+                if (BitUtils.isSet( bits, idx ))
                 {
                     foundKeep = true;
                     keep &= filterSet[idx];
