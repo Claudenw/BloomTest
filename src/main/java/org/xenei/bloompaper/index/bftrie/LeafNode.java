@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.xenei.bloompaper.index.BloomFilterIndexer;
 
 public class LeafNode implements Node {
     private final List<BloomFilter> lst;
@@ -26,8 +27,19 @@ public class LeafNode implements Node {
     }
 
     @Override
+    public boolean find(BloomFilter filter)
+    {
+        return !lst.isEmpty();
+    }
+
+    @Override
     public boolean remove(BloomFilter filter) {
         lst.remove( lst.size()-1 );
+        return true;
+    }
+
+    @Override
+    public boolean isEmpty() {
         return lst.isEmpty();
     }
 

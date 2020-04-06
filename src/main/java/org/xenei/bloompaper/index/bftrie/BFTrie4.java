@@ -39,21 +39,25 @@ public class BFTrie4   {
     }
 
 
-    public int getN()
+    public int count()
     {
         return count;
     }
-
-
 
     public void add(BloomFilter filter) {
         root.add(this,filter);
         count++;
     }
 
+    public boolean find( BloomFilter filter ) {
+        return root.find( filter );
+    }
+
     public void remove(BloomFilter filter) {
-        root.remove(filter);
-        count--;
+        if (root.remove(filter))
+        {
+            count--;
+        }
     }
 
     public List<BloomFilter> search(BloomFilter filter) {

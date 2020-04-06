@@ -1,7 +1,9 @@
 package org.xenei.bloompaper.index;
 
+import java.util.Arrays;
+
+import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.xenei.bloompaper.InstrumentedBloomFilter;
 
 
 /**
@@ -9,28 +11,28 @@ import org.xenei.bloompaper.InstrumentedBloomFilter;
  *
  */
 public class BloomIndexLinear extends BloomIndex {
-    private InstrumentedBloomFilter[] index;
+    private BloomFilter[] index;
     private int idx;
 
-    public BloomIndexLinear(int population,Shape bloomFilterConfig)
+    public BloomIndexLinear(int population,Shape shape)
     {
-        super(population, bloomFilterConfig);
-        this.index = new InstrumentedBloomFilter[population];
+        super(population, shape);
+        this.index = new BloomFilter[population];
         this.idx = 0;
     }
 
     @Override
-    public void add(InstrumentedBloomFilter filter)
+    public void add(BloomFilter filter)
     {
         index[idx++] = filter;
     }
 
     @Override
-    public int count(InstrumentedBloomFilter filter)
+    public int count(BloomFilter filter)
     {
         int result = 0;
         // searching entire list
-        for (InstrumentedBloomFilter candidate : index)
+        for (BloomFilter candidate : index)
         {
             if (candidate.contains(filter))
             {
@@ -38,7 +40,25 @@ public class BloomIndexLinear extends BloomIndex {
             }
         }
         return result;
+    }
 
+    @Override
+    public void delete(BloomFilter filter)
+    {
+        long[] bits = filter.getBits();
+        for (int i=idx-1;i>=0;i--)
+        {
+            if (Arrays.compare(index[i].getBits(), bits) == 0)
+            {
+                System.out.println( "Deleting "+BloomFilterIndexer.format( filter.getBits() ));
+                if (i < idx-1)
+                {
+                    System.arraycopy( index, i+1, index, i, idx-i-1);
+                }
+                index[--idx] = null;
+                break;
+            }
+        }
     }
 
     @Override
@@ -46,4 +66,8 @@ public class BloomIndexLinear extends BloomIndex {
         return "Linear";
     }
 
+    @Override
+    public int count() {
+        return idx;
+    }
 }

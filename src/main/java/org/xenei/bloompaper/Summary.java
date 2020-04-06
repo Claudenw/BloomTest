@@ -3,46 +3,59 @@ package org.xenei.bloompaper;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A summary of statistics.
+ *
+ */
 public class Summary {
 
+    /**
+     * A summary element
+     */
     public class Element {
         int n;
-        String type;
+        private final String indexName;
         int population;
         double load;
-        double complete;
-        double name;
-        double feature;
+        double [][] totals = new double[Stats.Phase.values().length][Stats.Type.values().length];
 
         public Element(Stats stat) {
-            this.type = stat.type;
-            this.population = stat.population;
+            this.indexName = stat.getName();
+            this.population = stat.getPopulation();
             this.n = 0;
         }
 
+        public double total( Stats.Phase phase, Stats.Type type )
+        {
+            return totals[phase.ordinal()][type.ordinal()];
+        }
 
-        @Override
-        public String toString() {
-            return String.format("'%s',%s,%s,%s,%s,%s", type, population, load / n,
-                    complete / n, name / n, feature / n);
+        public String getReport( Stats.Phase phase ) {
+            return String.format("'%s','%s', %s,%s,%s,%s,%s", indexName, phase, population, load / n,
+                    total(phase, Stats.Type.COMPLETE) / n,
+                    total(phase, Stats.Type.HIGHCARD) / n,
+                    total(phase, Stats.Type.LOWCARD) / n );
         }
 
         public boolean add(Stats stat) {
-            if (stat.type.equals(type) && stat.population == population) {
+            if (stat.getName().equals(indexName) && stat.getPopulation() == population) {
                 load += stat.load;
-                complete += stat.complete;
-                name += stat.name;
-                feature += stat.feature;
+                for (Stats.Phase phase : Stats.Phase.values() )
+                {
+                    for (Stats.Type type : Stats.Type.values())
+                    {
+                        totals[phase.ordinal()][type.ordinal()] += stat.getCount( phase, type);
+                    }
+                }
                 n++;
                 return true;
             }
             return false;
-
         }
     }
 
     public static String getHeader() {
-        return "'Type', 'Population', 'Avg Load Elapsed', 'Avg Complete Elapsed', 'Avg Name Elapsed', 'Avg Feature Elapsed'";
+        return "'Index', 'Phase', 'Population', 'Avg Load Elapsed', 'Avg Complete Elapsed', 'Avg High Card. Elapsed', 'Avg Low Card. Elapsed'";
     }
 
     private List<Element> table = new ArrayList<Element>();

@@ -1,7 +1,7 @@
 package org.xenei.bloompaper.index;
 
+import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.xenei.bloompaper.InstrumentedBloomFilter;
 import org.xenei.bloompaper.index.bftrie.BFTrie4;
 
 
@@ -10,8 +10,16 @@ import org.xenei.bloompaper.index.bftrie.BFTrie4;
  *
  */
 public class BloomIndexBFTrie extends BloomIndex {
+    /**
+     * The implementation of bftrie.
+     */
     private BFTrie4 bftrie;
 
+    /**
+     * Constructs the index
+     * @param population the expected population.
+     * @param shape the Shape of the Bloom filters.
+     */
     public BloomIndexBFTrie(int population, Shape shape)
     {
         super(population, shape);
@@ -19,13 +27,13 @@ public class BloomIndexBFTrie extends BloomIndex {
     }
 
     @Override
-    public void add(InstrumentedBloomFilter filter)
+    public void add(BloomFilter filter)
     {
         bftrie.add( filter );;
     }
 
     @Override
-    public int count(InstrumentedBloomFilter filter)
+    public int count(BloomFilter filter)
     {
         return bftrie.count(filter);
     }
@@ -33,5 +41,19 @@ public class BloomIndexBFTrie extends BloomIndex {
     @Override
     public String getName() {
         return "BF-Trie";
+    }
+
+    @Override
+    public void delete(BloomFilter filter) {
+        bftrie.remove( filter );
+    }
+
+    @Override
+    public int count() {
+        return bftrie.count();
+    }
+
+    public boolean find(BloomFilter filter) {
+        return bftrie.find( filter );
     }
 }

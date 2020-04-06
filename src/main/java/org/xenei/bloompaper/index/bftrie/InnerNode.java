@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.xenei.bloompaper.hamming.NibbleInfo;
+import org.xenei.bloompaper.index.BloomFilterIndexer;
 
 
 public class InnerNode implements Node {
@@ -13,16 +13,16 @@ public class InnerNode implements Node {
     private final Node[] nodes;
     private final int level;
     private final int maxDepth;
-    private final Shape bloomFilterConfig;
+    private final Shape shape;
 
-    public InnerNode(int level, Shape bloomFilterConfig)
+    public InnerNode(int level, Shape shape)
     {
-        this( level, bloomFilterConfig, bloomFilterConfig.getNumberOfBits()/WIDTH);
+        this( level, shape, shape.getNumberOfBits()/WIDTH);
     }
 
     public InnerNode(int level, Shape bloomFilterConfig, int maxDepth)
     {
-        this.bloomFilterConfig = bloomFilterConfig;
+        this.shape = bloomFilterConfig;
         this.level = level;
         this.maxDepth = maxDepth;
         nodes = new Node[BUCKETS];
@@ -38,76 +38,91 @@ public class InnerNode implements Node {
         return nodes;
     }
 
-    private NibbleInfo getNibble(BloomFilter filter, int level )
+    /**
+     * Gets the nibble Info for the nibble specified by the filter.
+     * @param filter the BloomFilter to get the nibble from.
+     * @param level the level of the BFTrie we are at.
+     * @return the NibbleInfo for that level
+     */
+    static public byte getNibble(BloomFilter filter, int level )
     {
         long[] buffer = filter.getBits();
 
-        int idx = level / Long.BYTES;
-        if (idx >= buffer.length) {
-            return NibbleInfo.NIBBLE_INFO[0];
-        }
-        int ofs = Math.floorMod(level * 4, Long.SIZE);
+        int startBit = level*4;
 
-        int nibble = (int) ((buffer[idx] >> ofs) & 0x0F);
-        return NibbleInfo.NIBBLE_INFO[nibble];
-        //	    byte[] buff = filter.getBitSet().toByteArray();
-        //	    int idx = level/2;
-        //	    if (idx>=buff.length)
-        //	    {
-        //	        return NibbleInfo.NIBBLE_INFO[0];
-        //	    }
-        //	    byte b = buff[idx];
-        //	    if ( level % 2  == 0)
-        //	    {
-        //	        int x = 0x0F & (b >> 4);
-        //	        return NibbleInfo.NIBBLE_INFO[x];
-        //	    } else {
-        //        int x = 0x0F & b;
-        //        return  NibbleInfo.NIBBLE_INFO[x];
-        //	    }
+
+
+        int idx = BloomFilterIndexer.getLongIndex(startBit);
+        // buffer may  be short if upper values are zero
+        if (idx >= buffer.length) {
+            return (byte)0;
+        }
+
+        int shift = startBit % Long.SIZE;
+        long mask = (0xFL << shift);
+        long value = buffer[idx] & mask;
+        return (byte)((value >> shift) & 0x0F);
     }
 
     @Override
     public void add(BFTrie4 btree, BloomFilter filter) {
-        NibbleInfo nibble = getNibble( filter, level );
-        if (nodes[nibble.getVal()] == null)
+        byte nibble = getNibble( filter, level );
+        if (nodes[nibble] == null)
         {
             if ((level+1) == maxDepth)
             {
-                nodes[nibble.getVal()] = new LeafNode( maxDepth==(bloomFilterConfig.getNumberOfBits()/WIDTH));
+                nodes[nibble] = new LeafNode( maxDepth==(shape.getNumberOfBits()/WIDTH));
             }
             else
             {
-                nodes[nibble.getVal()] = new InnerNode( level+1, bloomFilterConfig, maxDepth );
+                nodes[nibble] = new InnerNode( level+1, shape, maxDepth );
             }
         }
-        nodes[nibble.getVal()].add(btree,filter);
+        nodes[nibble].add(btree,filter);
     }
 
     @Override
-    public boolean remove(BloomFilter filter) {
-        NibbleInfo nibble = getNibble( filter, level );
-        if (nodes[nibble.getVal()] != null)
+    public boolean find(BloomFilter filter) {
+        byte nibble = getNibble( filter, level );
+        if (nodes[nibble] != null)
         {
-            if (nodes[nibble.getVal()].remove(filter))
-            {
-                nodes[nibble.getVal()] = null;
-            }
-            for (int i=0;i<BUCKETS;i++)
-            {
-                if (nodes[i] != null)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return nodes[nibble].find(filter);
         }
         return false;
     }
 
     @Override
+    public boolean remove(BloomFilter filter) {
+        byte nibble = getNibble( filter, level );
+        if (nodes[nibble] != null)
+        {
+            if (nodes[nibble].remove(filter))
+            {
+                if (nodes[nibble].isEmpty())
+                {
+                    nodes[nibble] = null;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        for (int i=0;i<BUCKETS;i++)
+        {
+            if (nodes[i] != null)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public void search(List<BloomFilter> result, BloomFilter filter) {
-        int[] nodeIdxs = BFTrie4.nibbleTable[getNibble(filter,level).getVal()];
+        int[] nodeIdxs = BFTrie4.nibbleTable[getNibble(filter,level)];
         for (int i : nodeIdxs)
         {
             if (nodes[i] != null)
@@ -120,7 +135,7 @@ public class InnerNode implements Node {
     @Override
     public int count(BloomFilter filter) {
         int retval = 0;
-        int[] nodeIdxs = BFTrie4.nibbleTable[getNibble(filter,level).getVal()];
+        int[] nodeIdxs = BFTrie4.nibbleTable[getNibble(filter,level)];
         for (int i : nodeIdxs)
         {
             if (nodes[i] != null)
