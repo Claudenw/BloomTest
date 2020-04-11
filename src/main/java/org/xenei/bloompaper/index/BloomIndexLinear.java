@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.xenei.bloompaper.Stats;
 
 
 /**
@@ -30,6 +31,7 @@ public class BloomIndexLinear extends BloomIndex {
     @Override
     public int count(BloomFilter filter)
     {
+        NumericBloomFilter nFilter = NumericBloomFilter.makeInstance(filter);
         int result = 0;
         // searching entire list
         for (BloomFilter candidate : index)

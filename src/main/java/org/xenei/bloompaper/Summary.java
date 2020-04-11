@@ -3,6 +3,8 @@ package org.xenei.bloompaper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.xenei.bloompaper.Stats.Type;
+
 /**
  * A summary of statistics.
  *
@@ -55,7 +57,12 @@ public class Summary {
     }
 
     public static String getHeader() {
-        return "'Index', 'Phase', 'Population', 'Avg Load Elapsed', 'Avg Complete Elapsed', 'Avg High Card. Elapsed', 'Avg Low Card. Elapsed'";
+        StringBuilder sb = new StringBuilder( "'Index Name', 'Phase', 'Population', 'Avg Load Elapsed'" );
+        for (Type type : Type.values())
+        {
+            sb.append( String.format( ", 'Avg %1$s Elapsed'", type));
+        }
+        return sb.toString();
     }
 
     private List<Element> table = new ArrayList<Element>();

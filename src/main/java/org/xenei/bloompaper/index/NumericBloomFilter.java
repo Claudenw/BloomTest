@@ -1,5 +1,6 @@
 package org.xenei.bloompaper.index;
 
+import java.util.Arrays;
 import java.util.BitSet;
 
 import javax.naming.OperationNotSupportedException;
@@ -15,11 +16,21 @@ public class NumericBloomFilter extends AbstractBloomFilter {
 
     private long[] bits;
 
+    public static NumericBloomFilter makeInstance( BloomFilter bf )
+    {
+        if (bf instanceof NumericBloomFilter)
+        {
+            return (NumericBloomFilter)bf;
+        }
+        return new NumericBloomFilter( bf.getShape(), bf.getBits());
+    }
+
     public NumericBloomFilter( Shape shape, long ... bits)
     {
         super(shape);
         this.bits = bits;
     }
+
     @Override
     public long[] getBits() {
         return bits;
@@ -38,4 +49,17 @@ public class NumericBloomFilter extends AbstractBloomFilter {
         throw new IllegalStateException( new OperationNotSupportedException() );
     }
 
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(bits);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof NumericBloomFilter)
+        {
+            return Arrays.equals( bits, ((NumericBloomFilter)other).bits);
+        }
+        return false;
+    }
 }

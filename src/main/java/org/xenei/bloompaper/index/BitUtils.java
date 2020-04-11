@@ -115,23 +115,11 @@ public final class BitUtils {
      * @return the highest bit set or -1 for none.
      */
     public static int maxSetBefore( long[] bits, int before ) {
-        int bitLimit = (before % 64)-1;
-        int limit = getLongIndex( before );
-        if (bitLimit<0)
+        for (int i=before-1;i>=0;i--)
         {
-            limit--;
-        }
-        for (int longIndex=limit;longIndex>=0;longIndex--)
-        {
-            if ( bits[longIndex] > 0)
+            if ((bits[getLongIndex(i)] & getLongBit(i)) != 0)
             {
-                for (int bitIndex=bitLimit;bitIndex>=0;bitIndex--) {
-                    if ((bits[longIndex] &  getLongBit( bitIndex )) > 0)
-                    {
-                        return (Long.SIZE*longIndex)+bitIndex;
-                    }
-                }
-                bitLimit=Long.SIZE-1;
+                return i;
             }
         }
         return -1;
@@ -156,6 +144,6 @@ public final class BitUtils {
     public static boolean isSet( long[] bits, int bitIdx )
     {
         int longRec = getLongIndex(bitIdx);
-        return (longRec < bits.length) ? (bits[longRec] & getLongBit(bitIdx)) > 0 : false;
+        return (longRec < bits.length) ? (bits[longRec] & getLongBit(bitIdx)) != 0 : false;
     }
 }

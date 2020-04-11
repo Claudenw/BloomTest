@@ -5,7 +5,6 @@ import java.util.TreeSet;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.xenei.bloompaper.index.BitUtils;
 import org.xenei.bloompaper.index.NumericBloomFilter;
 import org.xenei.bloompaper.index.hamming.Node.NodeComparator;
 
@@ -18,6 +17,8 @@ import org.xenei.bloompaper.index.hamming.Node.NodeComparator;
 public class BFHamming  {
 
     private TreeSet<Node> index = new TreeSet<Node>( NodeComparator.COMPLETE );
+
+
 
     public BFHamming(Shape shape) {
         Node.setEmpty( shape );
@@ -56,8 +57,11 @@ public class BFHamming  {
 
     public int count(BloomFilter filter) {
         int retval = 0;
+
         Node node = new Node(filter);
-        SortedSet<Node> tailSet = index.tailSet( new Node( filter ));
+
+
+        SortedSet<Node> tailSet = index.tailSet( node );
         if (tailSet.isEmpty()) {
             return 0;
         }
@@ -68,6 +72,7 @@ public class BFHamming  {
 
         Node lowerLimit = node.lowerLimitNode();
         Node upperLimit;
+
         while (NodeComparator.COMPLETE.compare( lowerLimit, index.last() ) <= 0)
         {
             upperLimit = lowerLimit.upperLimitNode();
@@ -79,7 +84,6 @@ public class BFHamming  {
         }
         return retval;
     }
-
 
     public int scan( BloomFilter bf )
     {

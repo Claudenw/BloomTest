@@ -12,14 +12,21 @@ public class Stats {
     private final int run;
 
     long load;
+
+    Phase currentPhase;
+    Type currentType;
+
     private long[][] time = new long[ Phase.values().length][ Type.values().length];
     private long[][] count = new long[ Phase.values().length][ Type.values().length];
 
-
     public static String getHeader() {
-        return "'Type', 'Phase', 'Population', 'Load Elapsed', 'Complete Elapsed', 'Complete Found', 'Name Elapsed', 'Name Found', 'Feature Elapsed', 'Feature Found', 'Delete Elapsed',  'Delete Count'";
+        StringBuilder sb = new StringBuilder( "'Index Name', 'Phase', 'Population', 'Load Elapsed'");
+        for (Type type : Type.values())
+        {
+            sb.append( String.format( ", '%1$s Elapsed', '%1$s Count'", type));
+        }
+        return sb.toString();
     }
-
 
     public Stats( String indexName, int population, int run)
     {

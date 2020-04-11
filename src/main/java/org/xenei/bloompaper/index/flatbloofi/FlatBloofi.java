@@ -10,6 +10,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.xenei.bloompaper.Stats;
 import org.xenei.bloompaper.index.BitUtils;
 import org.xenei.bloompaper.index.BloomIndex;
 import org.xenei.bloompaper.index.NumericBloomFilter;
@@ -23,7 +24,7 @@ import org.xenei.bloompaper.index.NumericBloomFilter;
  *
  * @param <E>
  */
-public final class FlatBloofi extends BloomIndex {
+public final class FlatBloofi {
 
     /*
      * each buffer entry accounts for 64 entries in the index.
@@ -33,38 +34,14 @@ public final class FlatBloofi extends BloomIndex {
      */
     private ArrayList<long[]> buffer;
     private BitSet busy;
-    private Set<BloomFilter> toDelete = new TreeSet<BloomFilter>( new Comparator<BloomFilter>() {
-
-        @Override
-        public int compare(BloomFilter arg0, BloomFilter arg1) {
-            return Arrays.compare( arg0.getBits(), arg1.getBits());
-        }});
+    private final Shape shape;
 
     public FlatBloofi(int population, Shape shape) {
-        super(population, shape);
+        this.shape = shape;
         buffer = new ArrayList<long[]>(0);
         busy = new BitSet(0);
-        toDelete.add( new NumericBloomFilter( shape, 1490127952317283331l, 192 ));
-toDelete.add( new NumericBloomFilter( shape, -5866426439917060973l, 235));
-toDelete.add( new NumericBloomFilter( shape, 332175928074042883l, 242));
-toDelete.add( new NumericBloomFilter( shape, -7703665306996998765l, 209));
-toDelete.add( new NumericBloomFilter( shape, 1529483428526887379l, 17));
-toDelete.add( new NumericBloomFilter( shape, 1229782938247364606l, 17));
-toDelete.add( new NumericBloomFilter( shape, 1247806132851905809l, 147));
-toDelete.add( new NumericBloomFilter( shape, 6869418595293663580l, 17));
-toDelete.add( new NumericBloomFilter( shape, -5660673895261988461l, 215));
-toDelete.add( new NumericBloomFilter( shape, 619682041822808520l, 138));
-toDelete.add( new NumericBloomFilter( shape, 1347179666688512345l, 147));
-toDelete.add( new NumericBloomFilter( shape, 1347181874317558347l, 147));
-toDelete.add( new NumericBloomFilter( shape, 3653022813325434985l, 179));
-toDelete.add( new NumericBloomFilter( shape, 691739640172480969l, 139));
-toDelete.add( new NumericBloomFilter( shape, 1844678805954337225l, 154));
-toDelete.add( new NumericBloomFilter( shape, 5608376568908695500l, 94));
-toDelete.add( new NumericBloomFilter( shape, 1347181874317558347l, 147));
-toDelete.add( new NumericBloomFilter( shape, 1229782938247303441l, 17));
     }
 
-    @Override
     public void add(BloomFilter bf) {
         int i = busy.nextClearBit(0);
         if (buffer.size()-1 < BitUtils.getLongIndex(i))
@@ -75,7 +52,6 @@ toDelete.add( new NumericBloomFilter( shape, 1229782938247303441l, 17));
         busy.set(i);
     }
 
-    @Override
     public int count(BloomFilter bf) {
         int count = 0;
         BitSet bs = BitSet.valueOf( bf.getBits() );
@@ -104,29 +80,6 @@ toDelete.add( new NumericBloomFilter( shape, 1229782938247303441l, 17));
                 mybuffer[k] |= mask;
             } else {
                 mybuffer[k] &= ~mask;
-            }
-        }
-
-        if (population == 10000 && i == 1000)
-        {
-            for (int k=0;k<mybuffer.length;k++)
-            {
-                if (BitUtils.isSet(bits, k))
-                {
-                    if ((mybuffer[k] & mask)==0)
-                    {
-                        System.err.println( "Did not set 1000 in mybuffer "+k);
-                    }
-                }
-                else
-                {
-                    if ((mybuffer[k] & mask)!=0)
-                    {
-                        System.err.println( "Did set 1000 in mybuffer "+k);
-                    }
-
-                }
-
             }
         }
     }
@@ -198,7 +151,6 @@ toDelete.add( new NumericBloomFilter( shape, 1229782938247303441l, 17));
         return BitSet.valueOf(result);
    }
 
-    @Override
     public void delete(BloomFilter filter) {
         BitSet found = findExactMatch( filter );
 
@@ -209,12 +161,6 @@ toDelete.add( new NumericBloomFilter( shape, 1229782938247303441l, 17));
         }
     }
 
-    @Override
-    public String getName() {
-        return "Flat Bloofi";
-    }
-
-    @Override
     public int count() {
         return busy.cardinality();
     }

@@ -25,6 +25,17 @@ public class Node {
         reset();
     }
 
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode( filter.getBits() );
+    }
+
+    @Override
+    public boolean equals( Object other )
+    {
+        return (other instanceof Node)?Arrays.equals( ((Node)other).getFilter().getBits(), getFilter().getBits()): false;
+    }
+
     public BloomFilter getFilter() {
         return filter;
     }
