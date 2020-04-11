@@ -1,6 +1,8 @@
 package org.xenei.bloompaper.index;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
@@ -15,6 +17,8 @@ public class BloomIndexLinear extends BloomIndex {
     private BloomFilter[] index;
     private int idx;
 
+    List<NumericBloomFilter> found;
+
     public BloomIndexLinear(int population,Shape shape)
     {
         super(population, shape);
@@ -28,16 +32,21 @@ public class BloomIndexLinear extends BloomIndex {
         index[idx++] = filter;
     }
 
+    public List<NumericBloomFilter> getFound() {
+        return found;
+    }
+
     @Override
     public int count(BloomFilter filter)
     {
-        NumericBloomFilter nFilter = NumericBloomFilter.makeInstance(filter);
+        found = new ArrayList<NumericBloomFilter>();
         int result = 0;
         // searching entire list
         for (BloomFilter candidate : index)
         {
             if (candidate.contains(filter))
             {
+                found.add( NumericBloomFilter.makeInstance(candidate) );
                 result++;
             }
         }

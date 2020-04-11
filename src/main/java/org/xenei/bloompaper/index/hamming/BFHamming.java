@@ -1,10 +1,13 @@
 package org.xenei.bloompaper.index.hamming;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.xenei.bloompaper.index.BloomIndexLinear;
 import org.xenei.bloompaper.index.NumericBloomFilter;
 import org.xenei.bloompaper.index.hamming.Node.NodeComparator;
 
@@ -17,7 +20,7 @@ import org.xenei.bloompaper.index.hamming.Node.NodeComparator;
 public class BFHamming  {
 
     private TreeSet<Node> index = new TreeSet<Node>( NodeComparator.COMPLETE );
-
+    public List<NumericBloomFilter> found;
 
 
     public BFHamming(Shape shape) {
@@ -59,7 +62,6 @@ public class BFHamming  {
         int retval = 0;
 
         Node node = new Node(filter);
-
 
         SortedSet<Node> tailSet = index.tailSet( node );
         if (tailSet.isEmpty()) {

@@ -95,10 +95,10 @@ public final class BitUtils {
     public static int maxSet( long[] bits ) {
         for (int longIndex=bits.length-1;longIndex>=0;longIndex--)
         {
-            if ( bits[longIndex] > 0)
+            if ( bits[longIndex] != 0)
             {
                 for (int bitIndex=Long.SIZE-1;bitIndex>=0;bitIndex--) {
-                    if ((bits[longIndex] &  getLongBit( bitIndex )) > 0)
+                    if ((bits[longIndex] &  getLongBit( bitIndex )) != 0)
                     {
                         return (Long.SIZE*longIndex)+bitIndex;
                     }

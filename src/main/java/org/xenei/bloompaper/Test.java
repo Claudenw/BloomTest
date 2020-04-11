@@ -40,7 +40,8 @@ public class Test {
     // 9,772,346 max lines
     private static int RUN_COUNT = 5;
 
-    static int[] POPULATIONS = { 100, 1000, 10000, 100000, 1000000 };
+    //static int[] POPULATIONS = { 100, 1000, 10000, 100000, 1000000 };
+    static int[] POPULATIONS = {  1000000 };
 
     private static void init() throws NoSuchMethodException, SecurityException {
         constructors.put("Hamming", BloomIndexHamming.class.getConstructor(int.class, Shape.class));
@@ -326,6 +327,14 @@ public class Test {
                 stat.currentType = type;
                 found += bi.count(bfSample[i]);
                 elapsed += (System.currentTimeMillis() - start);
+                if (bi instanceof BloomIndexHamming )
+                {
+                    stat.addFoundFilters(type, bfSample[i], ((BloomIndexHamming)bi).getFound() );;
+                }
+                if (bi instanceof BloomIndexLinear )
+                {
+                    stat.addFoundFilters(type,  bfSample[i], ((BloomIndexLinear)bi).getFound());
+                }
             }
             stats.get(run).registerResult(Stats.Phase.Query, type, elapsed, found);
             System.out.println(stats.get(run).displayString(Stats.Phase.Query, type));
