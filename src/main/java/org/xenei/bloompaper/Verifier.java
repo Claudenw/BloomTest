@@ -1,7 +1,6 @@
 package org.xenei.bloompaper;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,9 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.xenei.bloompaper.index.BitUtils;
-import org.xenei.bloompaper.index.NumericBloomFilter;
+import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 public class Verifier {
 
@@ -41,13 +38,16 @@ public class Verifier {
                                 err(String.format("     %s (run %s)", s.getName(), s.getRun()));
                             }
                         }
-//
-//                        for (Long x : report.keySet()) {
-//                            for (Long y : report.keySet()) {
-//                                compare(phase, type, report.get(x).get(0), report.get(y).get(0));
-//                            }
-//
-//                        }
+
+                        for (Long x : report.keySet()) {
+                            for (Long y : report.keySet()) {
+                                if (x != y)
+                                {
+                                    compare(phase, type, report.get(x).get(0), report.get(y).get(0));
+                                }
+                            }
+
+                        }
 
                         display("");
                     }
@@ -57,30 +57,30 @@ public class Verifier {
     }
 
     private void compare(Stats.Phase phase, Stats.Type type, Stats statsX, Stats statsY) {
-        Map<NumericBloomFilter, Set<NumericBloomFilter>> result = new HashMap<NumericBloomFilter, Set<NumericBloomFilter>>();
+        Map<FrozenBloomFilter, Set<FrozenBloomFilter>> result = new HashMap<FrozenBloomFilter, Set<FrozenBloomFilter>>();
         result.putAll(statsX.getFound( type));
-        for (Map.Entry<NumericBloomFilter, Set<NumericBloomFilter>> e : statsY.getFound(type).entrySet()) {
-            Set<NumericBloomFilter> xExtra = new HashSet<NumericBloomFilter>(result.get(e.getKey()));
-            Set<NumericBloomFilter> yExtra = new HashSet<NumericBloomFilter>(e.getValue());
+        for (Map.Entry<FrozenBloomFilter, Set<FrozenBloomFilter>> e : statsY.getFound(type).entrySet()) {
+            Set<FrozenBloomFilter> xExtra = new HashSet<FrozenBloomFilter>(result.get(e.getKey()));
+            Set<FrozenBloomFilter> yExtra = new HashSet<FrozenBloomFilter>(e.getValue());
             yExtra.removeAll(xExtra);
             xExtra.removeAll(e.getValue());
             if (!(yExtra.isEmpty() && xExtra.isEmpty())) {
 
-                System.out.println("Error in " + BitUtils.format(e.getKey().getBits()));
+                System.out.println("Difference with " + e.getKey());
                 if (!yExtra.isEmpty()) {
 
-                    System.out.println("Extra " + statsY.displayString(phase,type));
-                    for (BloomFilter bf : yExtra) {
-                        System.out.println(BitUtils.format(bf.getBits()));
+                    System.out.println("  Only in " + statsY.displayString(phase,type));
+                    for (FrozenBloomFilter bf : yExtra) {
+                        System.out.println( "    "+bf.toString());
                     }
                 }
-                    if (!xExtra.isEmpty()) {
+                if (!xExtra.isEmpty()) {
 
-                        System.out.println("Extra " + statsX.displayString(phase,type));
-                        for (BloomFilter bf : yExtra) {
-                            System.out.println(BitUtils.format(bf.getBits()));
-                        }
+                    System.out.println("  Only in " + statsX.displayString(phase,type));
+                    for (FrozenBloomFilter bf : xExtra) {
+                        System.out.println("    "+bf.toString());
                     }
+                }
 
             }
         }

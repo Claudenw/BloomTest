@@ -1,13 +1,15 @@
 package org.xenei.bloompaper.index.bloofi;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-
 import org.apache.commons.collections4.bloomfilter.ArrayCountingBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.CountingBloomFilter;
 import org.apache.commons.collections4.bloomfilter.SetOperations;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.xenei.bloompaper.index.BitUtils;
+import org.xenei.bloompaper.index.PseudoCountingBloomFilter;
 
 /**
  * An inner node for the Bloofi tree.
@@ -18,7 +20,7 @@ public class InnerNode implements Node {
     /**
      * Number of buckets on the node.
      */
-    private static final int NODE_SIZE = 16;
+    private static final int NODE_SIZE = 6;
 
     /**
      * The counting bloom filter for all the filters below.
@@ -33,10 +35,10 @@ public class InnerNode implements Node {
     /**
      * Number of used buckets.
      */
-    private int used = 0;
+    private int used;
 
     /**
-     * The parent of this node.  May be null.
+     * The parent of this node. May be null.
      */
     private InnerNode parent;
 
@@ -46,11 +48,18 @@ public class InnerNode implements Node {
     private Shape shape;
 
     /**
-     * Constructs an inner node.
-     * @param parent the parent of this node (may be null).
-     * @param shape the Shape of the Bloom filters that will be stored.
+     *  The id of this node (used in debugging)
      */
-    public InnerNode( InnerNode parent, Shape shape) {
+    private final int id;
+
+    /**
+     * Constructs an inner node.
+     *
+     * @param parent the parent of this node (may be null).
+     * @param shape  the Shape of the Bloom filters that will be stored.
+     */
+    public InnerNode(InnerNode parent, Shape shape) {
+        this.id = Node.Counter.nextId();
         this.shape = shape;
         filter = new ArrayCountingBloomFilter(shape);
         buckets = new Node[NODE_SIZE];
@@ -58,217 +67,186 @@ public class InnerNode implements Node {
         this.parent = parent;
     }
 
+    @Override
+    public String toString() {
+        return String.format(String.format("InnerNode:%s %s", this.id, BitUtils.formatHex(filter.getBits())));
+    }
+
     /**
      * Gets the parent of this node.
+     *
      * @return the parrent node, or null if not set.
      */
-    public InnerNode getParent()
-    {
+    @Override
+    public InnerNode getParent() {
         return parent;
     }
 
     @Override
-    public void setParent(InnerNode parent)
-    {
+    public void setParent(InnerNode parent) {
         this.parent = parent;
     }
 
     @Override
-    public void add( BloomFilter candidate )
-    {
-        filter.merge(candidate);
+    public void add(BloomFilter candidate) {
+        insert(candidate);
+    }
 
+    /**
+     * Determine the closest node to the candidate from among those in the buckets.
+     * @param candidate the bloom filter to use to test.
+     * @return the closest node.
+     */
+    private int determineClosest(BloomFilter candidate) {
         int closest = 0;
-        if (used > 1)
-        {
-            int closestDistance = SetOperations.hammingDistance( candidate, buckets[0].getFilter());
-            for (int i=1;i<used;i++)
-            {
-                int dist = SetOperations.hammingDistance( candidate, buckets[i].getFilter());
-                if (dist<closestDistance)
-                {
-                    closestDistance = dist;
-                    closest = i;
-                }
+        int closestDistance = SetOperations.hammingDistance(candidate, buckets[0].getFilter());
+        for (int i = 1; i < used; i++) {
+            int dist = SetOperations.hammingDistance(candidate, buckets[i].getFilter());
+            if (dist < closestDistance) {
+                closestDistance = dist;
+                closest = i;
             }
         }
-        insert( closest, candidate );
+        return closest;
     }
 
     /**
      * Insert the candidate in the specified bucket.
-     * @param position the bucket to store the candidate in.
+     *
+     * @param position  the bucket to store the candidate in.
      * @param candidate the candidate to store.
      */
-    private void insert( int position, BloomFilter candidate)
-    {
-        if (buckets[position] instanceof InnerNode)
-        {
-            ((InnerNode)buckets[position]).add( candidate );
+    private void insert(BloomFilter candidate) {
+        if (used == 0) {
+            buckets[used++] = new LeafNode(this, candidate);
+        } else if (buckets[0] instanceof InnerNode) {
+            ((InnerNode) buckets[determineClosest(candidate)]).add(candidate);
+        } else {
+            buckets[used++] = new LeafNode(this, candidate);
         }
-        else {
-            if (used == 0)
-            {
-                buckets[0] = new LeafNode( this, candidate );
-                used++;
-                return;
-            }
-            if (buckets[position].getFilter().equals(candidate))
-            {
-                ((LeafNode)buckets[position]).add( candidate);
-                return;
-            }
-            if (used < buckets.length)
-            {
-                System.arraycopy(buckets, position, buckets, position+1, used-position);
-                buckets[position]=new LeafNode(this, candidate);
-                used++;
-                return;
-            }
-            else
-            {
-                InnerNode sibling = split(candidate);
-                if (position < used)
-                {
-                    filter.merge(candidate);
-                    this.insert(position, candidate);
-                }
-                else
-                {
-                    sibling.filter.merge(candidate);
-                    sibling.insert( position-used, candidate );
-                }
-            }
+
+        /*
+         * if the buckets are full we split this page
+         */
+        if (used == NODE_SIZE) {
+            split();
         }
     }
 
     /**
-     * Split the node.
+     * Convert the Bloom filter to a counting Bloom filter if necessary.
+     * @param filter the filter to
+     * @return
+     */
+    private CountingBloomFilter asCountingFilter(final BloomFilter filter) {
+        if (filter instanceof CountingBloomFilter) {
+            return (CountingBloomFilter) filter;
+        } else {
+            return new PseudoCountingBloomFilter(filter);
+        }
+    }
+
+    /**
+     * Split the node. Does not modify the parent filter. Does modify this filter
+     * and create sibling filter. Will create a new root with both this and sibling
+     * filter counts.
+     *
      * @param candidate the candidate that caused the split.
      * @return the other node created by the split.
      */
-    private InnerNode split( BloomFilter candidate )
-    {
-        /* we are full so split this node and return the result.
-         * The split operation does not change the bloom filter of the
-         * parent but does change the bloom filter of this node.
+    private InnerNode split() {
+
+        /*
+         * we are full so split this node and return the result. The split operation
+         * does not change the bloom filter of the parent but does change the bloom
+         * filter of this node.
          */
-        InnerNode sibling = new InnerNode( parent, shape );
-        int splitPoint = buckets.length/2;
-        sibling.used = buckets.length-splitPoint;
+        InnerNode sibling = new InnerNode(parent, shape);
+        int splitPoint = buckets.length / 2;
+        sibling.used = buckets.length - splitPoint;
         System.arraycopy(buckets, splitPoint, sibling.buckets, 0, sibling.used);
         used -= sibling.used;
-        Arrays.fill( buckets, used, buckets.length, null);
+        Arrays.fill(buckets, used, buckets.length, null);
 
         // reset our filter
-        filter = new ArrayCountingBloomFilter( shape );
-        for (int i=0;i<used;i++)
-        {
-            filter.merge( buckets[i].getFilter());
+        filter = new ArrayCountingBloomFilter(shape);
+        for (int i = 0; i < used; i++) {
+            filter.add(asCountingFilter(buckets[i].getFilter()));
         }
 
         // populate the sibling filter
-        for (int i=0;i<sibling.used;i++)
-        {
-            sibling.filter.merge( sibling.buckets[i].getFilter());
-            sibling.buckets[i].setParent( sibling );
+        for (int i = 0; i < sibling.used; i++) {
+            sibling.buckets[i].setParent(sibling);
+            CountingBloomFilter bucketFilter = asCountingFilter(sibling.buckets[i].getFilter());
+            sibling.filter.add(bucketFilter);
         }
 
         // if we are the root create a new root.
-        if (parent == null)
-        {
-            parent = new InnerNode( null, shape );
-            parent.insert( this );
-            parent.filter.merge( candidate );
+        if (parent == null) {
+            parent = new InnerNode(null, shape);
+            parent.insert(this);
+            parent.getFilter().add(this.getFilter());
+            parent.getFilter().add(sibling.getFilter());
         }
 
-        // add the sibling to the parent
+        /*
+         * Add the sibling to the parent. This may cause the parent to split but when it
+         * returns from the insert the parent will be correctly set.
+         */
         parent.insert(sibling);
+
         return sibling;
     }
 
     /**
-     * Insert an inner node into this node.
-     * This only gets called during a split operation.
+     * Insert an inner node into this node. This only gets called during a split
+     * operation.
+     *
      * @param newNode the node to insert.
      */
-    private void insert(InnerNode newNode)
-    {
-        // the filter does not change
-        //filter.merge(newNode.getFilter());
-
-        if (used == 0)
-        {
-            buckets[0]=newNode;
-            newNode.setParent(this);
-            used++;
-            return;
-        }
-
-        int position = 0;
-        int closestDistance = SetOperations.hammingDistance( newNode.filter, buckets[0].getFilter());
-        for (int i=1;i<used;i++)
-        {
-            int dist = SetOperations.hammingDistance(newNode.filter, buckets[i].getFilter());
-            if (dist<closestDistance)
-            {
-                closestDistance = dist;
-                position = i;
-            }
-        }
-
-        if (used < buckets.length)
-        {
-            System.arraycopy(buckets, position, buckets, position+1, used-position);
-            buckets[position]=newNode;
-            newNode.setParent(this);
-            used++;
-            for (int i=0;i<used;i++)
-            {
-                if (buckets[i] == null)
-                {
-                    throw new IllegalStateException();
-                }
-            }
-        }
-        else
-        {
-            // we are full so so split this node and return the result
-            InnerNode sibling = split( newNode.filter );
-            if (position < used)
-            {
-                this.insert(newNode);
-            }
-            else
-            {
-                sibling.insert( newNode );
-            }
+    private void insert(InnerNode newNode) {
+        // first entry insert and return.
+        buckets[used++] = newNode;
+        newNode.setParent(this);
+        if (used == NODE_SIZE) {
+            split();
         }
     }
 
     @Override
-    public BloomFilter getFilter() {
+    public CountingBloomFilter getFilter() {
         return filter;
     }
 
     /**
-     * Remove the specified child node.
-     * @param position the node to remove.
+     * Remove the specified node from the buckets.
+     * If the nodes is the last one remove this inner node from its parent.
+     *
+     * @param node from the list of children.
      */
-    private void remove( int position )
-    {
-        Node node = buckets[position];
-        if (node instanceof InnerNode)
-        {
-            filter.subtract( (CountingBloomFilter) node.getFilter());
-        } else {
-            filter.remove( node.getFilter() );
+    public void remove(Node node) {
+        for (int position = 0; position < used; position++) {
+            if (buckets[position] == node) {
+                if (position + 1 < used) {
+                    System.arraycopy(buckets, position + 1, buckets, position, used - position - 1);
+                }
+                buckets[--used] = null;
+                if (used == 0) {
+                    if (parent != null) {
+                        parent.remove(this);
+                    }
+                } else {
+                    CountingBloomFilter nodeFilter = asCountingFilter(node.getFilter());
+                    this.filter.subtract( nodeFilter );
+                    InnerNode parent = this.parent;
+                    while (parent != null)
+                    {
+                        parent.filter.subtract( nodeFilter );
+                        parent = parent.parent;
+                    }
+                }
+            }
         }
-        if (position+1 < used)
-        {
-            System.arraycopy(buckets, position+1, buckets, position, used-position-1);
-        }
-        buckets[--used] = null;
     }
 
     @Override
@@ -279,16 +257,9 @@ public class InnerNode implements Node {
     @Override
     public boolean remove(BloomFilter filter) {
         // locate the child node that contains the filter.
-        if (this.filter.contains(filter))
-        {
-            for (int i=0;i<used;i++ )
-            {
-                if (buckets[i].remove(filter))
-                {
-                    if (buckets[i].isEmpty())
-                    {
-                        remove( i );
-                    }
+        if (this.filter.contains(filter)) {
+            for (int i = 0; i < used; i++) {
+                if (buckets[i].remove(filter)) {
                     return true;
                 }
             }
@@ -298,11 +269,9 @@ public class InnerNode implements Node {
 
     @Override
     public void search(List<BloomFilter> results, BloomFilter filter) {
-        if (this.filter.contains(filter))
-        {
-            for (int i=0;i<used;i++ )
-            {
-                buckets[i].search( results, filter);
+        if (this.filter.contains(filter)) {
+            for (int i = 0; i < used; i++) {
+                buckets[i].search(results, filter);
             }
         }
     }
@@ -310,14 +279,24 @@ public class InnerNode implements Node {
     @Override
     public int count(BloomFilter filter) {
         int retval = 0;
-        if (this.filter.contains(filter))
-        {
-            for (int i=0;i<used;i++ )
-            {
-                retval += buckets[i].count( filter);
+        if (this.filter.contains(filter)) {
+            for (int i = 0; i < used; i++) {
+                retval += buckets[i].count(filter);
             }
         }
         return retval;
+    }
+
+    @Override
+    public void setFilterCapture(Collection<BloomFilter> collection) {
+        for (int i = 0; i < used; i++) {
+            buckets[i].setFilterCapture(collection);
+        }
+    }
+
+    @Override
+    public int getId() {
+        return id;
     }
 
 }

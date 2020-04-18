@@ -1,8 +1,8 @@
 package org.xenei.bloompaper.index.bloofi;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 
@@ -18,6 +18,7 @@ public class Bloofi {
     private InnerNode root;
     private int count;
 
+
     /**
      * Constructs a bloofi index.
      * @param limit the number of expected filters.
@@ -27,6 +28,7 @@ public class Bloofi {
         root = new InnerNode( null, shape );
     }
 
+
     /**
      * Add a filter to the index.
      * @param candidate the index to add.
@@ -35,6 +37,7 @@ public class Bloofi {
     {
         count++;
         root.add(candidate);
+
         while (root.getParent() != null)
         {
             root = root.getParent();
@@ -51,6 +54,10 @@ public class Bloofi {
         }
     }
 
+    /**
+     * Gets the number of Bloom filters that have been added to the index.
+     * @return the number of Bloom filters that have been added to the index.
+     */
     public int count() {
         return count;
     }
@@ -75,6 +82,10 @@ public class Bloofi {
     public int count(BloomFilter filter)
     {
         return root.count( filter );
+    }
+
+    public void setFilterCapture(Collection<BloomFilter> collection) {
+        root.setFilterCapture(collection);
     }
 
 }

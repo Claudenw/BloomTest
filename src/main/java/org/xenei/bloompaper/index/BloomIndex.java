@@ -1,8 +1,9 @@
 package org.xenei.bloompaper.index;
 
+import java.util.Collection;
+
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.xenei.bloompaper.Stats;
 
 
 /**
@@ -58,5 +59,13 @@ public abstract class BloomIndex {
      * @param filter  The Bloom filter to count.
      */
     abstract public int count();
+
+    /**
+     * Sets a collection into which bloom filters matched during a count()
+     * operation will be added.
+     *
+     * @param collection The collection to add to.
+     */
+    abstract public void setFilterCapture( Collection<BloomFilter> collection );
 
 }

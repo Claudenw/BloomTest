@@ -7,7 +7,7 @@ import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.junit.Test;
 import org.xenei.bloompaper.RandomBloomFilter;
-import org.xenei.bloompaper.index.NumericBloomFilter;
+import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 public class FlatBloofiTest {
 
@@ -20,7 +20,7 @@ public class FlatBloofiTest {
 
         FlatBloofi flatBloofi = new FlatBloofi(500, shape);
 
-        BloomFilter bf = new NumericBloomFilter(shape, new long[] { 1, 1 });
+        BloomFilter bf = new FrozenBloomFilter(shape, new long[] { 1, 1 });
         flatBloofi.add( bf );
         flatBloofi.add( new RandomBloomFilter(shape));
         flatBloofi.add( new RandomBloomFilter(shape));
@@ -43,7 +43,7 @@ public class FlatBloofiTest {
 
         FlatBloofi flatBloofi = new FlatBloofi(500, shape);
 
-        BloomFilter bf = new NumericBloomFilter(shape, new long[] { 1, 1 });
+        BloomFilter bf = new FrozenBloomFilter(shape, new long[] { 1, 1 });
         flatBloofi.add( bf );
         flatBloofi.add( new RandomBloomFilter(shape));
         flatBloofi.add( new RandomBloomFilter(shape));

@@ -1,15 +1,13 @@
 package org.xenei.bloompaper;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.xenei.bloompaper.index.NumericBloomFilter;
+import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 /**
  * A record of the data from a single run.
@@ -27,7 +25,7 @@ public class Stats {
     Phase currentPhase;
     Type currentType;
 
-    Map<NumericBloomFilter,Set<NumericBloomFilter>>[] foundFilters = new HashMap[ Type.values().length ];
+    Map<FrozenBloomFilter,Set<FrozenBloomFilter>>[] foundFilters = new HashMap[ Type.values().length ];
 
     private long[][] time = new long[ Phase.values().length][ Type.values().length];
     private long[][] count = new long[ Phase.values().length][ Type.values().length];
@@ -41,19 +39,19 @@ public class Stats {
         return sb.toString();
     }
 
-    public void addFoundFilters( Type type, BloomFilter filter, Collection<NumericBloomFilter> filters) {
+    public void addFoundFilters( Type type, BloomFilter filter, Collection<BloomFilter> filters) {
         if (filters != null) {
             if (foundFilters[type.ordinal()] == null)
             {
-                foundFilters[type.ordinal()] = new HashMap<NumericBloomFilter, Set<NumericBloomFilter>>();
+                foundFilters[type.ordinal()] = new HashMap<FrozenBloomFilter, Set<FrozenBloomFilter>>();
             }
-            Set<NumericBloomFilter> set = new HashSet<NumericBloomFilter>();
-            set.addAll( filters );
-            foundFilters[type.ordinal()].put(NumericBloomFilter.makeInstance(filter), set );
+            Set<FrozenBloomFilter> set = new HashSet<FrozenBloomFilter>();
+            filters.stream().map( FrozenBloomFilter::makeInstance ).forEach( set::add );
+            foundFilters[type.ordinal()].put(FrozenBloomFilter.makeInstance(filter), set );
         }
     }
 
-    public Map<NumericBloomFilter,Set<NumericBloomFilter>> getFound( Type type )
+    public Map<FrozenBloomFilter,Set<FrozenBloomFilter>> getFound( Type type )
     {
         return foundFilters[type.ordinal()];
     }

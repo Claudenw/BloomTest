@@ -1,14 +1,15 @@
 package org.xenei.bloompaper.index.bftrie;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.xenei.bloompaper.index.BitUtils;
 
 public class LeafNode implements Node {
     private final List<BloomFilter> lst;
     private boolean checkEntries;
+    private Collection<BloomFilter> filterCapture;
 
     public LeafNode(boolean checkEntries) {
         this.checkEntries = checkEntries;
@@ -70,6 +71,7 @@ public class LeafNode implements Node {
             {
                 if(candidate.contains(filter))
                 {
+                    filterCapture.add( candidate );
                     retval++;
                 }
             }
@@ -77,6 +79,7 @@ public class LeafNode implements Node {
         }
         else
         {
+            filterCapture.addAll( lst );
             return lst.size();
         }
     }
@@ -85,5 +88,10 @@ public class LeafNode implements Node {
     public String toString()
     {
         return String.format( "LeafNode %s", lst );
+    }
+
+    @Override
+    public void setFilterCapture(Collection<BloomFilter> collection) {
+        this.filterCapture = collection;
     }
 }

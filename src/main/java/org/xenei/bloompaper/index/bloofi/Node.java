@@ -1,7 +1,7 @@
 package org.xenei.bloompaper.index.bloofi;
 
+import java.util.Collection;
 import java.util.List;
-
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 
 /**
@@ -9,11 +9,48 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
  *
  */
 public interface Node {
+
     /**
-     * Set the parent of this node.
+     * Class that holds the count for the node during creation.
+     */
+    public static class Counter {
+        /**
+         * The node count.
+         */
+        static int totalCount = 0;
+        /**
+         * Gets the next id.
+         * @return the next id.
+         */
+        public static int nextId() {
+            return totalCount++;
+        }
+        /**
+         * Resets the counter to zero.
+         */
+        public static void reset() {
+            totalCount = 0;
+        }
+    }
+
+    /**
+     * Gets the id for this node.
+     * @return the id.
+     */
+    public int getId();
+
+    /**
+     * Sets the parent of this node.
      * @param parent the parrent node.
      */
     public void setParent( InnerNode parent );
+
+    /**
+     * Gets the parent of this node.
+     * Will return null for the root node.
+     * @return the parent of this node.
+     */
+    public InnerNode getParent();
 
     /**
      * Get the filter for this node.
@@ -53,4 +90,13 @@ public interface Node {
      * @return true if the node is empty.
      */
     public boolean isEmpty();
+
+    /**
+     * Sets the filter capture for the count.
+     * Every bloom filter returned by the count is added to this collection.
+     * Used in debugging. In general the collection is a Null collection that does nothing.
+     * @param collection the Collection to add the filters to.
+     */
+    public void setFilterCapture(Collection<BloomFilter> collection);
+
 }

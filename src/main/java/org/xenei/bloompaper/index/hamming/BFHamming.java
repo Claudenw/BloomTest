@@ -1,14 +1,13 @@
 package org.xenei.bloompaper.index.hamming;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.xenei.bloompaper.index.BloomIndexLinear;
-import org.xenei.bloompaper.index.NumericBloomFilter;
+import org.xenei.bloompaper.index.FrozenBloomFilter;
 import org.xenei.bloompaper.index.hamming.Node.NodeComparator;
 
 /**
@@ -20,7 +19,9 @@ import org.xenei.bloompaper.index.hamming.Node.NodeComparator;
 public class BFHamming  {
 
     private TreeSet<Node> index = new TreeSet<Node>( NodeComparator.COMPLETE );
-    public List<NumericBloomFilter> found;
+    public List<FrozenBloomFilter> found;
+    private Collection<BloomFilter> filterCapture;
+
 
 
     public BFHamming(Shape shape) {
@@ -69,6 +70,7 @@ public class BFHamming  {
         }
         if (equals( node, tailSet.first()))
         {
+            filterCapture.add( tailSet.first().getFilter() );
             retval += tailSet.first().getCount();
         }
 
@@ -80,6 +82,7 @@ public class BFHamming  {
             upperLimit = lowerLimit.upperLimitNode();
             retval += tailSet.tailSet( lowerLimit ).headSet( upperLimit ).stream()
                     .filter( n -> n.getFilter().contains( filter ))
+                    .filter( n -> filterCapture.add( n.getFilter() ))
                     .mapToInt( n -> n.getCount() )
                     .sum();
             lowerLimit = upperLimit.lowerLimitNode();
@@ -101,4 +104,7 @@ public class BFHamming  {
 
     }
 
+    public void setFilterCapture(Collection<BloomFilter> collection) {
+        filterCapture = collection;
+    }
 }

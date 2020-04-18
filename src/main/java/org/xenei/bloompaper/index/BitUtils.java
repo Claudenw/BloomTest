@@ -135,6 +135,16 @@ public final class BitUtils {
         return sb.toString();
     }
 
+    public static String formatHex( long[] bits )
+    {
+        StringBuilder sb = new StringBuilder();
+        for (long l : bits)
+        {
+            sb.append( String.format( "0x%h ", l) );
+        }
+        return sb.toString();
+    }
+
     public static boolean chkBreak( BloomFilter filter, long... values )
     {
         long[] bits = filter.getBits();

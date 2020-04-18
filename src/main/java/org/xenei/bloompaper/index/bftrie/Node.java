@@ -1,5 +1,6 @@
 package org.xenei.bloompaper.index.bftrie;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
@@ -21,4 +22,5 @@ public interface Node {
     public boolean isEmpty();
     public void search(List<BloomFilter> results, BloomFilter filter);
     public int count(BloomFilter filter);
+    public void setFilterCapture(Collection<BloomFilter> collection);
 }

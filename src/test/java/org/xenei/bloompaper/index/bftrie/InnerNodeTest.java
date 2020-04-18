@@ -7,7 +7,7 @@ import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.junit.Test;
 import org.xenei.bloompaper.index.BitUtils;
-import org.xenei.bloompaper.index.NumericBloomFilter;
+import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 public class InnerNodeTest {
 
@@ -76,7 +76,7 @@ public class InnerNodeTest {
 
 
         System.out.println( String.format( "%X", value));
-        BloomFilter bf = new NumericBloomFilter(shape, new long[] { value, value });
+        BloomFilter bf = new FrozenBloomFilter(shape, new long[] { value, value });
 
         for (int i=0;i<16;i++)
         {

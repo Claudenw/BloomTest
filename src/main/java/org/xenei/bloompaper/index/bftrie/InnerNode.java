@@ -1,5 +1,6 @@
 package org.xenei.bloompaper.index.bftrie;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
@@ -150,6 +151,16 @@ public class InnerNode implements Node {
     public String toString()
     {
         return String.format( "InnerNode d:%s", level );
+    }
+
+    @Override
+    public void setFilterCapture(Collection<BloomFilter> collection) {
+        for (Node n : nodes) {
+            if (n != null)
+            {
+                n.setFilterCapture(collection);
+            }
+        }
     }
 
 }

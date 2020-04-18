@@ -1,10 +1,10 @@
 package org.xenei.bloompaper.index;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.xenei.bloompaper.Stats;
 import org.xenei.bloompaper.index.hamming.BFHamming;
 
 /**
@@ -38,7 +38,7 @@ public class BloomIndexHamming extends BloomIndex {
         }
     }
 
-    public List<NumericBloomFilter> getFound() {
+    public List<FrozenBloomFilter> getFound() {
         return index.found;
     }
 
@@ -59,5 +59,10 @@ public class BloomIndexHamming extends BloomIndex {
 
     public int scan( BloomFilter filter ) {
         return index.scan( filter );
+    }
+
+    @Override
+    public void setFilterCapture(Collection<BloomFilter> collection) {
+        index.setFilterCapture( collection );
     }
 }

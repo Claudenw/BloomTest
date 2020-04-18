@@ -2,6 +2,7 @@ package org.xenei.bloompaper.index.bftrie;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
@@ -71,6 +72,10 @@ public class BFTrie4   {
 
     public int count(BloomFilter filter) {
         return root.count(filter);
+    }
+
+    public void setFilterCapture(Collection<BloomFilter> collection) {
+        root.setFilterCapture( collection );
     }
 
 }

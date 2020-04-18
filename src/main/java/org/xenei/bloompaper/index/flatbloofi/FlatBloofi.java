@@ -2,18 +2,11 @@ package org.xenei.bloompaper.index.flatbloofi;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.BitSet;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
-
+import java.util.Collection;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.xenei.bloompaper.Stats;
 import org.xenei.bloompaper.index.BitUtils;
-import org.xenei.bloompaper.index.BloomIndex;
-import org.xenei.bloompaper.index.NumericBloomFilter;
 
 /**
  * This is what Daniel called Bloofi2. Basically, instead of using a tree
@@ -35,6 +28,9 @@ public final class FlatBloofi {
     private ArrayList<long[]> buffer;
     private BitSet busy;
     private final Shape shape;
+
+    private Collection<BloomFilter> filterCapture;
+
 
     public FlatBloofi(int population, Shape shape) {
         this.shape = shape;
@@ -115,7 +111,7 @@ public final class FlatBloofi {
 
             /* remove is the map of all entries that we know do not match
              * so remove all the ones that are not in the busy list
-            */
+             */
             long remove = ~busyBits[ filterSetIdx ];
 
             // is the list of all entries that might match.
@@ -149,7 +145,7 @@ public final class FlatBloofi {
         }
 
         return BitSet.valueOf(result);
-   }
+    }
 
     public void delete(BloomFilter filter) {
         BitSet found = findExactMatch( filter );
@@ -165,4 +161,7 @@ public final class FlatBloofi {
         return busy.cardinality();
     }
 
+    public void setFilterCapture(Collection<BloomFilter> collection) {
+        this.filterCapture = collection;
+    }
 }

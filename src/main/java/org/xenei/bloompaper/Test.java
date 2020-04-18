@@ -9,7 +9,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,14 +24,13 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.xenei.bloompaper.geoname.GeoName;
-import org.xenei.bloompaper.index.BitUtils;
 import org.xenei.bloompaper.index.BloomIndex;
 import org.xenei.bloompaper.index.BloomIndexBFTrie;
 import org.xenei.bloompaper.index.BloomIndexBloofi;
 import org.xenei.bloompaper.index.BloomIndexFlatBloofi;
 import org.xenei.bloompaper.index.BloomIndexHamming;
 import org.xenei.bloompaper.index.BloomIndexLinear;
-import org.xenei.bloompaper.index.NumericBloomFilter;
+import org.xenei.bloompaper.index.NullCollection;
 
 public class Test {
 
@@ -40,8 +39,10 @@ public class Test {
     // 9,772,346 max lines
     private static int RUN_COUNT = 5;
 
-    //static int[] POPULATIONS = { 100, 1000, 10000, 100000, 1000000 };
-    static int[] POPULATIONS = {  1000000 };
+    static int[] POPULATIONS = { 100, 1000, 10000, 100000, 1000000 };
+    //static int[] POPULATIONS = {  1000000 };
+
+    public static Object lastCreated;
 
     private static void init() throws NoSuchMethodException, SecurityException {
         constructors.put("Hamming", BloomIndexHamming.class.getConstructor(int.class, Shape.class));
@@ -319,28 +320,22 @@ public class Test {
             long elapsed = 0;
             long start = 0;
             long found = 0;
-
-            for (int i = 0; i < sampleSize; i++) {
+            for (int i = 0; i < sampleSize; i++)
+            {
                 start = System.currentTimeMillis();
                 Stats stat = stats.get(run);
                 stat.currentPhase = Stats.Phase.Query;
                 stat.currentType = type;
+                Collection<BloomFilter> filterCapture = NullCollection.INSTANCE;
+                //Collection<BloomFilter> filterCapture = new ArrayList<BloomFilter>();
+                bi.setFilterCapture( filterCapture );
                 found += bi.count(bfSample[i]);
                 elapsed += (System.currentTimeMillis() - start);
-                if (bi instanceof BloomIndexHamming )
-                {
-                    stat.addFoundFilters(type, bfSample[i], ((BloomIndexHamming)bi).getFound() );;
-                }
-                if (bi instanceof BloomIndexLinear )
-                {
-                    stat.addFoundFilters(type,  bfSample[i], ((BloomIndexLinear)bi).getFound());
-                }
+                stat.addFoundFilters(type, bfSample[i], filterCapture );
             }
             stats.get(run).registerResult(Stats.Phase.Query, type, elapsed, found);
             System.out.println(stats.get(run).displayString(Stats.Phase.Query, type));
         }
 
     }
-
-
 }
