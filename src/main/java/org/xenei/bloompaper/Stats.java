@@ -1,12 +1,19 @@
 package org.xenei.bloompaper;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 /**
@@ -31,7 +38,7 @@ public class Stats {
     private long[][] count = new long[ Phase.values().length][ Type.values().length];
 
     public static String getHeader() {
-        StringBuilder sb = new StringBuilder( "'Index Name', 'Phase', 'Population', 'Load Elapsed'");
+        StringBuilder sb = new StringBuilder( "'Index Name', 'Run', 'Phase', 'Population', 'Load Elapsed'");
         for (Type type : Type.values())
         {
             sb.append( String.format( ", '%1$s Elapsed', '%1$s Count'", type));
@@ -64,12 +71,58 @@ public class Stats {
     }
 
     public String reportStats( Phase phase ) {
-        StringBuilder sb = new StringBuilder( String.format( "'%s','%s',%s,%s", indexName, phase, population, load) );
+        StringBuilder sb = new StringBuilder( String.format( "'%s',%s,'%s',%s,%s", indexName, run, phase, population, load) );
         for (Type type : Type.values())
         {
             sb.append( String.format( ",%s,%s", getElapsed(phase, type ), getCount(phase, type)));
         }
         return sb.toString();
+    }
+
+    public static List<Stats> parse(BufferedReader reader) throws IOException {
+        CSVFormat format = CSVFormat.DEFAULT.withQuote( '\'');
+
+
+        String line = reader.readLine();
+        if (! Stats.getHeader().equals( line )) {
+            String s = String.format( "Wrong header.  Wrong version? Expected:\n%s\nRead:\n%s",
+                    Stats.getHeader(), line );
+            throw new IOException( s );
+        }
+
+        List<Stats> table = new ArrayList<Stats>();
+        while( (line = reader.readLine()) != null )
+        {
+            CSVParser parser = CSVParser.parse( line, format);
+            List<CSVRecord> lst = parser.getRecords();
+            CSVRecord rec = lst.get(0);
+
+            Stats stat = new Stats( rec.get(0), Integer.parseInt(rec.get(3) ), Integer.parseInt( rec.get(1) ));
+            stat.load = Integer.parseInt( rec.get( 4 ));
+            for (Phase phase : Phase.values() )
+            {
+                if (phase != Phase.valueOf(rec.get(2)))
+                {
+                    throw new IOException( String.format( "Wrong phase for %s.  Expected: %s Found: %s",
+                            stat, phase, rec.get(2)));
+                }
+                for (Type type : Type.values())
+                {
+                    int idx = 5+(type.ordinal()*2);
+
+                    stat.registerResult( phase, type, Long.parseLong( rec.get(idx) ),
+                        Long.parseLong( rec.get(idx+1) ));
+                }
+                if (phase.ordinal()+1 < Phase.values().length)
+                {
+                    parser = CSVParser.parse( reader.readLine(), format);
+                    lst = parser.getRecords();
+                    rec = lst.get(0);
+                }
+            }
+            table.add(stat);
+        }
+        return table;
     }
 
     public String getName() {

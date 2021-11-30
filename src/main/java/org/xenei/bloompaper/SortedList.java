@@ -269,9 +269,4 @@ public class SortedList<T> implements List<T> {
         return wrapped.toArray(arg0);
     }
 
-    @Override
-    public <E> E[] toArray(IntFunction<E[]> generator) {
-        return wrapped.toArray(generator);
-    }
-
 }

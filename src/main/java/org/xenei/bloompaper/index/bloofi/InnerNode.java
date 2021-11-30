@@ -7,7 +7,7 @@ import org.apache.commons.collections4.bloomfilter.ArrayCountingBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.CountingBloomFilter;
 import org.apache.commons.collections4.bloomfilter.SetOperations;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.BitUtils;
 import org.xenei.bloompaper.index.PseudoCountingBloomFilter;
 
@@ -20,7 +20,7 @@ public class InnerNode implements Node {
     /**
      * Number of buckets on the node.
      */
-    private static final int NODE_SIZE = 6;
+    private static final int NODE_SIZE = 16;
 
     /**
      * The counting bloom filter for all the filters below.
@@ -69,7 +69,7 @@ public class InnerNode implements Node {
 
     @Override
     public String toString() {
-        return String.format(String.format("InnerNode:%s %s", this.id, BitUtils.formatHex(filter.getBits())));
+        return String.format(String.format("InnerNode:%s %s", this.id, BitUtils.formatHex(BloomFilter.asBitMapArray(filter))));
     }
 
     /**

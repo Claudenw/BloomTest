@@ -2,7 +2,7 @@ package org.xenei.bloompaper.index.flatbloofi;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.UpdatableBloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class FlatBloofiTest {
 
         FlatBloofi flatBloofi = new FlatBloofi(500, shape);
 
-        BloomFilter bf = new FrozenBloomFilter(shape, new long[] { 1, 1 });
+        UpdatableBloomFilter bf = new FrozenBloomFilter(shape, new long[] { 1, 1 });
         flatBloofi.add( bf );
         flatBloofi.add( new RandomBloomFilter(shape));
         flatBloofi.add( new RandomBloomFilter(shape));
@@ -43,7 +43,7 @@ public class FlatBloofiTest {
 
         FlatBloofi flatBloofi = new FlatBloofi(500, shape);
 
-        BloomFilter bf = new FrozenBloomFilter(shape, new long[] { 1, 1 });
+        UpdatableBloomFilter bf = new FrozenBloomFilter(shape, new long[] { 1, 1 });
         flatBloofi.add( bf );
         flatBloofi.add( new RandomBloomFilter(shape));
         flatBloofi.add( new RandomBloomFilter(shape));

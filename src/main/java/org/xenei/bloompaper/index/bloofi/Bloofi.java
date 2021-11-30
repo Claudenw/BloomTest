@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.apache.commons.collections4.bloomfilter.Shape;
 
 /**
  * Traditional Bloofi implementation.

@@ -6,9 +6,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.FrozenBloomFilter;
-import org.xenei.bloompaper.index.hamming.Node.NodeComparator;
 
 /**
  * Implementation that uses hamming based index.
@@ -18,29 +17,23 @@ import org.xenei.bloompaper.index.hamming.Node.NodeComparator;
  */
 public class BFHamming  {
 
-    private TreeSet<Node> index = new TreeSet<Node>( NodeComparator.COMPLETE );
+    private TreeSet<Node> index = new TreeSet<Node>();
     public List<FrozenBloomFilter> found;
     private Collection<BloomFilter> filterCapture;
-
-
 
     public BFHamming(Shape shape) {
         Node.setEmpty( shape );
     }
 
-    private boolean equals(Node n1, Node n2) {
-        return NodeComparator.COMPLETE.compare(n1, n2) == 0;
-    }
-
     public void add(BloomFilter filter) {
         Node node = new Node( filter );
         SortedSet<Node> tailSet = index.tailSet( node );
-        if (tailSet.isEmpty() || ! equals( node, tailSet.first()))
+        if (tailSet.isEmpty() || ! node.equals(tailSet.first()))
         {
             tailSet.add( node );
         }
         else {
-            tailSet.first().merge( node );
+            tailSet.first().increment();
         }
     }
 
@@ -48,7 +41,7 @@ public class BFHamming  {
     public boolean delete(BloomFilter filter) {
         Node node = new Node( filter );
         SortedSet<Node> tailSet = index.tailSet( node );
-        if (!tailSet.isEmpty() && equals( node, tailSet.first()))
+        if (!tailSet.isEmpty() && node.equals( tailSet.first()))
         {
             if (tailSet.first().decrement())
             {
@@ -68,7 +61,7 @@ public class BFHamming  {
         if (tailSet.isEmpty()) {
             return 0;
         }
-        if (equals( node, tailSet.first()))
+        if (node.equals(tailSet.first()))
         {
             filterCapture.add( tailSet.first().getFilter() );
             retval += tailSet.first().getCount();
@@ -77,7 +70,7 @@ public class BFHamming  {
         Node lowerLimit = node.lowerLimitNode();
         Node upperLimit;
 
-        while (NodeComparator.COMPLETE.compare( lowerLimit, index.last() ) <= 0)
+        while ( lowerLimit.compareTo( index.last() ) <= 0)
         {
             upperLimit = lowerLimit.upperLimitNode();
             retval += tailSet.tailSet( lowerLimit ).headSet( upperLimit ).stream()

@@ -2,8 +2,12 @@ package org.xenei.bloompaper.index;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.BiPredicate;
+import java.util.function.LongConsumer;
+
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.apache.commons.collections4.bloomfilter.Shape;
+import org.apache.commons.collections4.bloomfilter.exceptions.NoMatchException;
 
 
 /**
@@ -45,13 +49,15 @@ public class BloomIndexLinear extends BloomIndex {
         return result;
     }
 
+
     @Override
     public void delete(BloomFilter filter)
     {
-        long[] bits = filter.getBits();
+        BitUtils.BufferCompare comp = new BitUtils.BufferCompare( filter, (x,y) -> x==y );
+
         for (int i=idx-1;i>=0;i--)
         {
-            if (Arrays.compare(index[i].getBits(), bits) == 0)
+            if (comp.matches( index[i] ))
             {
                 if (i < idx-1)
                 {

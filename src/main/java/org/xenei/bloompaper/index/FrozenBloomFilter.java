@@ -1,13 +1,8 @@
 package org.xenei.bloompaper.index;
 
-import java.util.Arrays;
-import java.util.BitSet;
-
-import org.apache.commons.collections4.bloomfilter.AbstractBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.StaticHasher;
+import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 
 
 /**
@@ -20,16 +15,11 @@ import org.apache.commons.collections4.bloomfilter.hasher.StaticHasher;
  * This filter implements hashCode() and equals() and is suitable for
  * use in Hash based collections.
  * </p>
- * @see BloomFilter#getBits()
+ * @see UpdatableBloomFilter#getBits()
  * @author claude
  *
  */
-public class FrozenBloomFilter extends AbstractBloomFilter {
-
-    /**
-     * The bits for the filter.
-     */
-    private long[] bits;
+public class FrozenBloomFilter extends SimpleBloomFilter {
 
     /**
      * Method to create a frozen filter from a standard filter.
@@ -44,7 +34,7 @@ public class FrozenBloomFilter extends AbstractBloomFilter {
         {
             return (FrozenBloomFilter)bf;
         }
-        return new FrozenBloomFilter( bf.getShape(), bf.getBits());
+        return new FrozenBloomFilter( bf );
     }
 
     /**
@@ -52,46 +42,20 @@ public class FrozenBloomFilter extends AbstractBloomFilter {
      * @param shape the Shape of the filter.
      * @param bits the enabled bits encoded as an array of longs.
      */
-    public FrozenBloomFilter( Shape shape, long ... bits)
+    private FrozenBloomFilter( BloomFilter bf )
     {
-        super(shape);
-        this.bits = bits.clone();
+        super(  bf.getShape(), bf );
     }
 
     @Override
-    public long[] getBits() {
-        return bits;
-    }
-    @Override
-    public StaticHasher getHasher() {
-        BitSet bitset = BitSet.valueOf( bits );
-        return new StaticHasher( bitset.stream().iterator(), getShape());
-    }
-    @Override
-    public void merge(BloomFilter other) {
-        throw new UnsupportedOperationException( "merge not supported" );
-    }
-    @Override
-    public void merge(Hasher hasher) {
-        throw new UnsupportedOperationException( "merge not supported" );
+    public boolean mergeInPlace(Hasher hasher) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public int hashCode() {
-        return Arrays.hashCode(bits);
+    public boolean mergeInPlace(BloomFilter other) {
+        throw new UnsupportedOperationException();
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof FrozenBloomFilter)
-        {
-            return Arrays.equals( bits, ((FrozenBloomFilter)other).bits);
-        }
-        return false;
-    }
 
-    @Override
-    public String toString() {
-        return BitUtils.format( bits );
-    }
 }

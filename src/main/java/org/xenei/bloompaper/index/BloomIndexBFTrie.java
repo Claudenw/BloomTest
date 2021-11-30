@@ -3,7 +3,7 @@ package org.xenei.bloompaper.index;
 import java.util.Collection;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.bftrie.BFTrie4;
 
 

@@ -1,12 +1,18 @@
 package org.xenei.bloompaper.index;
 
+import java.util.Objects;
 import java.util.PrimitiveIterator.OfInt;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
+import org.apache.commons.collections4.bloomfilter.ArrayCountingBloomFilter;
+import org.apache.commons.collections4.bloomfilter.BitCountProducer;
+import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.CountingBloomFilter;
+import org.apache.commons.collections4.bloomfilter.IndexProducer;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.StaticHasher;
+import org.apache.commons.collections4.bloomfilter.Shape;
 
 /**
  * A Counting filter implementation on a regular bloom filter.
@@ -22,10 +28,6 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
         delegate = filter;
     }
 
-    @Override
-    public int andCardinality(BloomFilter other) {
-        return delegate.andCardinality(other);
-    }
 
     @Override
     public int cardinality() {
@@ -43,38 +45,8 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
     }
 
     @Override
-    public long[] getBits() {
-        return delegate.getBits();
-    }
-
-    @Override
-    public StaticHasher getHasher() {
-        return delegate.getHasher();
-    }
-
-    @Override
     public Shape getShape() {
         return delegate.getShape();
-    }
-
-    @Override
-    public int orCardinality(BloomFilter other) {
-        return delegate.orCardinality(other);
-    }
-
-    @Override
-    public int xorCardinality(BloomFilter other) {
-        return delegate.xorCardinality(other);
-    }
-
-    @Override
-    public void merge(BloomFilter other) {
-        delegate.merge(other);
-    }
-
-    @Override
-    public void merge(Hasher other) {
-        delegate.merge( other );
     }
 
     @Override
@@ -88,30 +60,93 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
     }
 
     @Override
-    public boolean add(CountingBloomFilter other) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean subtract(CountingBloomFilter other) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public boolean isValid() {
         return true;
     }
 
     @Override
     public void forEachCount(BitCountConsumer action) {
-        if (delegate instanceof CountingBloomFilter) {
-            ((CountingBloomFilter) delegate).forEachCount(action);
-        } else {
-            OfInt iter = getHasher().getBits(getShape());
-            while (iter.hasNext()) {
-                action.accept(iter.nextInt(), 1);
-            }
-        }
+        BitCountProducer producer =
+                (delegate instanceof CountingBloomFilter) ? ((CountingBloomFilter) delegate) : BitCountProducer.from(delegate);
+        producer.forEachCount( action );;
     }
+
+
+    @Override
+    public boolean isSparse() {
+        return delegate.isSparse();
+    }
+
+
+    @Override
+    public boolean contains(IndexProducer indexProducer) {
+        return delegate.contains(indexProducer);
+    }
+
+
+    @Override
+    public boolean contains(BitMapProducer bitMapProducer) {
+        return delegate.contains(bitMapProducer);
+       }
+
+
+    @Override
+    public boolean mergeInPlace(BloomFilter other) {
+        throw new UnsupportedOperationException();
+    }
+
+
+    @Override
+    public void forEachIndex(IntConsumer consumer) {
+        delegate.forEachIndex(consumer);
+
+    }
+
+
+    @Override
+    public void forEachBitMap(LongConsumer consumer) {
+        delegate.forEachBitMap(consumer);
+    }
+
+
+    @Override
+    public boolean add(BitCountProducer other) {
+        throw new UnsupportedOperationException();
+    }
+
+
+    @Override
+    public boolean subtract(BitCountProducer other) {
+        throw new UnsupportedOperationException();
+    }
+
+
+    /**
+     * Clones the filter.  Used to create merged values.
+     * @return A clone of this filter.
+     */
+    protected ArrayCountingBloomFilter makeClone() {
+        ArrayCountingBloomFilter filter = new ArrayCountingBloomFilter(delegate.getShape());
+        filter.add(this);
+        return filter;
+    }
+
+    @Override
+    public CountingBloomFilter merge(BloomFilter other) {
+        Objects.requireNonNull(other, "other");
+        CountingBloomFilter filter = makeClone();
+        filter.add(BitCountProducer.from(other));
+        return filter;
+    }
+
+    @Override
+    public CountingBloomFilter merge(Hasher hasher) {
+        Objects.requireNonNull(hasher, "hasher");
+        ArrayCountingBloomFilter filter = makeClone();
+        filter.add(BitCountProducer.from(hasher.indices(delegate.getShape())));
+        return filter;
+    }
+
+
 
 }

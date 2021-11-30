@@ -3,7 +3,7 @@ package org.xenei.bloompaper.index;
 import java.util.Collection;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.apache.commons.collections4.bloomfilter.Shape;
 
 
 /**
@@ -67,5 +67,6 @@ public abstract class BloomIndex {
      * @param collection The collection to add to.
      */
     abstract public void setFilterCapture( Collection<BloomFilter> collection );
+
 
 }

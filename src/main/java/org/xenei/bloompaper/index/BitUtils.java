@@ -1,8 +1,12 @@
 package org.xenei.bloompaper.index;
 
 import java.util.Arrays;
+import java.util.function.BiPredicate;
+import java.util.function.LongConsumer;
 
+import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.exceptions.NoMatchException;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -145,15 +149,44 @@ public final class BitUtils {
         return sb.toString();
     }
 
-    public static boolean chkBreak( BloomFilter filter, long... values )
-    {
-        long[] bits = filter.getBits();
-        return Arrays.compare( bits,  values) == 0;
-    }
+//    public static boolean chkBreak( BloomFilter filter, long... values )
+//    {
+//        long[] bits = BloomFilter.asBitMapArray(filter);
+//        return Arrays.compare( bits,  values) == 0;
+//    }
 
     public static boolean isSet( long[] bits, int bitIdx )
     {
         int longRec = getLongIndex(bitIdx);
         return (longRec < bits.length) ? (bits[longRec] & getLongBit(bitIdx)) != 0 : false;
     }
+
+
+
+public static class BufferCompare implements LongConsumer {
+    BiPredicate<Long,Long> func;
+    long[] bitMap;
+    int i;
+
+    public BufferCompare( BloomFilter filter, BiPredicate<Long,Long> func ) {
+        bitMap = BloomFilter.asBitMapArray(filter);
+    }
+
+    @Override
+    public void accept(long value) {
+        if (i >= bitMap.length || ! func.test( bitMap[i++], value)) {
+            throw new NoMatchException();
+        }
+    }
+
+    public boolean matches( BloomFilter other ) {
+        i = 0;
+        try {
+            other.forEachBitMap(this);
+            return i == bitMap.length;
+        } catch (NoMatchException e) {
+            return false;
+        }
+    }
+}
 }

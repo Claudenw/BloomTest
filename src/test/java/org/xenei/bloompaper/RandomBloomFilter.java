@@ -6,7 +6,7 @@ import java.util.Random;
 import javax.naming.OperationNotSupportedException;
 
 import org.apache.commons.collections4.bloomfilter.AbstractBloomFilter;
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.UpdatableBloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.StaticHasher;
@@ -48,7 +48,7 @@ public class RandomBloomFilter extends AbstractBloomFilter {
         return new StaticHasher( bitset.stream().iterator(), getShape());
     }
     @Override
-    public void merge(BloomFilter other) {
+    public void merge(UpdatableBloomFilter other) {
         throw new IllegalStateException( new OperationNotSupportedException() );
     }
     @Override

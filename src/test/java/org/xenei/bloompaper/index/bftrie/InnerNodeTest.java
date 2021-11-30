@@ -2,7 +2,7 @@ package org.xenei.bloompaper.index.bftrie;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.UpdatableBloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
 import org.junit.Test;
@@ -76,7 +76,7 @@ public class InnerNodeTest {
 
 
         System.out.println( String.format( "%X", value));
-        BloomFilter bf = new FrozenBloomFilter(shape, new long[] { value, value });
+        UpdatableBloomFilter bf = new FrozenBloomFilter(shape, new long[] { value, value });
 
         for (int i=0;i<16;i++)
         {

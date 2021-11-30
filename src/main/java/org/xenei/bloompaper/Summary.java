@@ -1,5 +1,13 @@
 package org.xenei.bloompaper;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +54,7 @@ public class Summary {
                 {
                     for (Stats.Type type : Stats.Type.values())
                     {
-                        totals[phase.ordinal()][type.ordinal()] += stat.getCount( phase, type);
+                        totals[phase.ordinal()][type.ordinal()] += stat.getElapsed( phase, type);
                     }
                 }
                 n++;
@@ -82,5 +90,54 @@ public class Summary {
 
     public List<Element> getTable() {
         return table;
+    }
+
+    public static void writeData( PrintStream ps, List<Stats> table )
+    {
+        ps.println(Stats.getHeader());
+        for (final Stats s : table) {
+            for (Stats.Phase phase : Stats.Phase.values())
+            {
+                ps.println(s.reportStats(phase));
+            }
+        }
+    }
+
+    public void writeSummary( PrintStream ps )
+    {
+        ps.println(Summary.getHeader());
+        for (final Summary.Element e : getTable()) {
+            for (Stats.Phase phase : Stats.Phase.values()) {
+                ps.println(e.getReport( phase ));
+            }
+        }
+
+    }
+
+    /**
+     * Read a datafile and print it out.
+     * @param args the arguments.
+     * @throws IOException
+     */
+    public static void main(String[] args) throws IOException
+    {
+        if (args.length == 0 || args.length > 2)
+        {
+            System.out.println( "Summary <inputFile> [<outputFile>]");
+            System.exit(1);;
+        }
+
+        File f = new File( args[0] );
+        BufferedReader br = new BufferedReader( new FileReader( f ));
+
+        List<Stats> table = Stats.parse(br);
+
+        Summary summary = new Summary( table );
+        summary.writeSummary( System.out );
+        if (args.length == 2)
+        {
+            File outFile = new File( args[1] );
+            summary.writeSummary( new PrintStream( new FileOutputStream( outFile )));
+        }
     }
 }

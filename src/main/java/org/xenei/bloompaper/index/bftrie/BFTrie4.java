@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.apache.commons.collections4.bloomfilter.Shape;
 
 public class BFTrie4   {
     public static final int[][] nibbleTable = {
@@ -46,16 +46,16 @@ public class BFTrie4   {
     }
 
     public void add(BloomFilter filter) {
-        root.add(this,filter);
+        root.add(this,filter, BloomFilter.asBitMapArray(filter));
         count++;
     }
 
     public boolean find( BloomFilter filter ) {
-        return root.find( filter );
+        return root.find( BloomFilter.asBitMapArray(filter));
     }
 
     public void remove(BloomFilter filter) {
-        if (root.remove(filter))
+        if (root.remove(BloomFilter.asBitMapArray(filter)))
         {
             count--;
         }
@@ -66,12 +66,12 @@ public class BFTrie4   {
         int f = shape.getNumberOfBits()-filter.cardinality();
         int initSize = count * f / shape.getNumberOfBits();
         List<BloomFilter> retval = new ArrayList<BloomFilter>(initSize);
-        root.search( retval, filter);
+        root.search( retval, BloomFilter.asBitMapArray(filter));
         return retval;
     }
 
     public int count(BloomFilter filter) {
-        return root.count(filter);
+        return root.count(BloomFilter.asBitMapArray(filter));
     }
 
     public void setFilterCapture(Collection<BloomFilter> collection) {

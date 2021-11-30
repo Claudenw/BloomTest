@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.hamming.BFHamming;
 
 /**
@@ -18,8 +18,8 @@ public class BloomIndexHamming extends BloomIndex {
     private BFHamming index;
     private int count;
 
-    public BloomIndexHamming(int population, Shape bloomFilterConfig) {
-        super(population, bloomFilterConfig);
+    public BloomIndexHamming(int population, Shape shape) {
+        super(population, shape);
         this.index = new BFHamming(shape);
     }
 

@@ -18,12 +18,12 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
-import org.apache.commons.collections4.bloomfilter.BitSetBloomFilter;
+import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.HashFunction;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
+import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.geoname.GeoName;
+import org.xenei.bloompaper.geoname.GeoNameHasher;
+import org.xenei.bloompaper.geoname.GeoNameIterator;
 
 public class Density {
 
@@ -44,7 +44,6 @@ public class Density {
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
-        HashFunction hashFunction = new Murmur128x86Cyclic();
         try {
             cmd = parser.parse(getOptions(), args);
         } catch (Exception e) {
@@ -67,49 +66,44 @@ public class Density {
                 throw new IllegalArgumentException(dir.getAbsolutePath() + " is not a directory");
             }
         }
-        Shape bloomFilterConfig = new Shape( hashFunction, 3, 1.0 / 100000);
-        BloomFilter[] filters = new BloomFilter[SAMPLE_SIZE];
-        final URL inputFile = Density.class.getResource("/allCountries.txt");
-        Status status = new Status(bloomFilterConfig);
+        int numberOfItems = 3;
+        double probability = 1.0 / 100000;
 
-        System.out.println("Reading test data");
-        final BufferedReader br = new BufferedReader(new InputStreamReader(inputFile.openStream()));
-        for (int density = 0; density < MAX_DENSITY; density++) {
-            System.out.println("Saturation " + (density + 1));
-            for (int i = 0; i < SAMPLE_SIZE; i++) {
-                final GeoName gn = GeoName.parse(br.readLine());
-                if (density > 0) {
-                    filters[i].merge(new BitSetBloomFilter(GeoNameFilterFactory.create(gn), bloomFilterConfig));
+        Shape shape = Shape.Factory.fromNP(numberOfItems, probability);
+        Status status = new Status(shape);
+        BloomFilter[] filters = new BloomFilter[SAMPLE_SIZE];
+        try (GeoNameIterator geoIter = new GeoNameIterator(Density.class.getResource("/allCountries.txt"))) {
+
+            System.out.println("Reading test data");
+            for (int density = 0; density < MAX_DENSITY; density++) {
+                System.out.println("Saturation " + (density + 1));
+                for (int i = 0; i < SAMPLE_SIZE; i++) {
+                    final BloomFilter bf = new SimpleBloomFilter(shape, GeoNameHasher.createHasher(geoIter.next()));
+                    if (density > 0) {
+                        filters[i].mergeInPlace(bf);
+                    } else {
+                        filters[i] = bf;
+                    }
+                }
+                double effectiveP = shape.getProbability(numberOfItems * (density + 1));
+                Map<Integer, Map<Double, Integer>> points = new HashMap<Integer, Map<Double, Integer>>();
+                status.record(points, density, filters, effectiveP);
+                PrintStream ps = null;
+                if (dir != null) {
+                    ps = new PrintStream(new File(dir, "points" + (density + 1) + ".csv"));
                 } else {
-                    filters[i] = new BitSetBloomFilter(GeoNameFilterFactory.create(gn), bloomFilterConfig);
+                    ps = System.out;
                 }
-            }
-            double effectiveP = new Shape( hashFunction, bloomFilterConfig.getNumberOfItems() * (density + 1),
-                    bloomFilterConfig.getNumberOfBits(), bloomFilterConfig.getNumberOfHashFunctions()).getProbability();
-            Map<Integer,Map<Double,Integer>> points = new HashMap<Integer,Map<Double,Integer>>();
-            status.record(points, density, filters, effectiveP);
-            PrintStream ps = null;
-            if (dir != null)
-            {
-                ps = new PrintStream(new File(dir, "points"+(density+1)+".csv"));
-            }
-            else {
-                ps = System.out;
-            }
-            for (Map.Entry<Integer,Map<Double,Integer>> entry : points.entrySet() )
-            {
-                for (Map.Entry<Double,Integer> inner : entry.getValue().entrySet())
-                {
-                    ps.println( String.format( "%s,%s,%s", entry.getKey(), inner.getKey(), inner.getValue()));
+                for (Map.Entry<Integer, Map<Double, Integer>> entry : points.entrySet()) {
+                    for (Map.Entry<Double, Integer> inner : entry.getValue().entrySet()) {
+                        ps.println(String.format("%s,%s,%s", entry.getKey(), inner.getKey(), inner.getValue()));
+                    }
                 }
-            }
-            if (dir != null)
-            {
-                ps.close();
+                if (dir != null) {
+                    ps.close();
+                }
             }
         }
-
-        br.close();
 
         PrintStream o = null;
         System.out.println("=== results ===");
@@ -174,7 +168,8 @@ public class Density {
             logStats = new HashMap<Integer, LogStats>();
         }
 
-        public void record(Map<Integer,Map<Double,Integer>> points, int density, BloomFilter[] filters, double probability) throws FileNotFoundException {
+        public void record(Map<Integer, Map<Double, Integer>> points, int density, BloomFilter[] filters,
+                double probability) throws FileNotFoundException {
 
             SaturationStats sat = new SaturationStats();
             LogStats log = new LogStats();
@@ -199,15 +194,13 @@ public class Density {
                 if (c[i] > 0) {
                     satSum += c[i] * Math.pow(i + 1 - sat.mean, 2);
                     satCount += c[i];
-                    if (c[i] > modeCount)
-                    {
-                        sat.mode = i+1;
+                    if (c[i] > modeCount) {
+                        sat.mode = i + 1;
                         modeCount = c[i];
                     }
                 }
-                if (satCount >= count/2 && sat.median == 0)
-                {
-                    sat.median = i+1;
+                if (satCount >= count / 2 && sat.median == 0) {
+                    sat.median = i + 1;
                 }
             }
 
@@ -218,21 +211,19 @@ public class Density {
             double logSum = 0.0;
             for (BloomFilter f : filters) {
                 double logV = logValue(f);
-                log.min = Double.min( log.min, logV );
-                log.max = Double.max( log.max, logV );
+                log.min = Double.min(log.min, logV);
+                log.max = Double.max(log.max, logV);
                 logSum += Math.pow(logValue(f) - log.mean, 2);
-                Map<Double,Integer> m = points.get(f.cardinality());
-                if (m == null)
-                {
-                    m = new HashMap<Double,Integer>();
-                    points.put( f.cardinality(), m);
+                Map<Double, Integer> m = points.get(f.cardinality());
+                if (m == null) {
+                    m = new HashMap<Double, Integer>();
+                    points.put(f.cardinality(), m);
                 }
                 Integer cnt = m.get(logV);
-                if (cnt == null)
-                {
+                if (cnt == null) {
                     m.put(logV, 1);
                 } else {
-                    m.put(logV, cnt+1);
+                    m.put(logV, cnt + 1);
                 }
             }
             log.sd = Math.sqrt(logSum / (filters.length - 1));
@@ -262,7 +253,7 @@ public class Density {
 
         public double logValue(BloomFilter filter) {
             List<Integer> lst = new ArrayList<Integer>();
-            filter.getHasher().getBits( filter.getShape()).forEachRemaining( (IntConsumer)lst::add );;
+            filter.forEachIndex(lst::add);
             Collections.sort(lst, Collections.reverseOrder());
             return getApproximateLog(lst, MAX_LOG_DEPTH);
         }

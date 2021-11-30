@@ -19,11 +19,13 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
-import org.apache.commons.collections4.bloomfilter.BitSetBloomFilter;
+
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
+import org.apache.commons.collections4.bloomfilter.Shape;
+import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.xenei.bloompaper.geoname.GeoName;
+import org.xenei.bloompaper.geoname.GeoNameHasher;
+import org.xenei.bloompaper.geoname.GeoNameIterator;
 import org.xenei.bloompaper.index.BloomIndex;
 import org.xenei.bloompaper.index.BloomIndexBFTrie;
 import org.xenei.bloompaper.index.BloomIndexBloofi;
@@ -40,7 +42,7 @@ public class Test {
     private static int RUN_COUNT = 5;
 
     static int[] POPULATIONS = { 100, 1000, 10000, 100000, 1000000 };
-    //static int[] POPULATIONS = {  1000000 };
+
 
     public static Object lastCreated;
 
@@ -66,6 +68,7 @@ public class Test {
                 "The probability of collisions (defaults to 1/100000).  May be specified as x/y or double format");
         options.addOption("o", "output", true, "Output directory.  If not specified results will not be preserved");
         options.addOption("i", "iterations", true, "The number of iterations defualt=" + RUN_COUNT);
+        options.addOption("s", "size", true, "The population size.  May occure more than once.  defualt=100, 1000, 10000, 100000, and 1000000");
         return options;
     }
 
@@ -102,6 +105,24 @@ public class Test {
             }
         }
 
+        if (cmd.hasOption("s")) {
+            String[] values = cmd.getOptionValues("s");
+            POPULATIONS = new int[values.length];
+            for (int i=0;i<values.length;i++)
+            {
+                try {
+                        POPULATIONS[i] = Integer.parseInt( values[i] );
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException(String.format("Populsation size (s) %s is not a valid number.", values[i]));
+                }
+            }
+
+            if (RUN_COUNT < 1) {
+                RUN_COUNT = 5;
+                System.err.println(cmd.getOptionValue("i") + " is not a valid number, using " + RUN_COUNT);
+            }
+        }
+
         Shape shape;
         if (cmd.hasOption("n")) {
             n = Integer.valueOf(cmd.getOptionValue("n"));
@@ -116,7 +137,7 @@ public class Test {
                 p = Double.parseDouble(parts[0]) / Double.parseDouble(parts[1]);
             }
         }
-        shape = new Shape(new Murmur128x86Cyclic(), n, p);
+        shape = Shape.Factory.fromNP( n, p);
 
         File dir = null;
         if (cmd.hasOption("o")) {
@@ -154,15 +175,15 @@ public class Test {
         Collections.sort(tests);
 
         System.out.println("Reading test data");
-        final BufferedReader br = new BufferedReader(new InputStreamReader(inputFile.openStream()));
-        for (int i = 0; i < 1000000; i++) {
-            final GeoName gn = GeoName.parse(br.readLine());
-            if ((i % 1000) == 0) {
-                sample.add(gn);
+        try (GeoNameIterator geoIter = new GeoNameIterator(inputFile)) {
+            for (int i = 0; i < 1000000; i++) {
+                final GeoName gn = geoIter.next();
+                if ((i % 1000) == 0) {
+                    sample.add(gn);
+                }
+                filters[i] = new SimpleBloomFilter(shape, GeoNameHasher.createHasher(geoIter.next()));
             }
-            filters[i] = new BitSetBloomFilter(GeoNameFilterFactory.create(gn), shape);
         }
-
         // run the tests
         for (final String testName : tests) {
             System.out.println("Running " + testName);
@@ -187,42 +208,21 @@ public class Test {
         verifier.verify( table );
 
         System.out.println("===  data ===");
+        Summary.writeData( System.out, table);
         if (dir != null) {
             o = new PrintStream(new File(dir, "data.csv"));
-        }
-        System.out.println(Stats.getHeader());
-        if (o != null) {
-            o.println(Stats.getHeader());
-        }
-        for (final Stats s : table) {
-            for (Stats.Phase phase : Stats.Phase.values())
-            {
-                System.out.println(s.reportStats(phase));
-                if (o != null) {
-                    o.println(s.reportStats(phase));
-                }
-            }
+            Summary.writeData( o, table);
+            o.close();
         }
 
-        System.out.println("=== summary data ===");
-        if (dir != null) {
-            o = new PrintStream(new File(dir, "summary.csv"));
-        } else {
-            o = null;
-        }
         final Summary summary = new Summary(table);
 
-        System.out.println(Summary.getHeader());
-        if (o != null) {
-            o.println(Summary.getHeader());
-        }
-        for (final Summary.Element e : summary.getTable()) {
-            for (Stats.Phase phase : Stats.Phase.values()) {
-                System.out.println(e.getReport( phase ));
-                if (o != null) {
-                    o.println(e.getReport(phase));
-                }
-            }
+        System.out.println("=== summary data ===");
+        summary.writeSummary( System.out );
+        if (dir != null) {
+            o = new PrintStream(new File(dir, "summary.csv"));
+            summary.writeSummary( o );
+            o.close();
         }
 
         System.out.println("=== run complete ===");
@@ -260,13 +260,13 @@ public class Test {
         for (int i = 0; i < sample.size(); i++) {
             switch (type) {
             case COMPLETE:
-                bfSample[i] = new BitSetBloomFilter(GeoNameFilterFactory.create(sample.get(i)), shape);
+                bfSample[i] = new SimpleBloomFilter(shape, GeoNameHasher.createHasher(sample.get(i)));
                 break;
             case HIGHCARD:
-                bfSample[i] = new BitSetBloomFilter(GeoNameFilterFactory.create(sample.get(i).name), shape);
+                bfSample[i] = new SimpleBloomFilter(shape, GeoNameHasher.hasherFor(sample.get(i).name));
                 break;
             case LOWCARD:
-                bfSample[i] = new BitSetBloomFilter(GeoNameFilterFactory.create(sample.get(i).feature_code), shape);
+                bfSample[i] = new SimpleBloomFilter(shape, GeoNameHasher.hasherFor(sample.get(i).feature_code));
                 break;
             }
         }

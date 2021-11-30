@@ -3,9 +3,15 @@ package org.xenei.bloompaper.index.bloofi;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.LongConsumer;
+
+import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.exceptions.NoMatchException;
 import org.xenei.bloompaper.Test;
 import org.xenei.bloompaper.index.BitUtils;
+import org.xenei.bloompaper.index.BloomIndex;
+import org.xenei.bloompaper.index.BitUtils.BufferCompare;
 
 /**
  * A leaf node of the Bloofi tree.
@@ -71,9 +77,12 @@ public class LeafNode implements Node {
         updateFilters( this.filter );
     }
 
+
+
     @Override
     public boolean remove(BloomFilter filter) {
-        if (Arrays.compare( this.filter.getBits(), filter.getBits())==0)
+        BufferCompare comp = new BufferCompare( this.filter, (x,y) -> x == y );
+        if (comp.matches(filter))
         {
             count--;
             InnerNode node = getParent();
@@ -128,7 +137,7 @@ public class LeafNode implements Node {
     @Override
     public String toString()
     {
-        long[] bits = filter.getBits();
+        long[] bits = BloomFilter.asBitMapArray(filter);
         return String.format( String.format( "LeafNode %s: %s (%s)", id, BitUtils.formatHex( bits ), BitUtils.format( bits ) ) );
     }
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
+import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.BitUtils;
 
 /**
@@ -44,13 +44,13 @@ public final class FlatBloofi {
         {
             buffer.add(new long[shape.getNumberOfBits()+1]);
         }
-        setBloomAt(i, bf.getBits());
+        setBloomAt(i, BloomFilter.asBitMapArray(bf));
         busy.set(i);
     }
 
     public int count(BloomFilter bf) {
         int count = 0;
-        BitSet bs = BitSet.valueOf( bf.getBits() );
+        BitSet bs = BitSet.valueOf( BloomFilter.asBitMapArray(bf) );
 
         for (int i = 0; i < buffer.size(); i++) {
             long w = ~0l;
@@ -87,7 +87,7 @@ public final class FlatBloofi {
      */
     private BitSet findExactMatch( BloomFilter filter)
     {
-        long[] bits = filter.getBits();
+        long[] bits = BloomFilter.asBitMapArray(filter);
         long[] result = new long[ buffer.size() ];
         long[] busyBits = busy.toLongArray();
         /*
