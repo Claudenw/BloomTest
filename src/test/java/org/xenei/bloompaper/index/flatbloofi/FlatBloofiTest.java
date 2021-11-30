@@ -2,9 +2,9 @@ package org.xenei.bloompaper.index.flatbloofi;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.collections4.bloomfilter.UpdatableBloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.function.Murmur128x86Cyclic;
+import org.apache.commons.collections4.bloomfilter.BitMapProducer;
+import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.Shape;
 import org.junit.Test;
 import org.xenei.bloompaper.RandomBloomFilter;
 import org.xenei.bloompaper.index.FrozenBloomFilter;
@@ -16,11 +16,11 @@ public class FlatBloofiTest {
     {
         int n = 3;
         double p = 1.0 / 100000;
-        Shape shape = new Shape(new Murmur128x86Cyclic(), n, p);
+        Shape shape = Shape.Factory.fromNP( n, p);
 
         FlatBloofi flatBloofi = new FlatBloofi(500, shape);
 
-        UpdatableBloomFilter bf = new FrozenBloomFilter(shape, new long[] { 1, 1 });
+        BloomFilter bf = new FrozenBloomFilter(shape, BitMapProducer.fromLongArray(new long[] { 1, 1 }));
         flatBloofi.add( bf );
         flatBloofi.add( new RandomBloomFilter(shape));
         flatBloofi.add( new RandomBloomFilter(shape));
@@ -39,11 +39,11 @@ public class FlatBloofiTest {
     {
         int n = 3;
         double p = 1.0 / 100000;
-        Shape shape = new Shape(new Murmur128x86Cyclic(), n, p);
+        Shape shape = Shape.Factory.fromNP( n, p);
 
         FlatBloofi flatBloofi = new FlatBloofi(500, shape);
 
-        UpdatableBloomFilter bf = new FrozenBloomFilter(shape, new long[] { 1, 1 });
+        BloomFilter bf = new FrozenBloomFilter(shape, BitMapProducer.fromLongArray( new long[] { 1, 1 }));
         flatBloofi.add( bf );
         flatBloofi.add( new RandomBloomFilter(shape));
         flatBloofi.add( new RandomBloomFilter(shape));

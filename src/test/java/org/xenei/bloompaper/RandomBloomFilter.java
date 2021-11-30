@@ -2,57 +2,53 @@ package org.xenei.bloompaper;
 
 import java.util.BitSet;
 import java.util.Random;
+import java.util.function.LongConsumer;
 
 import javax.naming.OperationNotSupportedException;
 
-import org.apache.commons.collections4.bloomfilter.AbstractBloomFilter;
-import org.apache.commons.collections4.bloomfilter.UpdatableBloomFilter;
+import org.apache.commons.collections4.bloomfilter.BitMapProducer;
+import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
-import org.apache.commons.collections4.bloomfilter.hasher.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.StaticHasher;
+import org.apache.commons.collections4.bloomfilter.Shape;
+import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.xenei.bloompaper.index.BitUtils;
 
 
-public class RandomBloomFilter extends AbstractBloomFilter {
-
-    private long[] bits;
+public class RandomBloomFilter extends SimpleBloomFilter {
 
     private static Random random = new Random();
 
+    private static BitMapProducer randomBitMapProducer(Shape shape) {
+        return new BitMapProducer() {
+            int len = (int) Math.ceil( shape.getNumberOfBits() * 1.0 / Long.SIZE );
+
+        @Override
+        public void forEachBitMap(LongConsumer consumer) {
+            long mask = 0;
+            for ( int i=0;i<len;i++)
+            {
+                long word = random.nextLong();
+                mask |= BitUtils.getLongBit(i);
+                if (i == len-1) {
+                    word &= mask;
+                }
+                consumer.accept(word);
+            }
+        }
+    };
+    }
     public RandomBloomFilter( Shape shape)
     {
-        super(shape);
-        int len = (int) Math.ceil( shape.getNumberOfBits() * 1.0 / Long.SIZE );
-        this.bits = new long[len];
-
-        for ( int i=0;i<len;i++)
-        {
-            bits[i] = random.nextLong();
-        }
-        int lastBits = shape.getNumberOfBits() % Long.SIZE;
-        long mask = 0;
-        for (int i=0;i<lastBits;i++)
-        {
-            mask |= BitUtils.getLongBit(i);
-        }
-        bits[len-1] &= mask;
+        super(shape, randomBitMapProducer(shape) );
     }
 
+
     @Override
-    public long[] getBits() {
-        return bits;
-    }
-    @Override
-    public StaticHasher getHasher() {
-        BitSet bitset = BitSet.valueOf( bits );
-        return new StaticHasher( bitset.stream().iterator(), getShape());
-    }
-    @Override
-    public void merge(UpdatableBloomFilter other) {
+    public boolean mergeInPlace(BloomFilter other) {
         throw new IllegalStateException( new OperationNotSupportedException() );
     }
     @Override
-    public void merge(Hasher hasher) {
+    public boolean mergeInPlace(Hasher hasher) {
         throw new IllegalStateException( new OperationNotSupportedException() );
     }
 

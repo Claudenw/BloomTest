@@ -1,8 +1,14 @@
 package org.xenei.bloompaper.index;
 
+import java.util.function.LongConsumer;
+
+import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
+import org.xenei.bloompaper.index.hamming.Node;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
+import org.apache.commons.collections4.bloomfilter.exceptions.NoMatchException;
 
 
 /**
@@ -19,7 +25,7 @@ import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
  * @author claude
  *
  */
-public class FrozenBloomFilter extends SimpleBloomFilter {
+public class FrozenBloomFilter extends SimpleBloomFilter implements Comparable<FrozenBloomFilter>{
 
     /**
      * Method to create a frozen filter from a standard filter.
@@ -47,6 +53,11 @@ public class FrozenBloomFilter extends SimpleBloomFilter {
         super(  bf.getShape(), bf );
     }
 
+    public FrozenBloomFilter( Shape shape, BitMapProducer producer)
+    {
+        super( shape, producer);
+    }
+
     @Override
     public boolean mergeInPlace(Hasher hasher) {
         throw new UnsupportedOperationException();
@@ -57,5 +68,37 @@ public class FrozenBloomFilter extends SimpleBloomFilter {
         throw new UnsupportedOperationException();
     }
 
+
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof FrozenBloomFilter ? compareTo((FrozenBloomFilter)obj) == 0 : false;
+    }
+
+    @Override
+    public int hashCode() {
+        return getShape().hashCode();
+    }
+
+    @Override
+    public int compareTo(FrozenBloomFilter other) {
+        if (this == other) {
+            return 0;
+        }
+        int result = this.getShape().compareTo( other.getShape());
+        if (result == 0) {
+            long[] bitMap = BloomFilter.asBitMapArray(this);
+            long[] oBitMap = BloomFilter.asBitMapArray(other);
+            int limit = bitMap.length < oBitMap.length ? bitMap.length : oBitMap.length;
+            int i=0;
+            while (i<limit && result == 0) {
+                result = Long.compare( bitMap[i],  oBitMap[i] );
+            }
+            if (result == 0) {
+                result = Integer.compare( bitMap.length,  oBitMap.length );
+            }
+        }
+        return result;
+    }
 
 }
