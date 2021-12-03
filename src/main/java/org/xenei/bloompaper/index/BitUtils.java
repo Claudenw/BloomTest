@@ -170,6 +170,7 @@ public static class BufferCompare implements LongConsumer {
 
     public BufferCompare( BloomFilter filter, BiPredicate<Long,Long> func ) {
         bitMap = BloomFilter.asBitMapArray(filter);
+        this.func=func;
     }
 
     @Override

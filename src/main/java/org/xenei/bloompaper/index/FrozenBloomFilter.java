@@ -1,9 +1,11 @@
 package org.xenei.bloompaper.index;
 
+import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.IndexProducer;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 import org.xenei.bloompaper.index.hamming.Node;
@@ -25,7 +27,11 @@ import org.apache.commons.collections4.bloomfilter.exceptions.NoMatchException;
  * @author claude
  *
  */
-public class FrozenBloomFilter extends SimpleBloomFilter implements Comparable<FrozenBloomFilter>{
+public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFilter> {
+    private final BloomFilter wrapped;
+    private final int cardinality;
+    private long[] bitMap;
+
 
     /**
      * Method to create a frozen filter from a standard filter.
@@ -50,14 +56,21 @@ public class FrozenBloomFilter extends SimpleBloomFilter implements Comparable<F
      */
     private FrozenBloomFilter( BloomFilter bf )
     {
-        super(  bf.getShape(), bf );
+        wrapped = bf;
+        cardinality = bf.cardinality();
     }
 
     public FrozenBloomFilter( Shape shape, BitMapProducer producer)
     {
-        super( shape, producer);
+        this( new SimpleBloomFilter( shape, producer) );
     }
 
+    public long[] getBitMap() {
+        if (bitMap == null) {
+            bitMap = BloomFilter.asBitMapArray(wrapped);
+        }
+        return bitMap;
+    }
     @Override
     public boolean mergeInPlace(Hasher hasher) {
         throw new UnsupportedOperationException();
@@ -67,8 +80,6 @@ public class FrozenBloomFilter extends SimpleBloomFilter implements Comparable<F
     public boolean mergeInPlace(BloomFilter other) {
         throw new UnsupportedOperationException();
     }
-
-
 
     @Override
     public boolean equals(Object obj) {
@@ -87,12 +98,12 @@ public class FrozenBloomFilter extends SimpleBloomFilter implements Comparable<F
         }
         int result = this.getShape().compareTo( other.getShape());
         if (result == 0) {
-            long[] bitMap = BloomFilter.asBitMapArray(this);
-            long[] oBitMap = BloomFilter.asBitMapArray(other);
-            int limit = bitMap.length < oBitMap.length ? bitMap.length : oBitMap.length;
+            long[] oBitMap = other.getBitMap();
+            int limit = getBitMap().length < oBitMap.length ? getBitMap().length : oBitMap.length;
             int i=0;
             while (i<limit && result == 0) {
                 result = Long.compare( bitMap[i],  oBitMap[i] );
+                i++;
             }
             if (result == 0) {
                 result = Integer.compare( bitMap.length,  oBitMap.length );
@@ -100,5 +111,47 @@ public class FrozenBloomFilter extends SimpleBloomFilter implements Comparable<F
         }
         return result;
     }
+
+    @Override
+    public void forEachIndex(IntConsumer consumer) {
+        wrapped.forEachIndex(consumer);
+    }
+
+    @Override
+    public void forEachBitMap(LongConsumer consumer) {
+        wrapped.forEachBitMap(consumer);
+    }
+
+    @Override
+    public boolean isSparse() {
+        return wrapped.isSparse();
+    }
+
+    @Override
+    public Shape getShape() {
+        return wrapped.getShape();
+    }
+
+    @Override
+    public boolean contains(IndexProducer indexProducer) {
+        return wrapped.contains(indexProducer);
+    }
+
+    @Override
+    public boolean contains(BitMapProducer bitMapProducer) {
+        return wrapped.contains(bitMapProducer);
+    }
+
+    @Override
+    public boolean isFull() {
+        return wrapped.isFull();
+    }
+
+    @Override
+    public int cardinality() {
+        return cardinality;
+    }
+
+
 
 }

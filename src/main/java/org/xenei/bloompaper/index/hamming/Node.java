@@ -2,36 +2,39 @@ package org.xenei.bloompaper.index.hamming;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.IndexProducer;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.BitUtils;
+import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 public class Node implements Comparable<Node> {
     protected static BloomFilter empty;
-    private Shape shape;
-    private long[] bitMap;
+    private static FrozenBloomFilter wrapped;
+
+    private int hash;
     protected int count;
     protected Double log;
-    protected int hamming;
 
     static void setEmpty( Shape shape ) {
         empty = new SimpleBloomFilter( shape );
     }
 
     public Node(BloomFilter filter) {
-        this.bitMap = BloomFilter.asBitMapArray(filter);
-        this.shape = filter.getShape();
-        this.hamming = filter.cardinality();
+        this.wrapped = FrozenBloomFilter.makeInstance(filter);
         this.count = 1;
-        reset();
+        this.hash = Integer.hashCode( getHamming() );
+        this.log = null;
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode( bitMap );
+        return hash;
     }
 
     @Override
@@ -40,8 +43,8 @@ public class Node implements Comparable<Node> {
         return other instanceof Node ? this.compareTo( (Node)other ) == 0 : false;
     }
 
-    public BloomFilter getFilter() {
-        return new SimpleBloomFilter( shape, BitMapProducer.fromLongArray(bitMap));
+    public FrozenBloomFilter getFilter() {
+        return wrapped;
     }
 
     public boolean decrement() {
@@ -53,27 +56,17 @@ public class Node implements Comparable<Node> {
         this.count++;
     }
 
-//    public void merge(Node otherNode) {
-//        this.filter.merge(otherNode.filter);
-//        this.count += otherNode.count;
-//        reset();
-//    }
-
-    private void reset() {
-        this.log = null;
-    }
-
     public int getCount() {
         return this.count;
     }
 
     public int getHamming() {
-        return hamming;
+        return wrapped.cardinality();
     }
 
     @Override
     public String toString() {
-        return String.format( "%s n=%s h=%s l=%s", BitUtils.format( bitMap ),
+        return String.format( "%s n=%s h=%s l=%s", BitUtils.format( wrapped.getBitMap() ),
                 count, getHamming(), getLog());
     }
 
@@ -86,7 +79,7 @@ public class Node implements Comparable<Node> {
      */
     public Double getLog() {
         if (log == null) {
-            log = getApproximateLog(shape.getNumberOfBits());
+            log = getApproximateLog(wrapped.getShape().getNumberOfBits());
         }
         return log;
     }
@@ -136,13 +129,13 @@ public class Node implements Comparable<Node> {
     private final int[] getApproximateLogExponents(int depth) {
         int[] exp = new int[depth + 1];
 
-        exp[0] = BitUtils.maxSet(bitMap);
+        exp[0] = BitUtils.maxSet(wrapped.getBitMap());
         if (exp[0] < 0) {
             return exp;
         }
 
         for (int i = 1; i < depth; i++) {
-            exp[i] = BitUtils.maxSetBefore(bitMap, exp[i - 1]);
+            exp[i] = BitUtils.maxSetBefore(wrapped.getBitMap(), exp[i - 1]);
             if (exp[i] - exp[0] < -25) {
                 exp[i] = -1;
             }
@@ -174,31 +167,38 @@ public class Node implements Comparable<Node> {
         return new UpperLimitNode(this);
     }
 
-    private class LowerLimitNode extends Node {
-
-        public LowerLimitNode(Node node) {
+    private abstract class LimitNode extends Node {
+        protected int hamming;
+        protected LimitNode(Node node) {
             super(empty);
             this.hamming = node.getHamming()+1;
-            this.log = node.getLog();
             this.count = 0;
+        }
+        @Override
+        public final int getHamming() {
+            return hamming;
+        }
+
+    }
+    private class LowerLimitNode extends LimitNode {
+        public LowerLimitNode(Node node) {
+            super(node);
+            this.log = node.getLog();
         }
     }
 
-    private class UpperLimitNode extends Node {
+    private class UpperLimitNode extends LimitNode {
 
         private final double previousLog;
-
         public UpperLimitNode(Node node) {
-            super(empty);
-            this.hamming = node.getHamming() + 1;
+            super(node);
             this.log = 0.0;
             this.previousLog = node.getLog();
-            this.count = 0;
         }
 
         @Override
         public Node lowerLimitNode() {
-            Node retval = new LowerLimitNode(this);
+            LimitNode retval = new LowerLimitNode(this);
             retval.hamming--;
             retval.log = previousLog;
             return retval;
@@ -214,14 +214,7 @@ public class Node implements Comparable<Node> {
         if (result == 0) {
             result = Double.compare(this.getLog(), other.getLog());
             if (result == 0) {
-                int limit = this.bitMap.length>other.bitMap.length? other.bitMap.length:this.bitMap.length;
-                int i=0;
-                while (i<limit && result == 0) {
-                    result = Long.compare( other.bitMap[i], this.bitMap[i]);
-                }
-                if (result == 0) {
-                    result = Integer.compare( this.bitMap.length, other.bitMap.length);
-                }
+                result = wrapped.compareTo( other.wrapped );
             }
         }
         return result;
