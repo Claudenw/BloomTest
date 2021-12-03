@@ -31,12 +31,13 @@ import org.xenei.bloompaper.index.BloomIndexBFTrie;
 import org.xenei.bloompaper.index.BloomIndexBloofi;
 import org.xenei.bloompaper.index.BloomIndexFlatBloofi;
 import org.xenei.bloompaper.index.BloomIndexHamming;
-import org.xenei.bloompaper.index.BloomIndexLinear;
+import org.xenei.bloompaper.index.BloomIndexList;
+import org.xenei.bloompaper.index.BloomIndexArray;
 import org.xenei.bloompaper.index.NullCollection;
 
 public class Test {
 
-    private static Map<String, Constructor<? extends BloomIndex>> constructors = new HashMap<String, Constructor<? extends BloomIndex>>();
+    public static Map<String, Constructor<? extends BloomIndex>> constructors = new HashMap<String, Constructor<? extends BloomIndex>>();
 
     // 9,772,346 max lines
     private static int RUN_COUNT = 5;
@@ -46,12 +47,13 @@ public class Test {
 
     public static Object lastCreated;
 
-    private static void init() throws NoSuchMethodException, SecurityException {
+    public static void init() throws NoSuchMethodException, SecurityException {
         constructors.put("Hamming", BloomIndexHamming.class.getConstructor(int.class, Shape.class));
         constructors.put("Bloofi", BloomIndexBloofi.class.getConstructor(int.class, Shape.class));
         constructors.put("FlatBloofi", BloomIndexFlatBloofi.class.getConstructor(int.class, Shape.class));
         constructors.put("BF-Trie", BloomIndexBFTrie.class.getConstructor(int.class, Shape.class));
-        constructors.put("Linear", BloomIndexLinear.class.getConstructor(int.class, Shape.class));
+        constructors.put("Array", BloomIndexArray.class.getConstructor(int.class, Shape.class));
+        constructors.put("List", BloomIndexList.class.getConstructor(int.class, Shape.class));
     }
 
     public static Options getOptions() {

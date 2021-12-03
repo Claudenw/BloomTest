@@ -14,13 +14,13 @@ import org.apache.commons.collections4.bloomfilter.exceptions.NoMatchException;
  * Plain ol' linear search.
  *
  */
-public class BloomIndexLinear extends BloomIndex {
+public class BloomIndexArray extends BloomIndex {
     private BloomFilter[] index;
     private int idx;
     private Collection<BloomFilter> filterCapture;
 
 
-    public BloomIndexLinear(int population,Shape shape)
+    public BloomIndexArray(int population,Shape shape)
     {
         super(population, shape);
         this.index = new BloomFilter[population];
@@ -38,11 +38,11 @@ public class BloomIndexLinear extends BloomIndex {
     {
         int result = 0;
         // searching entire list
-        for (BloomFilter candidate : index)
+        for (int i=0;i<idx;i++)
         {
-            if (candidate.contains(filter))
+            if (index[i].contains(filter))
             {
-                filterCapture.add( candidate );
+                filterCapture.add( index[i] );
                 result++;
             }
         }
@@ -53,7 +53,7 @@ public class BloomIndexLinear extends BloomIndex {
     @Override
     public void delete(BloomFilter filter)
     {
-        BitUtils.BufferCompare comp = new BitUtils.BufferCompare( filter, (x,y) -> x==y );
+        BitUtils.BufferCompare comp = new BitUtils.BufferCompare( filter, (x,y) -> x.equals(y));
 
         for (int i=idx-1;i>=0;i--)
         {
