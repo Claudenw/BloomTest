@@ -70,12 +70,9 @@ public class BFTrie4   {
         return retval;
     }
 
-    public int count(BloomFilter filter) {
-        return root.count(BloomFilter.asBitMapArray(filter));
+    public int count(Collection<BloomFilter> collection, BloomFilter filter) {
+        return root.count(collection, BloomFilter.asBitMapArray(filter));
     }
 
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        root.setFilterCapture( collection );
-    }
 
 }

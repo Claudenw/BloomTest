@@ -10,7 +10,6 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 public class LeafNode implements Node {
     private final List<BloomFilter> lst;
     private boolean checkEntries;
-    private Collection<BloomFilter> filterCapture;
 
     public LeafNode(boolean checkEntries) {
         this.checkEntries = checkEntries;
@@ -65,7 +64,7 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public int count(long buffer[]) {
+    public int count(Collection<BloomFilter> filterCapture, long buffer[]) {
         if (checkEntries)
         {
             BitMapProducer bmp = BitMapProducer.fromLongArray(buffer);
@@ -93,8 +92,4 @@ public class LeafNode implements Node {
         return String.format( "LeafNode %s", lst );
     }
 
-    @Override
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        this.filterCapture = collection;
-    }
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
@@ -56,6 +57,7 @@ public class BFHamming  {
         int retval = 0;
 
         Node node = new Node(filter);
+        Consumer<BloomFilter> collector = filterCapture == null? (x)->{} : filterCapture::add;
 
         SortedSet<Node> tailSet = index.tailSet( node );
         if (tailSet.isEmpty()) {
@@ -63,8 +65,7 @@ public class BFHamming  {
         }
         if (node.equals(tailSet.first()))
         {
-            filterCapture.add( tailSet.first().getFilter() );
-            retval += tailSet.first().getCount();
+            retval += tailSet.first().getCount(collector);
         }
 
         Node lowerLimit = node.lowerLimitNode();
@@ -75,8 +76,7 @@ public class BFHamming  {
             upperLimit = lowerLimit.upperLimitNode();
             retval += tailSet.tailSet( lowerLimit ).headSet( upperLimit ).stream()
                     .filter( n -> n.getFilter().contains( filter ))
-                    .filter( n -> filterCapture.add( n.getFilter() ))
-                    .mapToInt( n -> n.getCount() )
+                    .mapToInt( n -> n.getCount( collector ) )
                     .sum();
             lowerLimit = upperLimit.lowerLimitNode();
         }
@@ -90,7 +90,7 @@ public class BFHamming  {
         {
             if ( test.getFilter().contains( bf ))
             {
-                count += test.getCount();
+                count += test.getCount( (x) -> {});
             }
         }
         return count;

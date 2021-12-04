@@ -130,14 +130,14 @@ public class InnerNode implements Node {
     }
 
     @Override
-    public int count(long[] buffer) {
+    public int count(Collection<BloomFilter> collection, long[] buffer) {
         int retval = 0;
         int[] nodeIdxs = BFTrie4.nibbleTable[getNibble(buffer,level)];
         for (int i : nodeIdxs)
         {
             if (nodes[i] != null)
             {
-                retval += nodes[i].count(buffer);
+                retval += nodes[i].count(collection, buffer);
             }
         }
         return retval;
@@ -147,16 +147,6 @@ public class InnerNode implements Node {
     public String toString()
     {
         return String.format( "InnerNode d:%s", level );
-    }
-
-    @Override
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        for (Node n : nodes) {
-            if (n != null)
-            {
-                n.setFilterCapture(collection);
-            }
-        }
     }
 
 }

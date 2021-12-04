@@ -91,10 +91,22 @@ public  class BloomIndexTest {
             underTest.add( new SimpleBloomFilter( shape, hasher[i] ));
         }
 
-        assertEquals( 2, underTest.count( new SimpleBloomFilter( shape, hasher[0] )  ));
+        Collection<BloomFilter> collection = new ArrayList<BloomFilter>();
+        underTest.setFilterCapture(collection);
         for (int i=0;i<hasher.length;i++) {
-            System.out.println( String.format( "%s count %s : %s",  name, i, underTest.count( new SimpleBloomFilter( shape, hasher[i] ))));
-           assertEquals( "error at position "+i, expected[i], underTest.count( new SimpleBloomFilter( shape, hasher[i] )));
+            //System.out.println( String.format( "%s count %s : %s",  name, i, underTest.count( new SimpleBloomFilter( shape, hasher[i] ))));
+            collection.clear();
+            int actual = underTest.count( new SimpleBloomFilter( shape, hasher[i] ));
+            if (i==0 || i==7) {
+                System.out.println( String.format( "%s: %s ", name, i));
+                for (BloomFilter bf : collection)
+                {
+                    System.out.print( String.format( "%10s", " "));
+                    bf.forEachBitMap( (word) -> System.out.print( String.format("%016X", word)));
+                    System.out.println();
+                }
+            }
+           assertEquals( "error at position "+i, expected[i], actual);
         }
 
     }

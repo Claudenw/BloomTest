@@ -17,6 +17,8 @@ public class BloomIndexBFTrie extends BloomIndex {
      */
     private BFTrie4 bftrie;
 
+    private Collection<BloomFilter> collection;
+
     /**
      * Constructs the index
      * @param population the expected population.
@@ -37,7 +39,7 @@ public class BloomIndexBFTrie extends BloomIndex {
     @Override
     public int count(BloomFilter filter)
     {
-        return bftrie.count(filter);
+        return bftrie.count(collection,filter);
     }
 
     @Override
@@ -61,7 +63,7 @@ public class BloomIndexBFTrie extends BloomIndex {
 
     @Override
     public void setFilterCapture(Collection<BloomFilter> collection) {
-        bftrie.setFilterCapture( collection );
+        this.collection = collection;
     }
 
 }

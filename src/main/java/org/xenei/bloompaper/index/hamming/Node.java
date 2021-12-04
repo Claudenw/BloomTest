@@ -1,7 +1,10 @@
 package org.xenei.bloompaper.index.hamming;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
@@ -15,7 +18,7 @@ import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 public class Node implements Comparable<Node> {
     protected static BloomFilter empty;
-    private static FrozenBloomFilter wrapped;
+    private final FrozenBloomFilter wrapped;
 
     private int hash;
     protected int count;
@@ -56,7 +59,8 @@ public class Node implements Comparable<Node> {
         this.count++;
     }
 
-    public int getCount() {
+    public int getCount(Consumer<BloomFilter> func) {
+        func.accept( wrapped );
         return this.count;
     }
 
@@ -66,8 +70,11 @@ public class Node implements Comparable<Node> {
 
     @Override
     public String toString() {
-        return String.format( "%s n=%s h=%s l=%s", BitUtils.format( wrapped.getBitMap() ),
-                count, getHamming(), getLog());
+        StringBuffer sb = new StringBuffer();
+        wrapped.forEachBitMap( (word) -> sb.append( String.format("%016X", word)));
+
+        return String.format( "%s n=%s h=%s l=%s, 0x%s", BitUtils.format( wrapped.getBitMap() ),
+                count, getHamming(), getLog(), sb );
     }
 
     /**
@@ -153,7 +160,7 @@ public class Node implements Comparable<Node> {
      *
      * @return a search node.
      */
-    public Node lowerLimitNode() {
+    public LimitNode lowerLimitNode() {
         return new LowerLimitNode(this);
     }
 
@@ -163,7 +170,7 @@ public class Node implements Comparable<Node> {
      *
      * @return a search node.
      */
-    public Node upperLimitNode() {
+    public LimitNode upperLimitNode() {
         return new UpperLimitNode(this);
     }
 
@@ -197,7 +204,7 @@ public class Node implements Comparable<Node> {
         }
 
         @Override
-        public Node lowerLimitNode() {
+        public LimitNode lowerLimitNode() {
             LimitNode retval = new LowerLimitNode(this);
             retval.hamming--;
             retval.log = previousLog;

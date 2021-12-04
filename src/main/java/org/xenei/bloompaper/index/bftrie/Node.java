@@ -21,6 +21,5 @@ public interface Node {
     public boolean find(long[] buffer);
     public boolean isEmpty();
     public void search(List<BloomFilter> results, long[] buffer);
-    public int count(long[] buffer);
-    public void setFilterCapture(Collection<BloomFilter> collection);
+    public int count(Collection<BloomFilter> collection, long[] buffer);
 }
