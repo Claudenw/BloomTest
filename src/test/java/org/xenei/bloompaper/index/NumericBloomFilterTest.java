@@ -17,47 +17,46 @@ public class NumericBloomFilterTest {
     Shape shape = Shape.Factory.fromNP(n, p);
 
     @Test
-    public void hashCodeTest()
-    {
-        FrozenBloomFilter target = new FrozenBloomFilter( shape, BitMapProducer.fromLongArray( new long[] {-3025718536694661252L } ));
-        assertEquals( target.hashCode(), target.hashCode() );
+    public void hashCodeTest() {
+        FrozenBloomFilter target = new FrozenBloomFilter(shape,
+                BitMapProducer.fromLongArray(new long[] { -3025718536694661252L }));
+        assertEquals(target.hashCode(), target.hashCode());
 
-        FrozenBloomFilter two = new FrozenBloomFilter( shape, BitMapProducer.fromLongArray( new long[] {-3025718536694661252L } ));
-        assertEquals( target.hashCode(), two.hashCode() );
+        FrozenBloomFilter two = new FrozenBloomFilter(shape,
+                BitMapProducer.fromLongArray(new long[] { -3025718536694661252L }));
+        assertEquals(target.hashCode(), two.hashCode());
 
     }
 
     @Test
     public void collectionTest() {
 
-        FrozenBloomFilter target = new FrozenBloomFilter( shape, BitMapProducer.fromLongArray( new long[] {-3025718536694661252L } ));
+        FrozenBloomFilter target = new FrozenBloomFilter(shape,
+                BitMapProducer.fromLongArray(new long[] { -3025718536694661252L }));
         Set<FrozenBloomFilter> set = new HashSet<FrozenBloomFilter>();
 
-        set.add( FrozenBloomFilter.makeInstance(new RandomBloomFilter(shape)));
-        set.add( target );
-        set.add( FrozenBloomFilter.makeInstance(new RandomBloomFilter(shape)));
+        set.add(FrozenBloomFilter.makeInstance(new RandomBloomFilter(shape)));
+        set.add(target);
+        set.add(FrozenBloomFilter.makeInstance(new RandomBloomFilter(shape)));
 
-        assertTrue( "Target missing from set", set.contains( target ));
+        assertTrue("Target missing from set", set.contains(target));
 
     }
 
     @Test
-    public void defensiveCopyTest()
-    {
+    public void defensiveCopyTest() {
         long bits[] = new long[1];
         bits[0] = -3025718536694661252L;
 
-        FrozenBloomFilter target = new FrozenBloomFilter( shape, BitMapProducer.fromLongArray( bits  ));
+        FrozenBloomFilter target = new FrozenBloomFilter(shape, BitMapProducer.fromLongArray(bits));
 
         int hash = target.hashCode();
 
         bits[0] = 0;
 
-        assertEquals( "Hash Changed", hash, target.hashCode());
+        assertEquals("Hash Changed", hash, target.hashCode());
 
-        assertEquals( target.hashCode(), target.hashCode() );
-
-
+        assertEquals(target.hashCode(), target.hashCode());
 
     }
 }

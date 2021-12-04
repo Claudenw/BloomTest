@@ -1,14 +1,8 @@
 package org.xenei.bloompaper.geoname;
 
-import java.nio.LongBuffer;
-import java.util.function.LongConsumer;
-
-import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
-
-
 
 /*
  The main 'geoname' table has the following fields :
@@ -55,43 +49,32 @@ public class GeoName {
     public String modification_date;
     public BloomFilter filter;
 
-     @Override
+    @Override
     public String toString() {
-        return new StringBuilder()
-                .append( "ID: ").append( geonameid ).append( "\n" )
-                .append( "Name:" ).append( name ).append( "\n" )
-                .append( "Ascii name: ").append( asciiname ).append( "\n" )
-                .append( "Alternate names: ").append( alternatenames ).append( "\n" )
-                .append( "Latitude: ").append( latitude ).append( "\n" )
-                .append( "Longitude: ").append( longitude ).append( "\n" )
-                .append( "Feature class: ").append( feature_class ).append( "\n" )
-                .append( "Feature code: ").append( feature_code ).append( "\n" )
-                .append( "Country code: ").append( country_code ).append( "\n" )
-                .append( "Country code2: ").append( cc2 ).append( "\n" )
-                .append( "Admin code1: ").append( admin1_code ).append( "\n" )
-                .append( "Admin code2: ").append( admin2_code ).append( "\n" )
-                .append( "Admin code3: ").append( admin3_code ).append( "\n" )
-                .append( "Admin code4: ").append( admin4_code ).append( "\n" )
-                .append( "Population: ").append( population ).append( "\n" )
-                .append( "Elevation: ").append( elevation ).append( "\n" )
-                .append( "Dem: ").append( dem ).append( "\n" )
-                .append( "Timezone: ").append( timezone ).append( "\n" )
-                .append( "Modification date: ").append( modification_date).toString()
-                .toString();
+        return new StringBuilder().append("ID: ").append(geonameid).append("\n").append("Name:").append(name)
+                .append("\n").append("Ascii name: ").append(asciiname).append("\n").append("Alternate names: ")
+                .append(alternatenames).append("\n").append("Latitude: ").append(latitude).append("\n")
+                .append("Longitude: ").append(longitude).append("\n").append("Feature class: ").append(feature_class)
+                .append("\n").append("Feature code: ").append(feature_code).append("\n").append("Country code: ")
+                .append(country_code).append("\n").append("Country code2: ").append(cc2).append("\n")
+                .append("Admin code1: ").append(admin1_code).append("\n").append("Admin code2: ").append(admin2_code)
+                .append("\n").append("Admin code3: ").append(admin3_code).append("\n").append("Admin code4: ")
+                .append(admin4_code).append("\n").append("Population: ").append(population).append("\n")
+                .append("Elevation: ").append(elevation).append("\n").append("Dem: ").append(dem).append("\n")
+                .append("Timezone: ").append(timezone).append("\n").append("Modification date: ")
+                .append(modification_date).toString().toString();
     }
 
     public static class Serde {
 
         // do not instantiate
-        private Serde() {}
+        private Serde() {
+        }
 
-
-        public static GeoName deserialize( String txt )
-        {
-            String[] parts = txt.split( "\t");
-            if (parts.length != 19)
-            {
-                System.out.println( "too short");
+        public static GeoName deserialize(String txt) {
+            String[] parts = txt.split("\t");
+            if (parts.length != 19) {
+                System.out.println("too short");
             }
             GeoName retval = new GeoName();
             retval.geonameid = parts[0];
@@ -113,31 +96,21 @@ public class GeoName {
             retval.dem = parts[16];
             retval.timezone = parts[17];
             retval.modification_date = parts[18];
-            Hasher hasher = GeoNameHasher.createHasher( retval );
-            retval.filter = new SimpleBloomFilter( GeoNameHasher.shape, hasher );
+            Hasher hasher = GeoNameHasher.createHasher(retval);
+            retval.filter = new SimpleBloomFilter(GeoNameHasher.shape, hasher);
             return retval;
         }
 
-        public static String serialize( GeoName geoname) {
-            return new StringBuffer( geoname.geonameid ).append( "\t" )
-                    .append( geoname.name ).append( "\t" )
-                    .append( geoname.asciiname ).append( "\t" )
-                    .append( geoname.alternatenames ).append( "\t" )
-                    .append( geoname.latitude ).append( "\t" )
-                    .append( geoname.longitude ).append( "\t" )
-                    .append( geoname.feature_class ).append( "\t" )
-                    .append( geoname.feature_code ).append( "\t" )
-                    .append( geoname.country_code ).append( "\t" )
-                    .append( geoname.cc2 ).append( "\t" )
-                    .append( geoname.admin1_code ).append( "\t" )
-                    .append( geoname.admin2_code ).append( "\t" )
-                    .append( geoname.admin3_code ).append( "\t" )
-                    .append( geoname.admin4_code ).append( "\t" )
-                    .append( geoname.population ).append( "\t" )
-                    .append( geoname.elevation ).append( "\t" )
-                    .append( geoname.dem ).append( "\t" )
-                    .append( geoname.timezone ).append( "\t" )
-                    .append( geoname.modification_date).toString();
+        public static String serialize(GeoName geoname) {
+            return new StringBuffer(geoname.geonameid).append("\t").append(geoname.name).append("\t")
+                    .append(geoname.asciiname).append("\t").append(geoname.alternatenames).append("\t")
+                    .append(geoname.latitude).append("\t").append(geoname.longitude).append("\t")
+                    .append(geoname.feature_class).append("\t").append(geoname.feature_code).append("\t")
+                    .append(geoname.country_code).append("\t").append(geoname.cc2).append("\t")
+                    .append(geoname.admin1_code).append("\t").append(geoname.admin2_code).append("\t")
+                    .append(geoname.admin3_code).append("\t").append(geoname.admin4_code).append("\t")
+                    .append(geoname.population).append("\t").append(geoname.elevation).append("\t").append(geoname.dem)
+                    .append("\t").append(geoname.timezone).append("\t").append(geoname.modification_date).toString();
         }
     }
 

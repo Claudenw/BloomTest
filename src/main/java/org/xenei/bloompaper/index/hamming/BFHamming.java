@@ -16,36 +16,31 @@ import org.xenei.bloompaper.index.FrozenBloomFilter;
  * As set of lists is created based on hamming value. The lists are sorted by
  * estimated Log value.
  */
-public class BFHamming  {
+public class BFHamming {
 
     private TreeSet<Node> index = new TreeSet<Node>();
     public List<FrozenBloomFilter> found;
     private Collection<BloomFilter> filterCapture;
 
     public BFHamming(Shape shape) {
-        Node.setEmpty( shape );
+        Node.setEmpty(shape);
     }
 
     public void add(BloomFilter filter) {
-        Node node = new Node( filter );
-        SortedSet<Node> tailSet = index.tailSet( node );
-        if (tailSet.isEmpty() || ! node.equals(tailSet.first()))
-        {
-            tailSet.add( node );
-        }
-        else {
+        Node node = new Node(filter);
+        SortedSet<Node> tailSet = index.tailSet(node);
+        if (tailSet.isEmpty() || !node.equals(tailSet.first())) {
+            tailSet.add(node);
+        } else {
             tailSet.first().increment();
         }
     }
 
-
     public boolean delete(BloomFilter filter) {
-        Node node = new Node( filter );
-        SortedSet<Node> tailSet = index.tailSet( node );
-        if (!tailSet.isEmpty() && node.equals( tailSet.first()))
-        {
-            if (tailSet.first().decrement())
-            {
+        Node node = new Node(filter);
+        SortedSet<Node> tailSet = index.tailSet(node);
+        if (!tailSet.isEmpty() && node.equals(tailSet.first())) {
+            if (tailSet.first().decrement()) {
                 tailSet.remove(tailSet.first());
             }
             return true;
@@ -57,40 +52,35 @@ public class BFHamming  {
         int retval = 0;
 
         Node node = new Node(filter);
-        Consumer<BloomFilter> collector = filterCapture == null? (x)->{} : filterCapture::add;
+        Consumer<BloomFilter> collector = filterCapture == null ? (x) -> {
+        } : filterCapture::add;
 
-        SortedSet<Node> tailSet = index.tailSet( node );
+        SortedSet<Node> tailSet = index.tailSet(node);
         if (tailSet.isEmpty()) {
             return 0;
         }
-        if (node.equals(tailSet.first()))
-        {
+        if (node.equals(tailSet.first())) {
             retval += tailSet.first().getCount(collector);
         }
 
         Node lowerLimit = node.lowerLimitNode();
         Node upperLimit;
 
-        while ( lowerLimit.compareTo( index.last() ) <= 0)
-        {
+        while (lowerLimit.compareTo(index.last()) <= 0) {
             upperLimit = lowerLimit.upperLimitNode();
-            retval += tailSet.tailSet( lowerLimit ).headSet( upperLimit ).stream()
-                    .filter( n -> n.getFilter().contains( filter ))
-                    .mapToInt( n -> n.getCount( collector ) )
-                    .sum();
+            retval += tailSet.tailSet(lowerLimit).headSet(upperLimit).stream()
+                    .filter(n -> n.getFilter().contains(filter)).mapToInt(n -> n.getCount(collector)).sum();
             lowerLimit = upperLimit.lowerLimitNode();
         }
         return retval;
     }
 
-    public int scan( BloomFilter bf )
-    {
+    public int scan(BloomFilter bf) {
         int count = 0;
-        for (Node test : index )
-        {
-            if ( test.getFilter().contains( bf ))
-            {
-                count += test.getCount( (x) -> {});
+        for (Node test : index) {
+            if (test.getFilter().contains(bf)) {
+                count += test.getCount((x) -> {
+                });
             }
         }
         return count;

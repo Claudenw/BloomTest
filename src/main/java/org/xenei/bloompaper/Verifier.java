@@ -41,8 +41,7 @@ public class Verifier {
 
                         for (Long x : report.keySet()) {
                             for (Long y : report.keySet()) {
-                                if (x != y)
-                                {
+                                if (x != y) {
                                     compare(phase, type, report.get(x).get(0), report.get(y).get(0));
                                 }
                             }
@@ -58,7 +57,7 @@ public class Verifier {
 
     private void compare(Stats.Phase phase, Stats.Type type, Stats statsX, Stats statsY) {
         Map<FrozenBloomFilter, Set<FrozenBloomFilter>> result = new HashMap<FrozenBloomFilter, Set<FrozenBloomFilter>>();
-        result.putAll(statsX.getFound( type));
+        result.putAll(statsX.getFound(type));
         for (Map.Entry<FrozenBloomFilter, Set<FrozenBloomFilter>> e : statsY.getFound(type).entrySet()) {
             Set<FrozenBloomFilter> xExtra = new HashSet<FrozenBloomFilter>(result.get(e.getKey()));
             Set<FrozenBloomFilter> yExtra = new HashSet<FrozenBloomFilter>(e.getValue());
@@ -69,16 +68,16 @@ public class Verifier {
                 System.out.println("Difference with " + e.getKey());
                 if (!yExtra.isEmpty()) {
 
-                    System.out.println("  Only in " + statsY.displayString(phase,type));
+                    System.out.println("  Only in " + statsY.displayString(phase, type));
                     for (FrozenBloomFilter bf : yExtra) {
-                        System.out.println( "    "+bf.toString());
+                        System.out.println("    " + bf.toString());
                     }
                 }
                 if (!xExtra.isEmpty()) {
 
-                    System.out.println("  Only in " + statsX.displayString(phase,type));
+                    System.out.println("  Only in " + statsX.displayString(phase, type));
                     for (FrozenBloomFilter bf : xExtra) {
-                        System.out.println("    "+bf.toString());
+                        System.out.println("    " + bf.toString());
                     }
                 }
 

@@ -1,7 +1,6 @@
 package org.xenei.bloompaper.index;
 
 import java.util.Objects;
-import java.util.PrimitiveIterator.OfInt;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 
@@ -27,7 +26,6 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
     public PseudoCountingBloomFilter(BloomFilter filter) {
         delegate = filter;
     }
-
 
     @Override
     public int cardinality() {
@@ -66,35 +64,31 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
 
     @Override
     public void forEachCount(BitCountConsumer action) {
-        BitCountProducer producer =
-                (delegate instanceof CountingBloomFilter) ? ((CountingBloomFilter) delegate) : BitCountProducer.from(delegate);
-        producer.forEachCount( action );;
+        BitCountProducer producer = (delegate instanceof CountingBloomFilter) ? ((CountingBloomFilter) delegate)
+                : BitCountProducer.from(delegate);
+        producer.forEachCount(action);
+        ;
     }
-
 
     @Override
     public boolean isSparse() {
         return delegate.isSparse();
     }
 
-
     @Override
     public boolean contains(IndexProducer indexProducer) {
         return delegate.contains(indexProducer);
     }
 
-
     @Override
     public boolean contains(BitMapProducer bitMapProducer) {
         return delegate.contains(bitMapProducer);
-       }
-
+    }
 
     @Override
     public boolean mergeInPlace(BloomFilter other) {
         throw new UnsupportedOperationException();
     }
-
 
     @Override
     public void forEachIndex(IntConsumer consumer) {
@@ -102,24 +96,20 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
 
     }
 
-
     @Override
     public void forEachBitMap(LongConsumer consumer) {
         delegate.forEachBitMap(consumer);
     }
-
 
     @Override
     public boolean add(BitCountProducer other) {
         throw new UnsupportedOperationException();
     }
 
-
     @Override
     public boolean subtract(BitCountProducer other) {
         throw new UnsupportedOperationException();
     }
-
 
     /**
      * Clones the filter.  Used to create merged values.
@@ -146,7 +136,5 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
         filter.add(BitCountProducer.from(hasher.indices(delegate.getShape())));
         return filter;
     }
-
-
 
 }

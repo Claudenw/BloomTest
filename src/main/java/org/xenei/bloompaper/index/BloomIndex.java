@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 
-
 /**
  * base class for a Bloom Index.
  */
@@ -24,8 +23,7 @@ public abstract class BloomIndex {
      * @param population the number of Bloom filters expected in the index
      * @param shape the Shape of the bloom filters.
      */
-    protected BloomIndex( int population, Shape shape )
-    {
+    protected BloomIndex(int population, Shape shape) {
         this.shape = shape;
         this.population = population;
     }
@@ -66,7 +64,6 @@ public abstract class BloomIndex {
      *
      * @param collection The collection to add to.
      */
-    abstract public void setFilterCapture( Collection<BloomFilter> collection );
-
+    abstract public void setFilterCapture(Collection<BloomFilter> collection);
 
 }

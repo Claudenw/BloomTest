@@ -25,15 +25,13 @@ public class BloomIndexHamming extends BloomIndex {
 
     @Override
     public void add(BloomFilter filter) {
-        index.add( filter );
+        index.add(filter);
         count++;
     }
 
-
     @Override
     public void delete(BloomFilter filter) {
-        if (index.delete( filter ))
-        {
+        if (index.delete(filter)) {
             count--;
         }
     }
@@ -44,7 +42,7 @@ public class BloomIndexHamming extends BloomIndex {
 
     @Override
     public int count(BloomFilter filter) {
-        return index.count( filter );
+        return index.count(filter);
     }
 
     @Override
@@ -57,12 +55,12 @@ public class BloomIndexHamming extends BloomIndex {
         return count;
     }
 
-    public int scan( BloomFilter filter ) {
-        return index.scan( filter );
+    public int scan(BloomFilter filter) {
+        return index.scan(filter);
     }
 
     @Override
     public void setFilterCapture(Collection<BloomFilter> collection) {
-        index.setFilterCapture( collection );
+        index.setFilterCapture(collection);
     }
 }

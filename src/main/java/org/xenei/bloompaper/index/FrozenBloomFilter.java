@@ -8,10 +8,7 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.IndexProducer;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
-import org.xenei.bloompaper.index.hamming.Node;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
-import org.apache.commons.collections4.bloomfilter.exceptions.NoMatchException;
-
 
 /**
  * A Bloom filter that is created from a list of long values that
@@ -32,7 +29,6 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     private final int cardinality;
     private long[] bitMap;
 
-
     /**
      * Method to create a frozen filter from a standard filter.
      * If the standard filter is already a FrozenBloomFilter then
@@ -40,13 +36,11 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
      * @param bf the Bloom filter to freeze
      * @return a FrozenBloomFilter.
      */
-    public static FrozenBloomFilter makeInstance( BloomFilter bf )
-    {
-        if (bf instanceof FrozenBloomFilter)
-        {
-            return (FrozenBloomFilter)bf;
+    public static FrozenBloomFilter makeInstance(BloomFilter bf) {
+        if (bf instanceof FrozenBloomFilter) {
+            return (FrozenBloomFilter) bf;
         }
-        return new FrozenBloomFilter( bf );
+        return new FrozenBloomFilter(bf);
     }
 
     /**
@@ -54,15 +48,13 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
      * @param shape the Shape of the filter.
      * @param bits the enabled bits encoded as an array of longs.
      */
-    private FrozenBloomFilter( BloomFilter bf )
-    {
+    private FrozenBloomFilter(BloomFilter bf) {
         wrapped = bf;
         cardinality = bf.cardinality();
     }
 
-    public FrozenBloomFilter( Shape shape, BitMapProducer producer)
-    {
-        this( new SimpleBloomFilter( shape, producer) );
+    public FrozenBloomFilter(Shape shape, BitMapProducer producer) {
+        this(new SimpleBloomFilter(shape, producer));
     }
 
     public long[] getBitMap() {
@@ -71,6 +63,7 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
         }
         return bitMap;
     }
+
     @Override
     public boolean mergeInPlace(Hasher hasher) {
         throw new UnsupportedOperationException();
@@ -83,7 +76,7 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof FrozenBloomFilter ? compareTo((FrozenBloomFilter)obj) == 0 : false;
+        return obj instanceof FrozenBloomFilter ? compareTo((FrozenBloomFilter) obj) == 0 : false;
     }
 
     @Override
@@ -96,17 +89,17 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
         if (this == other) {
             return 0;
         }
-        int result = this.getShape().compareTo( other.getShape());
+        int result = this.getShape().compareTo(other.getShape());
         if (result == 0) {
             long[] oBitMap = other.getBitMap();
             int limit = getBitMap().length < oBitMap.length ? getBitMap().length : oBitMap.length;
-            int i=0;
-            while (i<limit && result == 0) {
-                result = Long.compare( bitMap[i],  oBitMap[i] );
+            int i = 0;
+            while (i < limit && result == 0) {
+                result = Long.compare(bitMap[i], oBitMap[i]);
                 i++;
             }
             if (result == 0) {
-                result = Integer.compare( bitMap.length,  oBitMap.length );
+                result = Integer.compare(bitMap.length, oBitMap.length);
             }
         }
         return result;
@@ -151,7 +144,5 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     public int cardinality() {
         return cardinality;
     }
-
-
 
 }

@@ -1,9 +1,7 @@
 package org.xenei.bloompaper;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -44,7 +42,6 @@ public class Test {
 
     static int[] POPULATIONS = { 100, 1000, 10000, 100000, 1000000 };
 
-
     public static Object lastCreated;
 
     public static void init() throws NoSuchMethodException, SecurityException {
@@ -70,7 +67,8 @@ public class Test {
                 "The probability of collisions (defaults to 1/100000).  May be specified as x/y or double format");
         options.addOption("o", "output", true, "Output directory.  If not specified results will not be preserved");
         options.addOption("i", "iterations", true, "The number of iterations defualt=" + RUN_COUNT);
-        options.addOption("s", "size", true, "The population size.  May occure more than once.  defualt=100, 1000, 10000, 100000, and 1000000");
+        options.addOption("s", "size", true,
+                "The population size.  May occure more than once.  defualt=100, 1000, 10000, 100000, and 1000000");
         return options;
     }
 
@@ -110,12 +108,12 @@ public class Test {
         if (cmd.hasOption("s")) {
             String[] values = cmd.getOptionValues("s");
             POPULATIONS = new int[values.length];
-            for (int i=0;i<values.length;i++)
-            {
+            for (int i = 0; i < values.length; i++) {
                 try {
-                        POPULATIONS[i] = Integer.parseInt( values[i] );
+                    POPULATIONS[i] = Integer.parseInt(values[i]);
                 } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException(String.format("Populsation size (s) %s is not a valid number.", values[i]));
+                    throw new IllegalArgumentException(
+                            String.format("Populsation size (s) %s is not a valid number.", values[i]));
                 }
             }
 
@@ -139,7 +137,7 @@ public class Test {
                 p = Double.parseDouble(parts[0]) / Double.parseDouble(parts[1]);
             }
         }
-        shape = Shape.Factory.fromNP( n, p);
+        shape = Shape.Factory.fromNP(n, p);
 
         File dir = null;
         if (cmd.hasOption("o")) {
@@ -201,29 +199,29 @@ public class Test {
 
         PrintStream o = null;
 
-        System.out.println( "=== verification ===" );
+        System.out.println("=== verification ===");
         if (dir != null) {
             o = new PrintStream(new File(dir, "verification.txt"));
         }
 
-        Verifier verifier = new Verifier( o );
-        verifier.verify( table );
+        Verifier verifier = new Verifier(o);
+        verifier.verify(table);
 
         System.out.println("===  data ===");
-        Summary.writeData( System.out, table);
+        Summary.writeData(System.out, table);
         if (dir != null) {
             o = new PrintStream(new File(dir, "data.csv"));
-            Summary.writeData( o, table);
+            Summary.writeData(o, table);
             o.close();
         }
 
         final Summary summary = new Summary(table);
 
         System.out.println("=== summary data ===");
-        summary.writeSummary( System.out );
+        summary.writeSummary(System.out);
         if (dir != null) {
             o = new PrintStream(new File(dir, "summary.csv"));
-            summary.writeSummary( o );
+            summary.writeSummary(o);
             o.close();
         }
 
@@ -249,10 +247,9 @@ public class Test {
             }
             final long end = System.currentTimeMillis();
 
-            stat.registerResult(Stats.Phase.Delete, type , end - start, stat.getPopulation() - bi.count());
+            stat.registerResult(Stats.Phase.Delete, type, end - start, stat.getPopulation() - bi.count());
 
-            System.out.println(
-                    stat.displayString(Stats.Phase.Delete, type) );
+            System.out.println(stat.displayString(Stats.Phase.Delete, type));
         }
     }
 
@@ -310,7 +307,7 @@ public class Test {
                 elapsed += (System.currentTimeMillis() - start);
             }
             stat.load = elapsed;
-            System.out.println( stat.loadDisplayString());
+            System.out.println(stat.loadDisplayString());
         }
         return bi;
     }
@@ -322,18 +319,17 @@ public class Test {
             long elapsed = 0;
             long start = 0;
             long found = 0;
-            for (int i = 0; i < sampleSize; i++)
-            {
+            for (int i = 0; i < sampleSize; i++) {
                 start = System.currentTimeMillis();
                 Stats stat = stats.get(run);
                 stat.currentPhase = Stats.Phase.Query;
                 stat.currentType = type;
                 Collection<BloomFilter> filterCapture = NullCollection.INSTANCE;
-                //Collection<BloomFilter> filterCapture = new ArrayList<BloomFilter>();
-                bi.setFilterCapture( filterCapture );
+                // Collection<BloomFilter> filterCapture = new ArrayList<BloomFilter>();
+                bi.setFilterCapture(filterCapture);
                 found += bi.count(bfSample[i]);
                 elapsed += (System.currentTimeMillis() - start);
-                stat.addFoundFilters(type, bfSample[i], filterCapture );
+                stat.addFoundFilters(type, bfSample[i], filterCapture);
             }
             stats.get(run).registerResult(Stats.Phase.Query, type, elapsed, found);
             System.out.println(stats.get(run).displayString(Stats.Phase.Query, type));

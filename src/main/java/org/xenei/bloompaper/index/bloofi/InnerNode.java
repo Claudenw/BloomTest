@@ -69,7 +69,8 @@ public class InnerNode implements Node {
 
     @Override
     public String toString() {
-        return String.format(String.format("InnerNode:%s %s", this.id, BitUtils.formatHex(BloomFilter.asBitMapArray(filter))));
+        return String.format(
+                String.format("InnerNode:%s %s", this.id, BitUtils.formatHex(BloomFilter.asBitMapArray(filter))));
     }
 
     /**
@@ -237,11 +238,10 @@ public class InnerNode implements Node {
                     }
                 } else {
                     CountingBloomFilter nodeFilter = asCountingFilter(node.getFilter());
-                    this.filter.subtract( nodeFilter );
+                    this.filter.subtract(nodeFilter);
                     InnerNode parent = this.parent;
-                    while (parent != null)
-                    {
-                        parent.filter.subtract( nodeFilter );
+                    while (parent != null) {
+                        parent.filter.subtract(nodeFilter);
                         parent = parent.parent;
                     }
                 }

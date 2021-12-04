@@ -1,10 +1,8 @@
 package org.xenei.bloompaper.index;
 
-import java.util.Arrays;
 import java.util.function.BiPredicate;
 import java.util.function.LongConsumer;
 
-import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.exceptions.NoMatchException;
 
@@ -33,7 +31,8 @@ public final class BitUtils {
     private static final int DIVIDE_BY_64 = 6;
 
     /** Do not instantiate. */
-    private BitUtils() {}
+    private BitUtils() {
+    }
 
     /**
      * Check the index is positive.
@@ -62,10 +61,12 @@ public final class BitUtils {
      * @see #checkPositive(int)
      */
     public static int getLongIndex(int bitIndex) {
-        // An integer divide by 64 is equivalent to a shift of 6 bits if the integer is positive.
+        // An integer divide by 64 is equivalent to a shift of 6 bits if the integer is
+        // positive.
         // We do not explicitly check for a negative here. Instead we use a
         // a signed shift. Any negative index will produce a negative value
-        // by sign-extension and if used as an index into an array it will throw an exception.
+        // by sign-extension and if used as an index into an array it will throw an
+        // exception.
         return bitIndex >> DIVIDE_BY_64;
     }
 
@@ -96,15 +97,12 @@ public final class BitUtils {
      * @param bits the set of longs as a bit vector
      * @return the highest bit set or -1 for none.
      */
-    public static int maxSet( long[] bits ) {
-        for (int longIndex=bits.length-1;longIndex>=0;longIndex--)
-        {
-            if ( bits[longIndex] != 0)
-            {
-                for (int bitIndex=Long.SIZE-1;bitIndex>=0;bitIndex--) {
-                    if ((bits[longIndex] &  getLongBit( bitIndex )) != 0)
-                    {
-                        return (Long.SIZE*longIndex)+bitIndex;
+    public static int maxSet(long[] bits) {
+        for (int longIndex = bits.length - 1; longIndex >= 0; longIndex--) {
+            if (bits[longIndex] != 0) {
+                for (int bitIndex = Long.SIZE - 1; bitIndex >= 0; bitIndex--) {
+                    if ((bits[longIndex] & getLongBit(bitIndex)) != 0) {
+                        return (Long.SIZE * longIndex) + bitIndex;
                     }
                 }
             }
@@ -118,76 +116,67 @@ public final class BitUtils {
      * @param before the index of the maximum position+1
      * @return the highest bit set or -1 for none.
      */
-    public static int maxSetBefore( long[] bits, int before ) {
-        for (int i=before-1;i>=0;i--)
-        {
-            if ((bits[getLongIndex(i)] & getLongBit(i)) != 0)
-            {
+    public static int maxSetBefore(long[] bits, int before) {
+        for (int i = before - 1; i >= 0; i--) {
+            if ((bits[getLongIndex(i)] & getLongBit(i)) != 0) {
                 return i;
             }
         }
         return -1;
     }
 
-    public static String format( long[] bits )
-    {
+    public static String format(long[] bits) {
         StringBuilder sb = new StringBuilder();
-        for (long l : bits)
-        {
-            sb.append( l ).append(" ");
+        for (long l : bits) {
+            sb.append(l).append(" ");
         }
         return sb.toString();
     }
 
-    public static String formatHex( long[] bits )
-    {
+    public static String formatHex(long[] bits) {
         StringBuilder sb = new StringBuilder();
-        for (long l : bits)
-        {
-            sb.append( String.format( "0x%h ", l) );
+        for (long l : bits) {
+            sb.append(String.format("0x%h ", l));
         }
         return sb.toString();
     }
 
-//    public static boolean chkBreak( BloomFilter filter, long... values )
-//    {
-//        long[] bits = BloomFilter.asBitMapArray(filter);
-//        return Arrays.compare( bits,  values) == 0;
-//    }
+    //    public static boolean chkBreak( BloomFilter filter, long... values )
+    //    {
+    //        long[] bits = BloomFilter.asBitMapArray(filter);
+    //        return Arrays.compare( bits,  values) == 0;
+    //    }
 
-    public static boolean isSet( long[] bits, int bitIdx )
-    {
+    public static boolean isSet(long[] bits, int bitIdx) {
         int longRec = getLongIndex(bitIdx);
         return (longRec < bits.length) ? (bits[longRec] & getLongBit(bitIdx)) != 0 : false;
     }
 
+    public static class BufferCompare implements LongConsumer {
+        BiPredicate<Long, Long> func;
+        long[] bitMap;
+        int i;
 
+        public BufferCompare(BloomFilter filter, BiPredicate<Long, Long> func) {
+            bitMap = BloomFilter.asBitMapArray(filter);
+            this.func = func;
+        }
 
-public static class BufferCompare implements LongConsumer {
-    BiPredicate<Long,Long> func;
-    long[] bitMap;
-    int i;
+        @Override
+        public void accept(long value) {
+            if (i >= bitMap.length || !func.test(bitMap[i++], value)) {
+                throw new NoMatchException();
+            }
+        }
 
-    public BufferCompare( BloomFilter filter, BiPredicate<Long,Long> func ) {
-        bitMap = BloomFilter.asBitMapArray(filter);
-        this.func=func;
-    }
-
-    @Override
-    public void accept(long value) {
-        if (i >= bitMap.length || ! func.test( bitMap[i++], value)) {
-            throw new NoMatchException();
+        public boolean matches(BloomFilter other) {
+            i = 0;
+            try {
+                other.forEachBitMap(this);
+                return i == bitMap.length;
+            } catch (NoMatchException e) {
+                return false;
+            }
         }
     }
-
-    public boolean matches( BloomFilter other ) {
-        i = 0;
-        try {
-            other.forEachBitMap(this);
-            return i == bitMap.length;
-        } catch (NoMatchException e) {
-            return false;
-        }
-    }
-}
 }

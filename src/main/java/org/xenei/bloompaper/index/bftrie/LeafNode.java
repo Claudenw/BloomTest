@@ -16,26 +16,23 @@ public class LeafNode implements Node {
         lst = new ArrayList<BloomFilter>();
     }
 
-    public List<BloomFilter> getList()
-    {
+    public List<BloomFilter> getList() {
         return lst;
     }
 
     @Override
-    public void add(BFTrie4 btree, BloomFilter filter, long[] buffer)
-    {
-        lst.add( filter );
+    public void add(BFTrie4 btree, BloomFilter filter, long[] buffer) {
+        lst.add(filter);
     }
 
     @Override
-    public boolean find(long[] buffer)
-    {
+    public boolean find(long[] buffer) {
         return !lst.isEmpty();
     }
 
     @Override
     public boolean remove(long[] buffer) {
-        lst.remove( lst.size()-1 );
+        lst.remove(lst.size() - 1);
         return true;
     }
 
@@ -46,50 +43,39 @@ public class LeafNode implements Node {
 
     @Override
     public void search(List<BloomFilter> result, long[] buffer) {
-        if (checkEntries)
-        {
+        if (checkEntries) {
             BitMapProducer bmp = BitMapProducer.fromLongArray(buffer);
-            for (BloomFilter candidate : lst)
-            {
-                if(candidate.contains( bmp))
-                {
-                    result.add( candidate );
+            for (BloomFilter candidate : lst) {
+                if (candidate.contains(bmp)) {
+                    result.add(candidate);
                 }
             }
-        }
-        else
-        {
-            result.addAll( lst );
+        } else {
+            result.addAll(lst);
         }
     }
 
     @Override
     public int count(Collection<BloomFilter> filterCapture, long buffer[]) {
-        if (checkEntries)
-        {
+        if (checkEntries) {
             BitMapProducer bmp = BitMapProducer.fromLongArray(buffer);
             int retval = 0;
-            for (BloomFilter candidate : lst)
-            {
-                if(candidate.contains(bmp))
-                {
-                    filterCapture.add( candidate );
+            for (BloomFilter candidate : lst) {
+                if (candidate.contains(bmp)) {
+                    filterCapture.add(candidate);
                     retval++;
                 }
             }
             return retval;
-        }
-        else
-        {
-            filterCapture.addAll( lst );
+        } else {
+            filterCapture.addAll(lst);
             return lst.size();
         }
     }
 
     @Override
-    public String toString()
-    {
-        return String.format( "LeafNode %s", lst );
+    public String toString() {
+        return String.format("LeafNode %s", lst);
     }
 
 }

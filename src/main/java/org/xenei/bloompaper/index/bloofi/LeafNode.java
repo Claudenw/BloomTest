@@ -1,16 +1,10 @@
 package org.xenei.bloompaper.index.bloofi;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.LongConsumer;
-
-import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.exceptions.NoMatchException;
 import org.xenei.bloompaper.Test;
 import org.xenei.bloompaper.index.BitUtils;
-import org.xenei.bloompaper.index.BloomIndex;
 import org.xenei.bloompaper.index.BitUtils.BufferCompare;
 
 /**
@@ -43,25 +37,23 @@ public class LeafNode implements Node {
         this.count = 1;
         this.parent = parent;
         Test.lastCreated = this;
-        updateFilters( candidate );
+        updateFilters(candidate);
     }
 
     /**
      * Updates all the parent counting Bloom filters with this Bloom filter.
      * @param candidate
      */
-    private void updateFilters( BloomFilter candidate ) {
+    private void updateFilters(BloomFilter candidate) {
         InnerNode node = getParent();
-        while (node != null)
-        {
-            node.getFilter().mergeInPlace( candidate );
+        while (node != null) {
+            node.getFilter().mergeInPlace(candidate);
             node = node.getParent();
         }
     }
 
     @Override
-    public void setParent(InnerNode parent)
-    {
+    public void setParent(InnerNode parent) {
         this.parent = parent;
     }
 
@@ -71,29 +63,23 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public void add(BloomFilter filter)
-    {
+    public void add(BloomFilter filter) {
         ++count;
-        updateFilters( this.filter );
+        updateFilters(this.filter);
     }
-
-
 
     @Override
     public boolean remove(BloomFilter filter) {
-        BufferCompare comp = new BufferCompare( this.filter, (x,y) -> x.equals(y) );
-        if (comp.matches(filter))
-        {
+        BufferCompare comp = new BufferCompare(this.filter, (x, y) -> x.equals(y));
+        if (comp.matches(filter)) {
             count--;
             InnerNode node = getParent();
-            if (count <= 0)
-            {
-                node.remove( this );
+            if (count <= 0) {
+                node.remove(this);
             } else {
                 /* update the filters */
-                while (node != null)
-                {
-                    node.getFilter().remove( filter );
+                while (node != null) {
+                    node.getFilter().remove(filter);
                     node = node.getParent();
                 }
             }
@@ -110,11 +96,9 @@ public class LeafNode implements Node {
 
     @Override
     public void search(List<BloomFilter> result, BloomFilter filter) {
-        if (this.filter.contains(filter))
-        {
-            for (int i=0;i<count;i++)
-            {
-                result.add( this.filter );
+        if (this.filter.contains(filter)) {
+            for (int i = 0; i < count; i++) {
+                result.add(this.filter);
             }
         }
     }
@@ -122,8 +106,7 @@ public class LeafNode implements Node {
     @Override
     public int count(BloomFilter filter) {
 
-        if (this.filter.contains(filter))
-        {
+        if (this.filter.contains(filter)) {
             filterCapture.add(this.filter);
             return count;
         }
@@ -135,10 +118,10 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         long[] bits = BloomFilter.asBitMapArray(filter);
-        return String.format( String.format( "LeafNode %s: %s (%s)", id, BitUtils.formatHex( bits ), BitUtils.format( bits ) ) );
+        return String
+                .format(String.format("LeafNode %s: %s (%s)", id, BitUtils.formatHex(bits), BitUtils.format(bits)));
     }
 
     @Override
@@ -155,6 +138,5 @@ public class LeafNode implements Node {
     public int getId() {
         return id;
     }
-
 
 }

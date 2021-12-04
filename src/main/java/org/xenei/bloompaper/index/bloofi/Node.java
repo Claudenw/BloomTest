@@ -18,6 +18,7 @@ public interface Node {
          * The node count.
          */
         static int totalCount = 0;
+
         /**
          * Gets the next id.
          * @return the next id.
@@ -25,6 +26,7 @@ public interface Node {
         public static int nextId() {
             return totalCount++;
         }
+
         /**
          * Resets the counter to zero.
          */
@@ -43,7 +45,7 @@ public interface Node {
      * Sets the parent of this node.
      * @param parent the parrent node.
      */
-    public void setParent( InnerNode parent );
+    public void setParent(InnerNode parent);
 
     /**
      * Gets the parent of this node.

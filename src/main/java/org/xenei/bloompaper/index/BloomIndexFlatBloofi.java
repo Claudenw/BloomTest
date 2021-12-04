@@ -6,7 +6,6 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.flatbloofi.FlatBloofi;
 
-
 /**
  * Implementation of BTree Nibble search.
  *
@@ -14,26 +13,24 @@ import org.xenei.bloompaper.index.flatbloofi.FlatBloofi;
 public class BloomIndexFlatBloofi extends BloomIndex {
     private FlatBloofi bloofi;
 
-    public BloomIndexFlatBloofi(int population, Shape shape)
-    {
+    public BloomIndexFlatBloofi(int population, Shape shape) {
         super(population, shape);
         this.bloofi = new FlatBloofi(population, shape);
     }
 
     @Override
-    public void add(BloomFilter filter)
-    {
-        bloofi.add( filter );;
+    public void add(BloomFilter filter) {
+        bloofi.add(filter);
+        ;
     }
 
     @Override
     public void delete(BloomFilter filter) {
-        bloofi.delete( filter );
+        bloofi.delete(filter);
     }
 
     @Override
-    public int count(BloomFilter filter)
-    {
+    public int count(BloomFilter filter) {
         return bloofi.count(filter);
     }
 
@@ -49,6 +46,6 @@ public class BloomIndexFlatBloofi extends BloomIndex {
 
     @Override
     public void setFilterCapture(Collection<BloomFilter> collection) {
-        bloofi.setFilterCapture( collection );
+        bloofi.setFilterCapture(collection);
     }
 }
