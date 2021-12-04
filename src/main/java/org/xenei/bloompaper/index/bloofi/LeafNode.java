@@ -54,7 +54,7 @@ public class LeafNode implements Node {
         InnerNode node = getParent();
         while (node != null)
         {
-            node.getFilter().merge( candidate );
+            node.getFilter().mergeInPlace( candidate );
             node = node.getParent();
         }
     }
@@ -81,7 +81,7 @@ public class LeafNode implements Node {
 
     @Override
     public boolean remove(BloomFilter filter) {
-        BufferCompare comp = new BufferCompare( this.filter, (x,y) -> x == y );
+        BufferCompare comp = new BufferCompare( this.filter, (x,y) -> x.equals(y) );
         if (comp.matches(filter))
         {
             count--;
