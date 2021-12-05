@@ -28,16 +28,14 @@ public class Stats {
         Query, Delete
     }
 
+    private static final double TIME_SCALE = 0.000000001;
     private final String indexName;
     private final int population;
     private final int run;
 
-    long load;
+    private long load;
 
-    Phase currentPhase;
-    Type currentType;
-
-    Map<FrozenBloomFilter, Set<FrozenBloomFilter>>[] foundFilters = new HashMap[Type.values().length];
+    private Map<FrozenBloomFilter, Set<FrozenBloomFilter>>[] foundFilters = new HashMap[Type.values().length];
 
     private long[][] time = new long[Phase.values().length][Type.values().length];
     private long[][] count = new long[Phase.values().length][Type.values().length];
@@ -59,6 +57,10 @@ public class Stats {
             filters.stream().map(FrozenBloomFilter::makeInstance).forEach(set::add);
             foundFilters[type.ordinal()].put(FrozenBloomFilter.makeInstance(filter), set);
         }
+    }
+
+    public void setLoad( long load ) {
+        this.load = load;
     }
 
     public Map<FrozenBloomFilter, Set<FrozenBloomFilter>> getFound(Type type) {
@@ -130,27 +132,32 @@ public class Stats {
         return count[phase.ordinal()][type.ordinal()];
     }
 
-    public long getElapsed(Phase phase, Type type) {
-        return time[phase.ordinal()][type.ordinal()];
+    public double getElapsed(Phase phase, Type type) {
+        return time[phase.ordinal()][type.ordinal()] * TIME_SCALE;
+    }
+
+    public double getLoad() {
+        return load * TIME_SCALE;
     }
 
     public int getPopulation() {
         return population;
     }
 
+
     public void registerResult(final Phase phase, final Type type, final long elapsed, final long count) {
-        time[phase.ordinal()][type.ordinal()] = elapsed;
+        this.time[phase.ordinal()][type.ordinal()] = elapsed;
         this.count[phase.ordinal()][type.ordinal()] = count;
     }
 
     public String displayString(final Phase phase, Type type) {
-        return String.format("%s %s %s population %s run %s  exec time %s (%s)", indexName, phase, type, population,
-                run, time[phase.ordinal()][type.ordinal()], count[phase.ordinal()][type.ordinal()]);
+        return String.format("%s %s %s population %s run %s  exec time %f (%s)", indexName, phase, type, population,
+                run, getElapsed(phase,type), getCount(phase,type));
 
     }
 
     public String loadDisplayString() {
-        return String.format("%s population %s run %s load time %s", indexName, population, run, load);
+        return String.format("%s population %s run %s load time %s", indexName, population, run, getLoad());
     }
 
 }

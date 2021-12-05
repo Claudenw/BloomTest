@@ -45,7 +45,7 @@ public class Summary {
 
         public boolean add(Stats stat) {
             if (stat.getName().equals(indexName) && stat.getPopulation() == population) {
-                load += stat.load;
+                load += stat.getLoad();
                 for (Stats.Phase phase : Stats.Phase.values()) {
                     for (Stats.Type type : Stats.Type.values()) {
                         totals[phase.ordinal()][type.ordinal()] += stat.getElapsed(phase, type);

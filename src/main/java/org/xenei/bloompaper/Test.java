@@ -21,6 +21,9 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
+
+import org.apache.commons.lang3.time.StopWatch;
+
 import org.xenei.bloompaper.geoname.GeoName;
 import org.xenei.bloompaper.geoname.GeoNameHasher;
 import org.xenei.bloompaper.geoname.GeoNameIterator;
@@ -231,6 +234,7 @@ public class Test {
             final BloomFilter[] filters, final BloomFilter[] bfSample, final List<Stats> stats, Shape shape)
                     throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi;
+        StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
             /* setup */
             Stats stat = stats.get(run);
@@ -240,13 +244,14 @@ public class Test {
             }
 
             /* run */
-            final long start = System.currentTimeMillis();
+            stopwatch.reset();
+            stopwatch.start();
             for (BloomFilter bf : bfSample) {
                 bi.delete(bf);
             }
-            final long end = System.currentTimeMillis();
+            stopwatch.stop();
 
-            stat.registerResult(Stats.Phase.Delete, type, end - start, stat.getPopulation() - bi.count());
+            stat.registerResult(Stats.Phase.Delete, type, stopwatch.getNanoTime(), stat.getPopulation() - bi.count());
 
             System.out.println(stat.displayString(Stats.Phase.Delete, type));
         }
@@ -294,18 +299,20 @@ public class Test {
             final Shape shape, final List<Stats> stats)
                     throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi = null;
-
+        StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
             Stats stat = stats.get(run);
             bi = constructor.newInstance(stat.getPopulation(), shape);
             long elapsed = 0;
-            long start = 0;
+
             for (int i = 0; i < stat.getPopulation(); i++) {
-                start = System.currentTimeMillis();
+                stopwatch.reset();
+                stopwatch.start();
                 bi.add(filters[i]);
-                elapsed += (System.currentTimeMillis() - start);
+                stopwatch.stop();
+                elapsed += stopwatch.getNanoTime();
             }
-            stat.load = elapsed;
+            stat.setLoad( elapsed );
             System.out.println(stat.loadDisplayString());
         }
         return bi;
@@ -314,22 +321,22 @@ public class Test {
     private static void doCount(final Stats.Type type, final BloomIndex bi, final BloomFilter[] bfSample,
             final List<Stats> stats) {
         final int sampleSize = bfSample.length;
+        StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
             long elapsed = 0;
-            long start = 0;
             long found = 0;
+            Stats stat = stats.get(run);
             for (int i = 0; i < sampleSize; i++) {
-                start = System.currentTimeMillis();
-                Stats stat = stats.get(run);
-                stat.currentPhase = Stats.Phase.Query;
-                stat.currentType = type;
                 Collection<BloomFilter> filterCapture = new ArrayList<BloomFilter>();
+                stopwatch.reset();
+                stopwatch.start();
                 found += bi.count(filterCapture::add, bfSample[i]);
-                elapsed += (System.currentTimeMillis() - start);
+                stopwatch.stop();
+                elapsed += stopwatch.getNanoTime();
                 stat.addFoundFilters(type, bfSample[i], filterCapture);
             }
-            stats.get(run).registerResult(Stats.Phase.Query, type, elapsed, found);
-            System.out.println(stats.get(run).displayString(Stats.Phase.Query, type));
+            stat.registerResult(Stats.Phase.Query, type, elapsed, found);
+            System.out.println(stat.displayString(Stats.Phase.Query, type));
         }
 
     }
