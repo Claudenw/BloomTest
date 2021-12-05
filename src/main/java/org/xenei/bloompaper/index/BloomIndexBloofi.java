@@ -16,8 +16,6 @@ import org.xenei.bloompaper.index.bloofi.Node;
 public class BloomIndexBloofi extends BloomIndex {
     private Bloofi bloofi;
 
-    // public static List<LeafNode> leafs;
-
     public BloomIndexBloofi(int population, Shape bloomFilterConfig) {
         super(population, bloomFilterConfig);
         Node.Counter.reset();

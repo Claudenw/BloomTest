@@ -1,7 +1,6 @@
 package org.xenei.bloompaper.index;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
@@ -15,7 +14,6 @@ import org.apache.commons.collections4.bloomfilter.Shape;
  */
 public class BloomIndexList extends BloomIndex {
     private List<BloomFilter> index;
-    private Collection<BloomFilter> filterCapture;
 
     public BloomIndexList(int population, Shape shape) {
         super(population, shape);

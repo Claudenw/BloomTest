@@ -1,6 +1,5 @@
 package org.xenei.bloompaper.index.hamming;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -21,7 +20,6 @@ public class BFHamming {
 
     private TreeSet<Node> index = new TreeSet<Node>();
     public List<FrozenBloomFilter> found;
-    private Collection<BloomFilter> filterCapture;
 
     public BFHamming(Shape shape) {
         Node.setEmpty(shape);
@@ -86,7 +84,4 @@ public class BFHamming {
 
     }
 
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        filterCapture = collection;
-    }
 }
