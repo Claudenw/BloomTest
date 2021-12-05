@@ -232,7 +232,7 @@ public class Test {
 
     private static void doDelete(Stats.Type type, final Constructor<? extends BloomIndex> constructor,
             final BloomFilter[] filters, final BloomFilter[] bfSample, final List<Stats> stats, Shape shape)
-                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi;
         StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
@@ -278,7 +278,7 @@ public class Test {
 
     private static List<Stats> runTest(final Shape shape, final Constructor<? extends BloomIndex> constructor,
             final List<GeoName> sample, final BloomFilter[] filters, List<Stats> stats) throws IOException,
-    InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
         BloomIndex bi = doLoad(constructor, filters, shape, stats);
 
@@ -297,7 +297,7 @@ public class Test {
 
     private static BloomIndex doLoad(final Constructor<? extends BloomIndex> constructor, final BloomFilter[] filters,
             final Shape shape, final List<Stats> stats)
-                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi = null;
         StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
@@ -312,7 +312,7 @@ public class Test {
                 stopwatch.stop();
                 elapsed += stopwatch.getNanoTime();
             }
-            stat.setLoad( elapsed );
+            stat.setLoad(elapsed);
             System.out.println(stat.loadDisplayString());
         }
         return bi;

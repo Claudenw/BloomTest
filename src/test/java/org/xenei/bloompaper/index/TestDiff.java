@@ -9,8 +9,10 @@ public class TestDiff {
     double p = 1.0 / 100000;
     Shape shape = Shape.Factory.fromNP(n, p);
 
-    //    NumericBloomFilter filter = new NumericBloomFilter( shape, 2315448351954444800L, 34 );
-    //    NumericBloomFilter target = new NumericBloomFilter( shape, -5570068171581312439L, 34  );
+    // NumericBloomFilter filter = new NumericBloomFilter( shape,
+    // 2315448351954444800L, 34 );
+    // NumericBloomFilter target = new NumericBloomFilter( shape,
+    // -5570068171581312439L, 34 );
     FrozenBloomFilter filter = new FrozenBloomFilter(shape,
             BitMapProducer.fromLongArray(new long[] { 5764629513350676800L }));
     FrozenBloomFilter target = new FrozenBloomFilter(shape,

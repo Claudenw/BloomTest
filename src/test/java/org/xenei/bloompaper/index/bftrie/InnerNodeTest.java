@@ -2,7 +2,6 @@ package org.xenei.bloompaper.index.bftrie;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.commons.collections4.bloomfilter.Shape;
 import org.junit.Test;
 import org.xenei.bloompaper.index.BitUtils;
 
@@ -14,9 +13,6 @@ public class InnerNodeTest {
 
     @Test
     public void nibbleTest() {
-        int n = 3;
-        double p = 1.0 / 100000;
-        Shape shape = Shape.Factory.fromNP(n, p);
 
         long zero = 0;
 

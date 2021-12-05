@@ -35,6 +35,7 @@ public class Stats {
 
     private long load;
 
+    @SuppressWarnings("unchecked")
     private Map<FrozenBloomFilter, Set<FrozenBloomFilter>>[] foundFilters = new HashMap[Type.values().length];
 
     private long[][] time = new long[Phase.values().length][Type.values().length];
@@ -59,7 +60,7 @@ public class Stats {
         }
     }
 
-    public void setLoad( long load ) {
+    public void setLoad(long load) {
         this.load = load;
     }
 
@@ -144,7 +145,6 @@ public class Stats {
         return population;
     }
 
-
     public void registerResult(final Phase phase, final Type type, final long elapsed, final long count) {
         this.time[phase.ordinal()][type.ordinal()] = elapsed;
         this.count[phase.ordinal()][type.ordinal()] = count;
@@ -152,7 +152,7 @@ public class Stats {
 
     public String displayString(final Phase phase, Type type) {
         return String.format("%s %s %s population %s run %s  exec time %f (%s)", indexName, phase, type, population,
-                run, getElapsed(phase,type), getCount(phase,type));
+                run, getElapsed(phase, type), getCount(phase, type));
 
     }
 

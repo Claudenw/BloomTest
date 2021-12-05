@@ -41,8 +41,8 @@ public class BFTrie4 {
 
     public void search(Consumer<BloomFilter> consumer, BloomFilter filter) {
         // estimate result size as % of key space.
-        //        int f = shape.getNumberOfBits() - filter.cardinality();
-        //        int initSize = count * f / shape.getNumberOfBits();
+        // int f = shape.getNumberOfBits() - filter.cardinality();
+        // int initSize = count * f / shape.getNumberOfBits();
         root.search(consumer, BloomFilter.asBitMapArray(filter));
     }
 

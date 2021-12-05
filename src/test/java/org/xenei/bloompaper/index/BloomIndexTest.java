@@ -8,11 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 
-import org.apache.commons.collections4.bloomfilter.BitCountProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
@@ -61,14 +58,15 @@ public class BloomIndexTest {
             }
         }
 
-
     }
 
     @Before
-    public void setup() throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public void setup()
+            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         underTest = constructor.newInstance(INSERT_LIMIT, shape);
     }
 
+    @SuppressWarnings("rawtypes")
     @Parameters(name = "{0}")
     public static Collection tests() throws NoSuchMethodException, SecurityException {
         org.xenei.bloompaper.Test.init();
@@ -106,24 +104,23 @@ public class BloomIndexTest {
         }
 
         int expected = HASHER_COUNT;
-        assertEquals( expected, underTest.count() );
+        assertEquals(expected, underTest.count());
 
         // find the index with the highest duplicate count
         int max = -1;
         int idx = -1;
 
-        for (int i=0;i<HASHER_COUNT;i++) {
-            if (duplicates[i]>max ) {
+        for (int i = 0; i < HASHER_COUNT; i++) {
+            if (duplicates[i] > max) {
                 idx = i;
                 max = duplicates[i];
             }
         }
 
-
-        BloomFilter bf = new SimpleBloomFilter( shape, hasher[idx]);
-        underTest.delete( bf );
-        assertEquals( expected-1, underTest.count());
-        assertEquals( matches[idx]-1, underTest.count( bf ));
+        BloomFilter bf = new SimpleBloomFilter(shape, hasher[idx]);
+        underTest.delete(bf);
+        assertEquals(expected - 1, underTest.count());
+        assertEquals(matches[idx] - 1, underTest.count(bf));
 
     }
 
@@ -142,7 +139,7 @@ public class BloomIndexTest {
 
     @Test
     public void testCount() {
-        //List<BloomFilter> capture = new ArrayList<BloomFilter>();
+        // List<BloomFilter> capture = new ArrayList<BloomFilter>();
 
         assertEquals(0, underTest.count());
         underTest.add(new SimpleBloomFilter(shape, hasher[0]));
@@ -153,7 +150,7 @@ public class BloomIndexTest {
         }
 
         Collection<BloomFilter> collection = new ArrayList<BloomFilter>();
-        //underTest.setFilterCapture(collection);
+        // underTest.setFilterCapture(collection);
         for (int i = 0; i < hasher.length; i++) {
             // System.out.println( String.format( "%s count %s : %s", name, i,
             // underTest.count( new SimpleBloomFilter( shape, hasher[i] ))));
@@ -179,19 +176,17 @@ public class BloomIndexTest {
             underTest.add(new SimpleBloomFilter(shape, hasher[i]));
         }
 
-
         Collection<BloomFilter> collection = new ArrayList<BloomFilter>();
 
-        BloomFilter bf = new SimpleBloomFilter( shape, hasher[0] );
-        underTest.search( collection::add, bf);
+        BloomFilter bf = new SimpleBloomFilter(shape, hasher[0]);
+        underTest.search(collection::add, bf);
 
-        BufferCompare buffComp = new BufferCompare( bf, BufferCompare.exact );
+        BufferCompare buffComp = new BufferCompare(bf, BufferCompare.exact);
         boolean found = false;
-        for (BloomFilter bf2 : collection ) {
+        for (BloomFilter bf2 : collection) {
             found |= buffComp.matches(bf2);
         }
-        assertTrue( found );
+        assertTrue(found);
     }
-
 
 }
