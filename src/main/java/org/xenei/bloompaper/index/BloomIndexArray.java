@@ -60,5 +60,4 @@ public class BloomIndexArray extends BloomIndex {
         }
     }
 
-
 }

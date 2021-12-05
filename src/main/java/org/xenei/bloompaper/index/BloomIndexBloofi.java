@@ -1,6 +1,5 @@
 package org.xenei.bloompaper.index;
 
-import java.util.Collection;
 import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
@@ -45,7 +44,6 @@ public class BloomIndexBloofi extends BloomIndex {
         return bloofi.count();
     }
 
-
     private static LeafNode testing;
 
     public static void setTesting(Object lastCreated) {
@@ -58,7 +56,7 @@ public class BloomIndexBloofi extends BloomIndex {
 
     @Override
     protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
-        bloofi.search( consumer, filter );
+        bloofi.search(consumer, filter);
     }
 
 }

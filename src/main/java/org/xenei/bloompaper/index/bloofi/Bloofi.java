@@ -1,7 +1,6 @@
 package org.xenei.bloompaper.index.bloofi;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -73,7 +72,7 @@ public class Bloofi {
      * @return the number of filters that match.
      */
     public void search(Consumer<BloomFilter> result, BloomFilter filter) {
-        root.search( result, filter);
+        root.search(result, filter);
     }
 
 }

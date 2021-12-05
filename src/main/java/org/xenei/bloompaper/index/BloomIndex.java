@@ -1,6 +1,5 @@
 package org.xenei.bloompaper.index;
 
-import java.util.Collection;
 import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
@@ -11,7 +10,8 @@ import org.apache.commons.collections4.bloomfilter.Shape;
  */
 public abstract class BloomIndex {
 
-    public static Consumer<BloomFilter> NULL_CONSUMER = (b) -> {};
+    public static Consumer<BloomFilter> NULL_CONSUMER = (b) -> {
+    };
     /**
      * The shape of the filters being stored
      */
@@ -49,7 +49,7 @@ public abstract class BloomIndex {
      */
     public final int count(BloomFilter filter) {
         BloomIndex.Incrementer incr = new BloomIndex.Incrementer();
-        doSearch( incr, filter );
+        doSearch(incr, filter);
         return incr.count;
     }
 
@@ -57,9 +57,9 @@ public abstract class BloomIndex {
      * Counts the number of matching Bloom filters in the index.
      * @param filter  The Bloom filter to count.
      */
-    public final int count(Consumer<BloomFilter> consumer,BloomFilter filter) {
+    public final int count(Consumer<BloomFilter> consumer, BloomFilter filter) {
         BloomIndex.Incrementer incr = new BloomIndex.Incrementer();
-        doSearch( consumer.andThen(incr), filter );
+        doSearch(consumer.andThen(incr), filter);
         return incr.count;
     }
 
@@ -68,7 +68,7 @@ public abstract class BloomIndex {
      * @param filter  The Bloom filter to count.
      */
     public final void search(Consumer<BloomFilter> consumer, BloomFilter filter) {
-        doSearch( consumer, filter );
+        doSearch(consumer, filter);
     }
 
     abstract protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter);
@@ -86,7 +86,7 @@ public abstract class BloomIndex {
     abstract public int count();
 
     public static class Incrementer implements Consumer<BloomFilter> {
-        public int count=0;
+        public int count = 0;
 
         @Override
         public void accept(BloomFilter t) {

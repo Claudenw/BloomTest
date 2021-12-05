@@ -1,8 +1,6 @@
 package org.xenei.bloompaper.index.bloofi;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.ArrayCountingBloomFilter;

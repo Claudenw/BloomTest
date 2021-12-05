@@ -58,7 +58,7 @@ public class BFHamming {
     public void search(Consumer<BloomFilter> result, BloomFilter filter) {
 
         Node node = new Node(filter);
-        //int retval = 0;
+        // int retval = 0;
 
         SortedSet<Node> tailSet = index.tailSet(node);
         if (tailSet.isEmpty()) {
@@ -73,18 +73,15 @@ public class BFHamming {
 
         while (lowerLimit.compareTo(index.last()) <= 0) {
             upperLimit = lowerLimit.upperLimitNode();
-            tailSet.tailSet(lowerLimit).headSet(upperLimit).stream()
-                    .filter(n -> n.getFilter().contains(filter))
-                    .forEach( (n) -> n.getCount(result) );
+            tailSet.tailSet(lowerLimit).headSet(upperLimit).stream().filter(n -> n.getFilter().contains(filter))
+            .forEach((n) -> n.getCount(result));
             lowerLimit = upperLimit.lowerLimitNode();
         }
     }
 
     public int scan(BloomFilter bf) {
         BloomIndex.Incrementer incr = new BloomIndex.Incrementer();
-        index.stream().map( (n) -> n.getFilter() )
-        .filter( (f) -> f.contains(bf) )
-        .forEach( incr );
+        index.stream().map((n) -> n.getFilter()).filter((f) -> f.contains(bf)).forEach(incr);
         return incr.count;
 
     }

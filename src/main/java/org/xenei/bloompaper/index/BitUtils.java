@@ -141,11 +141,11 @@ public final class BitUtils {
         return sb.toString();
     }
 
-    //    public static boolean chkBreak( BloomFilter filter, long... values )
-    //    {
-    //        long[] bits = BloomFilter.asBitMapArray(filter);
-    //        return Arrays.compare( bits,  values) == 0;
-    //    }
+    // public static boolean chkBreak( BloomFilter filter, long... values )
+    // {
+    // long[] bits = BloomFilter.asBitMapArray(filter);
+    // return Arrays.compare( bits, values) == 0;
+    // }
 
     public static boolean isSet(long[] bits, int bitIdx) {
         int longRec = getLongIndex(bitIdx);
@@ -153,8 +153,8 @@ public final class BitUtils {
     }
 
     public static class BufferCompare implements LongConsumer {
-        public static BiPredicate<Long,Long> exact = (x,y) -> x.equals(y);
-        public static BiPredicate<Long,Long> bloom = (x,y) ->  ((x.longValue() & y.longValue()) == y.longValue());
+        public static BiPredicate<Long, Long> exact = (x, y) -> x.equals(y);
+        public static BiPredicate<Long, Long> bloom = (x, y) -> ((x.longValue() & y.longValue()) == y.longValue());
 
         BiPredicate<Long, Long> func;
         long[] bitMap;

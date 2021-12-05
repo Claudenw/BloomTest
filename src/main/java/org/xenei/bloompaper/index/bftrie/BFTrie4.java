@@ -1,8 +1,5 @@
 package org.xenei.bloompaper.index.bftrie;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
@@ -48,8 +45,7 @@ public class BFTrie4 {
         // estimate result size as % of key space.
         int f = shape.getNumberOfBits() - filter.cardinality();
         int initSize = count * f / shape.getNumberOfBits();
-        root.search( consumer, BloomFilter.asBitMapArray(filter));
+        root.search(consumer, BloomFilter.asBitMapArray(filter));
     }
-
 
 }

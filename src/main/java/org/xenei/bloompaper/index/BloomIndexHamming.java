@@ -1,6 +1,5 @@
 package org.xenei.bloompaper.index;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -57,6 +56,6 @@ public class BloomIndexHamming extends BloomIndex {
 
     @Override
     protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
-        index.search(consumer,filter);
+        index.search(consumer, filter);
     }
 }

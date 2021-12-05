@@ -52,8 +52,8 @@ public class BloomIndexList extends BloomIndex {
 
     @Override
     public void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
-        for (BloomFilter candidate : index ) {
-            if (candidate.contains( filter )) {
+        for (BloomFilter candidate : index) {
+            if (candidate.contains(filter)) {
                 consumer.accept(candidate);
             }
         }

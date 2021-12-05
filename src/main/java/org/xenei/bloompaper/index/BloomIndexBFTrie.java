@@ -56,9 +56,7 @@ public class BloomIndexBFTrie extends BloomIndex {
 
     @Override
     protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
-         bftrie.search(consumer, filter);
+        bftrie.search(consumer, filter);
     }
-
-
 
 }

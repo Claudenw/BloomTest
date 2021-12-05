@@ -50,8 +50,8 @@ public class Node implements Comparable<Node> {
     }
 
     public void getCount(Consumer<BloomFilter> func) {
-        for (int i=0;i<count;i++) {
-            func.accept( wrapped );
+        for (int i = 0; i < count; i++) {
+            func.accept(wrapped);
         }
     }
 

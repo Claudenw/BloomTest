@@ -1,7 +1,5 @@
 package org.xenei.bloompaper.index.bftrie;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;

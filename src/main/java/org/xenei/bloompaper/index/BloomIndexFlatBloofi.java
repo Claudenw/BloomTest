@@ -1,6 +1,5 @@
 package org.xenei.bloompaper.index;
 
-import java.util.Collection;
 import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;

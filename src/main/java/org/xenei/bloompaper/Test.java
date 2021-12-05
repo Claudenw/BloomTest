@@ -31,7 +31,6 @@ import org.xenei.bloompaper.index.BloomIndexFlatBloofi;
 import org.xenei.bloompaper.index.BloomIndexHamming;
 import org.xenei.bloompaper.index.BloomIndexList;
 import org.xenei.bloompaper.index.BloomIndexArray;
-import org.xenei.bloompaper.index.NullCollection;
 
 public class Test {
 
@@ -325,7 +324,7 @@ public class Test {
                 stat.currentPhase = Stats.Phase.Query;
                 stat.currentType = type;
                 Collection<BloomFilter> filterCapture = new ArrayList<BloomFilter>();
-                found += bi.count(filterCapture::add,bfSample[i]);
+                found += bi.count(filterCapture::add, bfSample[i]);
                 elapsed += (System.currentTimeMillis() - start);
                 stat.addFoundFilters(type, bfSample[i], filterCapture);
             }
