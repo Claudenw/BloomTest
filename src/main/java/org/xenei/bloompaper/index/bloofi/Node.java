@@ -2,6 +2,8 @@ package org.xenei.bloompaper.index.bloofi;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
+
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 
 /**
@@ -78,27 +80,12 @@ public interface Node {
      * @param results The List to add the results to.
      * @param filter the filter to look for.
      */
-    public void search(List<BloomFilter> results, BloomFilter filter);
-
-    /**
-     * Counts the number of stored Bloom filters that match the filter.
-     * @param filter  the Bloom filter to match.
-     * @return the number of matching bloom filters.
-     */
-    public int count(BloomFilter filter);
+    public void search(Consumer<BloomFilter> results, BloomFilter filter);
 
     /**
      * Returns true if the node is empty.
      * @return true if the node is empty.
      */
     public boolean isEmpty();
-
-    /**
-     * Sets the filter capture for the count.
-     * Every bloom filter returned by the count is added to this collection.
-     * Used in debugging. In general the collection is a Null collection that does nothing.
-     * @param collection the Collection to add the filters to.
-     */
-    public void setFilterCapture(Collection<BloomFilter> collection);
 
 }

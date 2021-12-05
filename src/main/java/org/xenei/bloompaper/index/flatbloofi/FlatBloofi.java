@@ -3,8 +3,13 @@ package org.xenei.bloompaper.index.flatbloofi;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
+
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.IndexProducer;
 import org.apache.commons.collections4.bloomfilter.Shape;
+import org.apache.commons.collections4.bloomfilter.SparseBloomFilter;
 import org.xenei.bloompaper.index.BitUtils;
 
 /**
@@ -27,8 +32,6 @@ public final class FlatBloofi {
     private BitSet busy;
     private final Shape shape;
 
-    private Collection<BloomFilter> filterCapture;
-
     public FlatBloofi(int population, Shape shape) {
         this.shape = shape;
         buffer = new ArrayList<long[]>(0);
@@ -44,8 +47,7 @@ public final class FlatBloofi {
         busy.set(i);
     }
 
-    public int count(BloomFilter bf) {
-        int count = 0;
+    public void search(Consumer<BloomFilter> result, BloomFilter bf) {
         BitSet bs = BitSet.valueOf(BloomFilter.asBitMapArray(bf));
 
         for (int i = 0; i < buffer.size(); i++) {
@@ -56,11 +58,33 @@ public final class FlatBloofi {
 
             while (w != 0) {
                 long t = w & -w;
-                count++;
+                int idx = Long.numberOfTrailingZeros(t) + (Long.SIZE*i);
+                if (busy.get(idx)) {
+                    result.accept( getBloomAt( idx ) );
+                }
                 w ^= t;
             }
         }
-        return count;
+    }
+
+    private BloomFilter getBloomAt(int idx) {
+        IndexProducer indexProducer = new IndexProducer() {
+
+        final long[] mybuffer = buffer.get(BitUtils.getLongIndex(idx));
+        final long mask = BitUtils.getLongBit(idx);
+
+        @Override
+        public void forEachIndex(IntConsumer consumer) {
+            for (int k=0; k< mybuffer.length; k++ )
+            {
+                if ((mask & mybuffer[k]) > 0)
+                {
+                    consumer.accept(k);
+                }
+            }
+        }
+        };
+        return new SparseBloomFilter( shape, indexProducer );
     }
 
     private void setBloomAt(int i, long[] bits) {
@@ -149,7 +173,4 @@ public final class FlatBloofi {
         return busy.cardinality();
     }
 
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        this.filterCapture = collection;
-    }
 }

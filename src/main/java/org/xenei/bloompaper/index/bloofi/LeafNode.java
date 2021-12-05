@@ -2,6 +2,8 @@ package org.xenei.bloompaper.index.bloofi;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
+
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.xenei.bloompaper.Test;
 import org.xenei.bloompaper.index.BitUtils;
@@ -21,8 +23,6 @@ public class LeafNode implements Node {
     private int count;
 
     private InnerNode parent;
-
-    private Collection<BloomFilter> filterCapture;
 
     private final int id;
 
@@ -70,7 +70,7 @@ public class LeafNode implements Node {
 
     @Override
     public boolean remove(BloomFilter filter) {
-        BufferCompare comp = new BufferCompare(this.filter, (x, y) -> x.equals(y));
+        BufferCompare comp = new BufferCompare(this.filter, BitUtils.BufferCompare.exact);
         if (comp.matches(filter)) {
             count--;
             InnerNode node = getParent();
@@ -95,22 +95,12 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public void search(List<BloomFilter> result, BloomFilter filter) {
+    public void search(Consumer<BloomFilter> result, BloomFilter filter) {
         if (this.filter.contains(filter)) {
             for (int i = 0; i < count; i++) {
-                result.add(this.filter);
+                result.accept(this.filter);
             }
         }
-    }
-
-    @Override
-    public int count(BloomFilter filter) {
-
-        if (this.filter.contains(filter)) {
-            filterCapture.add(this.filter);
-            return count;
-        }
-        return 0;
     }
 
     public int count() {
@@ -127,11 +117,6 @@ public class LeafNode implements Node {
     @Override
     public BloomFilter getFilter() {
         return filter;
-    }
-
-    @Override
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        this.filterCapture = collection;
     }
 
     @Override

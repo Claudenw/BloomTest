@@ -3,6 +3,7 @@ package org.xenei.bloompaper.index.bftrie;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
@@ -43,17 +44,12 @@ public class BFTrie4 {
         }
     }
 
-    public List<BloomFilter> search(BloomFilter filter) {
+    public void search(Consumer<BloomFilter> consumer, BloomFilter filter) {
         // estimate result size as % of key space.
         int f = shape.getNumberOfBits() - filter.cardinality();
         int initSize = count * f / shape.getNumberOfBits();
-        List<BloomFilter> retval = new ArrayList<BloomFilter>(initSize);
-        root.search(retval, BloomFilter.asBitMapArray(filter));
-        return retval;
+        root.search( consumer, BloomFilter.asBitMapArray(filter));
     }
 
-    public int count(Collection<BloomFilter> collection, BloomFilter filter) {
-        return root.count(collection, BloomFilter.asBitMapArray(filter));
-    }
 
 }

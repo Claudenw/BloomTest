@@ -2,6 +2,7 @@ package org.xenei.bloompaper.index.bftrie;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
@@ -102,25 +103,13 @@ public class InnerNode implements Node {
     }
 
     @Override
-    public void search(List<BloomFilter> result, long[] buffer) {
+    public void search(Consumer<BloomFilter> consumer, long[] buffer) {
         int[] nodeIdxs = BFTrie4.nibbleTable[getNibble(buffer, level)];
         for (int i : nodeIdxs) {
             if (nodes[i] != null) {
-                nodes[i].search(result, buffer);
+                nodes[i].search(consumer, buffer);
             }
         }
-    }
-
-    @Override
-    public int count(Collection<BloomFilter> collection, long[] buffer) {
-        int retval = 0;
-        int[] nodeIdxs = BFTrie4.nibbleTable[getNibble(buffer, level)];
-        for (int i : nodeIdxs) {
-            if (nodes[i] != null) {
-                retval += nodes[i].count(collection, buffer);
-            }
-        }
-        return retval;
     }
 
     @Override

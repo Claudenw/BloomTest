@@ -1,6 +1,7 @@
 package org.xenei.bloompaper.index;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
@@ -35,11 +36,6 @@ public class BloomIndexBFTrie extends BloomIndex {
     }
 
     @Override
-    public int count(BloomFilter filter) {
-        return bftrie.count(collection, filter);
-    }
-
-    @Override
     public String getName() {
         return "BF-Trie";
     }
@@ -59,8 +55,10 @@ public class BloomIndexBFTrie extends BloomIndex {
     }
 
     @Override
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        this.collection = collection;
+    protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
+         bftrie.search(consumer, filter);
     }
+
+
 
 }

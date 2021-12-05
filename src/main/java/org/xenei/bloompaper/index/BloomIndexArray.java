@@ -1,6 +1,8 @@
 package org.xenei.bloompaper.index;
 
 import java.util.Collection;
+import java.util.function.Consumer;
+
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 
@@ -25,21 +27,8 @@ public class BloomIndexArray extends BloomIndex {
     }
 
     @Override
-    public int count(BloomFilter filter) {
-        int result = 0;
-        // searching entire list
-        for (int i = 0; i < idx; i++) {
-            if (index[i].contains(filter)) {
-                filterCapture.add(index[i]);
-                result++;
-            }
-        }
-        return result;
-    }
-
-    @Override
     public void delete(BloomFilter filter) {
-        BitUtils.BufferCompare comp = new BitUtils.BufferCompare(filter, (x, y) -> x.equals(y));
+        BitUtils.BufferCompare comp = new BitUtils.BufferCompare(filter, BitUtils.BufferCompare.exact);
 
         for (int i = idx - 1; i >= 0; i--) {
             if (comp.matches(index[i])) {
@@ -63,8 +52,13 @@ public class BloomIndexArray extends BloomIndex {
     }
 
     @Override
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        filterCapture = collection;
+    public void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
+        for (int i = 0; i < idx; i++) {
+            if (index[i].contains(filter)) {
+                consumer.accept(index[i]);
+            }
+        }
     }
+
 
 }

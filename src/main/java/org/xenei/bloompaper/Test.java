@@ -324,10 +324,8 @@ public class Test {
                 Stats stat = stats.get(run);
                 stat.currentPhase = Stats.Phase.Query;
                 stat.currentType = type;
-                Collection<BloomFilter> filterCapture = NullCollection.INSTANCE;
-                // Collection<BloomFilter> filterCapture = new ArrayList<BloomFilter>();
-                bi.setFilterCapture(filterCapture);
-                found += bi.count(bfSample[i]);
+                Collection<BloomFilter> filterCapture = new ArrayList<BloomFilter>();
+                found += bi.count(filterCapture::add,bfSample[i]);
                 elapsed += (System.currentTimeMillis() - start);
                 stat.addFoundFilters(type, bfSample[i], filterCapture);
             }

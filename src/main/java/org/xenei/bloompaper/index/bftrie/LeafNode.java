@@ -3,6 +3,7 @@ package org.xenei.bloompaper.index.bftrie;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
@@ -42,34 +43,12 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public void search(List<BloomFilter> result, long[] buffer) {
+    public void search(Consumer<BloomFilter> result, long[] buffer) {
         if (checkEntries) {
             BitMapProducer bmp = BitMapProducer.fromLongArray(buffer);
-            for (BloomFilter candidate : lst) {
-                if (candidate.contains(bmp)) {
-                    result.add(candidate);
-                }
-            }
+            lst.stream().filter( b -> b.contains(bmp)).forEach(result);
         } else {
-            result.addAll(lst);
-        }
-    }
-
-    @Override
-    public int count(Collection<BloomFilter> filterCapture, long buffer[]) {
-        if (checkEntries) {
-            BitMapProducer bmp = BitMapProducer.fromLongArray(buffer);
-            int retval = 0;
-            for (BloomFilter candidate : lst) {
-                if (candidate.contains(bmp)) {
-                    filterCapture.add(candidate);
-                    retval++;
-                }
-            }
-            return retval;
-        } else {
-            filterCapture.addAll(lst);
-            return lst.size();
+            lst.stream().forEach(result);
         }
     }
 

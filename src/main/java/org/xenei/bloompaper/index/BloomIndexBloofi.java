@@ -1,6 +1,8 @@
 package org.xenei.bloompaper.index;
 
 import java.util.Collection;
+import java.util.function.Consumer;
+
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.bloofi.Bloofi;
@@ -29,11 +31,6 @@ public class BloomIndexBloofi extends BloomIndex {
     }
 
     @Override
-    public int count(BloomFilter filter) {
-        return bloofi.count(filter);
-    }
-
-    @Override
     public String getName() {
         return "Bloofi Impl";
     }
@@ -48,10 +45,6 @@ public class BloomIndexBloofi extends BloomIndex {
         return bloofi.count();
     }
 
-    @Override
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        bloofi.setFilterCapture(collection);
-    }
 
     private static LeafNode testing;
 
@@ -61,6 +54,11 @@ public class BloomIndexBloofi extends BloomIndex {
 
     public static LeafNode getTesting() {
         return testing;
+    }
+
+    @Override
+    protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
+        bloofi.search( consumer, filter );
     }
 
 }

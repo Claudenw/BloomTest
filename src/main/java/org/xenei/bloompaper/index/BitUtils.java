@@ -153,6 +153,9 @@ public final class BitUtils {
     }
 
     public static class BufferCompare implements LongConsumer {
+        public static BiPredicate<Long,Long> exact = (x,y) -> x.equals(y);
+        public static BiPredicate<Long,Long> bloom = (x,y) ->  ((x.longValue() & y.longValue()) == y.longValue());
+
         BiPredicate<Long, Long> func;
         long[] bitMap;
         int i;

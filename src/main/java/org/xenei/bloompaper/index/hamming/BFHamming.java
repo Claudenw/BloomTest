@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
+import org.xenei.bloompaper.index.BloomIndex;
 import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 /**
@@ -48,19 +49,23 @@ public class BFHamming {
         return false;
     }
 
-    public int count(BloomFilter filter) {
-        int retval = 0;
+    /**
+     * Finds the matching nodes
+     * @param result
+     * @param filter
+     * @return
+     */
+    public void search(Consumer<BloomFilter> result, BloomFilter filter) {
 
         Node node = new Node(filter);
-        Consumer<BloomFilter> collector = filterCapture == null ? (x) -> {
-        } : filterCapture::add;
+        //int retval = 0;
 
         SortedSet<Node> tailSet = index.tailSet(node);
         if (tailSet.isEmpty()) {
-            return 0;
+            return;
         }
         if (node.equals(tailSet.first())) {
-            retval += tailSet.first().getCount(collector);
+            tailSet.first().getCount(result);
         }
 
         Node lowerLimit = node.lowerLimitNode();
@@ -68,22 +73,19 @@ public class BFHamming {
 
         while (lowerLimit.compareTo(index.last()) <= 0) {
             upperLimit = lowerLimit.upperLimitNode();
-            retval += tailSet.tailSet(lowerLimit).headSet(upperLimit).stream()
-                    .filter(n -> n.getFilter().contains(filter)).mapToInt(n -> n.getCount(collector)).sum();
+            tailSet.tailSet(lowerLimit).headSet(upperLimit).stream()
+                    .filter(n -> n.getFilter().contains(filter))
+                    .forEach( (n) -> n.getCount(result) );
             lowerLimit = upperLimit.lowerLimitNode();
         }
-        return retval;
     }
 
     public int scan(BloomFilter bf) {
-        int count = 0;
-        for (Node test : index) {
-            if (test.getFilter().contains(bf)) {
-                count += test.getCount((x) -> {
-                });
-            }
-        }
-        return count;
+        BloomIndex.Incrementer incr = new BloomIndex.Incrementer();
+        index.stream().map( (n) -> n.getFilter() )
+        .filter( (f) -> f.contains(bf) )
+        .forEach( incr );
+        return incr.count;
 
     }
 

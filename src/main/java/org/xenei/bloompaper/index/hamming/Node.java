@@ -49,9 +49,10 @@ public class Node implements Comparable<Node> {
         this.count++;
     }
 
-    public int getCount(Consumer<BloomFilter> func) {
-        func.accept(wrapped);
-        return this.count;
+    public void getCount(Consumer<BloomFilter> func) {
+        for (int i=0;i<count;i++) {
+            func.accept( wrapped );
+        }
     }
 
     public int getHamming() {

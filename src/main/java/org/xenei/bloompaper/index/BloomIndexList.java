@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
+
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 
@@ -26,26 +28,14 @@ public class BloomIndexList extends BloomIndex {
     }
 
     @Override
-    public int count(BloomFilter filter) {
-        int result = 0;
-        // searching entire list
-        for (BloomFilter candidate : index) {
-            if (candidate.contains(filter)) {
-                filterCapture.add(candidate);
-                result++;
-            }
-        }
-        return result;
-    }
-
-    @Override
     public void delete(BloomFilter filter) {
-        BitUtils.BufferCompare comp = new BitUtils.BufferCompare(filter, (x, y) -> x.equals(y));
+        BitUtils.BufferCompare comp = new BitUtils.BufferCompare(filter, BitUtils.BufferCompare.exact);
 
         Iterator<BloomFilter> iter = index.iterator();
         while (iter.hasNext()) {
             if (comp.matches(iter.next())) {
                 iter.remove();
+                return;
             }
         }
     }
@@ -61,8 +51,12 @@ public class BloomIndexList extends BloomIndex {
     }
 
     @Override
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        filterCapture = collection;
+    public void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
+        for (BloomFilter candidate : index ) {
+            if (candidate.contains( filter )) {
+                consumer.accept(candidate);
+            }
+        }
     }
 
 }

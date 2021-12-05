@@ -3,6 +3,8 @@ package org.xenei.bloompaper.index.bloofi;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
+
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 
@@ -61,7 +63,7 @@ public class Bloofi {
      */
     public List<BloomFilter> get(BloomFilter filter) {
         List<BloomFilter> retval = new ArrayList<BloomFilter>();
-        root.search(retval, filter);
+        root.search(retval::add, filter);
         return retval;
     }
 
@@ -70,12 +72,8 @@ public class Bloofi {
      * @param filter the filter to match.
      * @return the number of filters that match.
      */
-    public int count(BloomFilter filter) {
-        return root.count(filter);
-    }
-
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        root.setFilterCapture(collection);
+    public void search(Consumer<BloomFilter> result, BloomFilter filter) {
+        root.search( result, filter);
     }
 
 }

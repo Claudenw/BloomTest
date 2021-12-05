@@ -3,6 +3,8 @@ package org.xenei.bloompaper.index.bloofi;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
+
 import org.apache.commons.collections4.bloomfilter.ArrayCountingBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.CountingBloomFilter;
@@ -268,29 +270,11 @@ public class InnerNode implements Node {
     }
 
     @Override
-    public void search(List<BloomFilter> results, BloomFilter filter) {
+    public void search(Consumer<BloomFilter> results, BloomFilter filter) {
         if (this.filter.contains(filter)) {
             for (int i = 0; i < used; i++) {
                 buckets[i].search(results, filter);
             }
-        }
-    }
-
-    @Override
-    public int count(BloomFilter filter) {
-        int retval = 0;
-        if (this.filter.contains(filter)) {
-            for (int i = 0; i < used; i++) {
-                retval += buckets[i].count(filter);
-            }
-        }
-        return retval;
-    }
-
-    @Override
-    public void setFilterCapture(Collection<BloomFilter> collection) {
-        for (int i = 0; i < used; i++) {
-            buckets[i].setFilterCapture(collection);
         }
     }
 

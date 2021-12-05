@@ -1,6 +1,7 @@
 package org.xenei.bloompaper.index;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
@@ -9,6 +10,8 @@ import org.apache.commons.collections4.bloomfilter.Shape;
  * base class for a Bloom Index.
  */
 public abstract class BloomIndex {
+
+    public static Consumer<BloomFilter> NULL_CONSUMER = (b) -> {};
     /**
      * The shape of the filters being stored
      */
@@ -35,7 +38,7 @@ public abstract class BloomIndex {
     abstract public void add(BloomFilter filter);
 
     /**
-     * Deletes an Bloom filter from the index.
+     * Deletes a Bloom filter from the index.
      * @param filter  The Bloom filter to delete.
      */
     abstract public void delete(BloomFilter filter);
@@ -44,7 +47,31 @@ public abstract class BloomIndex {
      * Counts the number of matching Bloom filters in the index.
      * @param filter  The Bloom filter to count.
      */
-    abstract public int count(BloomFilter filter);
+    public final int count(BloomFilter filter) {
+        BloomIndex.Incrementer incr = new BloomIndex.Incrementer();
+        doSearch( incr, filter );
+        return incr.count;
+    }
+
+    /**
+     * Counts the number of matching Bloom filters in the index.
+     * @param filter  The Bloom filter to count.
+     */
+    public final int count(Consumer<BloomFilter> consumer,BloomFilter filter) {
+        BloomIndex.Incrementer incr = new BloomIndex.Incrementer();
+        doSearch( consumer.andThen(incr), filter );
+        return incr.count;
+    }
+
+    /**
+     * Counts the number of matching Bloom filters in the index.
+     * @param filter  The Bloom filter to count.
+     */
+    public final void search(Consumer<BloomFilter> consumer, BloomFilter filter) {
+        doSearch( consumer, filter );
+    }
+
+    abstract protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter);
 
     /**
      * Gets the name of the index implementation.
@@ -58,12 +85,12 @@ public abstract class BloomIndex {
      */
     abstract public int count();
 
-    /**
-     * Sets a collection into which bloom filters matched during a count()
-     * operation will be added.
-     *
-     * @param collection The collection to add to.
-     */
-    abstract public void setFilterCapture(Collection<BloomFilter> collection);
+    public static class Incrementer implements Consumer<BloomFilter> {
+        public int count=0;
 
+        @Override
+        public void accept(BloomFilter t) {
+            count++;
+        }
+    }
 }
