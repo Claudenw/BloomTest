@@ -2,15 +2,21 @@ package org.xenei.bloompaper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.Shape;
+import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -28,7 +34,7 @@ public class Stats {
         Query, Delete
     }
 
-    private static final double TIME_SCALE = 0.000000001;
+    public static final double TIME_SCALE = 0.000000001;
     private final String indexName;
     private final int population;
     private final int run;
@@ -65,7 +71,8 @@ public class Stats {
     }
 
     public Map<FrozenBloomFilter, Set<FrozenBloomFilter>> getFound(Type type) {
-        return foundFilters[type.ordinal()];
+        Map<FrozenBloomFilter, Set<FrozenBloomFilter>> result = foundFilters[type.ordinal()];
+        return result == null ? Collections.emptyMap() : result;
     }
 
     public Stats(String indexName, int population, int run) {
@@ -83,7 +90,7 @@ public class Stats {
         return sb.toString();
     }
 
-    public static List<Stats> parse(BufferedReader reader) throws IOException {
+    public static Table parse(BufferedReader reader) throws IOException {
         CSVFormat format = CSVFormat.DEFAULT.withQuote('\'');
 
         String line = reader.readLine();
@@ -92,7 +99,7 @@ public class Stats {
             throw new IOException(s);
         }
 
-        List<Stats> table = new ArrayList<Stats>();
+        Map<String, List<Stats>> table = new HashMap<String, List<Stats>>();
         while ((line = reader.readLine()) != null) {
             CSVParser parser = CSVParser.parse(line, format);
             List<CSVRecord> lst = parser.getRecords();
@@ -116,9 +123,18 @@ public class Stats {
                     rec = lst.get(0);
                 }
             }
-            table.add(stat);
+            List<Stats> resultList = table.get(stat.getName());
+            if (resultList == null) {
+                resultList = new ArrayList<Stats>();
+                table.put(stat.getName(), resultList);
+            }
+            resultList.add(stat);
         }
-        return table;
+        Table result = new Table();
+        for (Map.Entry<String, List<Stats>> e : table.entrySet()) {
+            result.add(e.getKey(), e.getValue());
+        }
+        return result;
     }
 
     public String getName() {
@@ -158,6 +174,129 @@ public class Stats {
 
     public String loadDisplayString() {
         return String.format("%s population %s run %s load time %s", indexName, population, run, getLoad());
+    }
+
+    public static class Serde {
+
+        public void writeStats(ObjectOutputStream out, Stats stats) throws IOException {
+            out.writeUTF(stats.indexName);
+            out.writeInt(stats.population);
+            out.writeInt(stats.run);
+            out.writeLong(stats.load);
+            writeLongMatrix(out, stats.time);
+            writeLongMatrix(out, stats.count);
+            writeFilterMaps(out, stats.foundFilters);
+
+        }
+
+        private void writeLongMatrix(ObjectOutputStream out, long[][] matrix) throws IOException {
+            out.writeInt(Phase.values().length);
+            for (int p = 0; p < Phase.values().length; p++) {
+                writeLongArray(out, matrix[p]);
+            }
+        }
+
+        private void writeLongArray(ObjectOutputStream out, long[] arry) throws IOException {
+            out.writeInt(arry.length);
+            for (long l : arry) {
+                out.writeLong(l);
+            }
+        }
+
+        private void writeFilterMaps(ObjectOutputStream out,
+                Map<FrozenBloomFilter, Set<FrozenBloomFilter>>[] foundFilters) throws IOException {
+            Map<FrozenBloomFilter, Set<FrozenBloomFilter>> map;
+
+            out.writeInt(Type.values().length);
+            for (int t = 0; t < Type.values().length; t++) {
+                map = foundFilters[t];
+                if (map == null || map.isEmpty()) {
+                    out.writeInt(0);
+                } else {
+
+                    out.writeInt(map.size());
+                    for (Map.Entry<FrozenBloomFilter, Set<FrozenBloomFilter>> entry : map.entrySet()) {
+                        writeBloomFilter(out, entry.getKey());
+                        out.writeInt(entry.getValue().size());
+                        for (BloomFilter bf : entry.getValue()) {
+                            writeBloomFilter(out, bf);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void writeBloomFilter(ObjectOutputStream out, BloomFilter bf) throws IOException {
+            out.writeInt(bf.getShape().getNumberOfHashFunctions());
+            out.writeInt(bf.getShape().getNumberOfBits());
+            writeLongArray(out, BloomFilter.asBitMapArray(bf));
+        }
+
+        public Stats readStats(ObjectInputStream in) throws IOException {
+            return this.readStats(in, false);
+        }
+
+        public Stats readStats(ObjectInputStream in, boolean simple) throws IOException {
+            Stats result = new Stats(in.readUTF(), in.readInt(), in.readInt());
+            result.load = in.readLong();
+            result.time = readLongMatrix(in);
+            result.count = readLongMatrix(in);
+            if (!simple) {
+                result.foundFilters = readFilterMaps(in);
+            }
+            return result;
+        }
+
+        private long[][] readLongMatrix(ObjectInputStream in) throws IOException {
+            int p = in.readInt();
+            long[][] matrix = new long[p][];
+            for (int i = 0; i < p; i++) {
+                matrix[i] = readLongArray(in);
+            }
+            return matrix;
+        }
+
+        private long[] readLongArray(ObjectInputStream in) throws IOException {
+            int len = in.readInt();
+            long[] arry = new long[len];
+            for (int i = 0; i < len; i++) {
+                arry[i] = in.readLong();
+            }
+            return arry;
+        }
+
+        private Map<FrozenBloomFilter, Set<FrozenBloomFilter>>[] readFilterMaps(ObjectInputStream in)
+                throws IOException {
+            int len = in.readInt();
+            @SuppressWarnings("unchecked")
+            Map<FrozenBloomFilter, Set<FrozenBloomFilter>>[] result = new HashMap[len];
+
+            for (int t = 0; t < len; t++) {
+                int count = in.readInt();
+                if (count != 0) {
+                    result[t] = new HashMap<FrozenBloomFilter, Set<FrozenBloomFilter>>();
+                    for (int f = 0; f < count; f++) {
+                        FrozenBloomFilter key = readBloomFilter(in);
+                        Set<FrozenBloomFilter> value = new HashSet<FrozenBloomFilter>();
+                        int sLen = in.readInt();
+                        for (int i = 0; i < sLen; i++) {
+                            value.add(readBloomFilter(in));
+                        }
+                        result[t].put(key, value);
+                    }
+                }
+            }
+            return result;
+        }
+
+        private FrozenBloomFilter readBloomFilter(ObjectInputStream in) throws IOException {
+            Shape shape = new Shape(in.readInt(), in.readInt());
+            long[] bitMaps = readLongArray(in);
+            BitMapProducer producer = BitMapProducer.fromLongArray(bitMaps);
+            BloomFilter bf = new SimpleBloomFilter(shape, producer);
+            return FrozenBloomFilter.makeInstance(bf);
+        }
+
     }
 
 }

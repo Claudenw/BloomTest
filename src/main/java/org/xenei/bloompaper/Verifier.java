@@ -1,13 +1,15 @@
 package org.xenei.bloompaper;
 
+import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-
+import java.util.TreeMap;
+import java.util.function.Consumer;
 import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 public class Verifier {
@@ -18,14 +20,46 @@ public class Verifier {
         this.o = o;
     }
 
-    public void verify(final List<Stats> table) {
+    private class MapGen implements Consumer<Stats> {
+        Map<Long, List<Stats>> report = new TreeMap<Long, List<Stats>>();
+        int population;
+        Stats.Phase phase;
+        Stats.Type type;
+
+        MapGen(int population, Stats.Phase phase, Stats.Type type) {
+            this.population = population;
+            this.phase = phase;
+            this.type = type;
+        }
+
+        @Override
+        public void accept(Stats s) {
+            if (s.getPopulation() == population) {
+                long idx = s.getCount(phase, type);
+                List<Stats> lst = report.get(idx);
+                if (lst == null) {
+                    lst = new ArrayList<Stats>();
+                    report.put(idx, lst);
+                }
+                lst.add(s);
+            }
+        }
+
+        public Map<Long, List<Stats>> getReport() {
+            return report;
+        }
+    }
+
+    public void verify(final Table table) throws IOException {
 
         for (Stats.Phase phase : Stats.Phase.values()) {
             for (Stats.Type type : Stats.Type.values()) {
 
                 for (int population : Test.POPULATIONS) {
-                    Map<Long, List<Stats>> report = table.stream().filter(s -> s.getPopulation() == population)
-                            .collect(Collectors.groupingBy(s -> s.getCount(phase, type)));
+                    MapGen mapGen = new MapGen(population, phase, type);
+                    table.forEachStat(mapGen);
+
+                    Map<Long, List<Stats>> report = mapGen.getReport();
 
                     if (report.size() == 1) {
                         display(String.format("%s %s %s - OK", phase, type, population));

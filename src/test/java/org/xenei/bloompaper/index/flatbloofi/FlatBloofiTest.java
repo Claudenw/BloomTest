@@ -6,7 +6,7 @@ import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.junit.Test;
-import org.xenei.bloompaper.RandomBloomFilter;
+import org.xenei.bloompaper.TestingBloomFilter;
 import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 public class FlatBloofiTest {
@@ -21,11 +21,11 @@ public class FlatBloofiTest {
 
         BloomFilter bf = new FrozenBloomFilter(shape, BitMapProducer.fromLongArray(new long[] { 1, 1 }));
         flatBloofi.add(bf);
-        flatBloofi.add(new RandomBloomFilter(shape));
-        flatBloofi.add(new RandomBloomFilter(shape));
-        flatBloofi.add(new RandomBloomFilter(shape));
-        flatBloofi.add(new RandomBloomFilter(shape));
-        flatBloofi.add(new RandomBloomFilter(shape));
+        flatBloofi.add(new TestingBloomFilter(shape));
+        flatBloofi.add(new TestingBloomFilter(shape));
+        flatBloofi.add(new TestingBloomFilter(shape));
+        flatBloofi.add(new TestingBloomFilter(shape));
+        flatBloofi.add(new TestingBloomFilter(shape));
 
         assertEquals(6, flatBloofi.count());
         flatBloofi.delete(bf);
@@ -43,12 +43,12 @@ public class FlatBloofiTest {
 
         BloomFilter bf = new FrozenBloomFilter(shape, BitMapProducer.fromLongArray(new long[] { 1, 1 }));
         flatBloofi.add(bf);
-        flatBloofi.add(new RandomBloomFilter(shape));
-        flatBloofi.add(new RandomBloomFilter(shape));
+        flatBloofi.add(new TestingBloomFilter(shape));
+        flatBloofi.add(new TestingBloomFilter(shape));
         flatBloofi.add(bf);
-        flatBloofi.add(new RandomBloomFilter(shape));
-        flatBloofi.add(new RandomBloomFilter(shape));
-        flatBloofi.add(new RandomBloomFilter(shape));
+        flatBloofi.add(new TestingBloomFilter(shape));
+        flatBloofi.add(new TestingBloomFilter(shape));
+        flatBloofi.add(new TestingBloomFilter(shape));
 
         assertEquals(7, flatBloofi.count());
         flatBloofi.delete(bf);

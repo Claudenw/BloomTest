@@ -70,7 +70,7 @@ public class Test {
         options.addOption("o", "output", true, "Output directory.  If not specified results will not be preserved");
         options.addOption("i", "iterations", true, "The number of iterations defualt=" + RUN_COUNT);
         options.addOption("s", "size", true,
-                "The population size.  May occure more than once.  defualt=100, 1000, 10000, 100000, and 1000000");
+                "The population size.  May occure more than once.  defualt=100, 1000, 10000, 100000, and 1000000.  Default = all");
         return options;
     }
 
@@ -118,11 +118,6 @@ public class Test {
                             String.format("Populsation size (s) %s is not a valid number.", values[i]));
                 }
             }
-
-            if (RUN_COUNT < 1) {
-                RUN_COUNT = 5;
-                System.err.println(cmd.getOptionValue("i") + " is not a valid number, using " + RUN_COUNT);
-            }
         }
 
         Shape shape;
@@ -152,7 +147,7 @@ public class Test {
         }
 
         final List<String> tests = new ArrayList<String>();
-        final List<Stats> table = new ArrayList<Stats>();
+        final Table table = new Table(dir);
         final BloomFilter[] filters = new BloomFilter[1000000]; // (1e6)
         final URL inputFile = Test.class.getResource("/allCountries.txt");
         final List<GeoName> sample = new ArrayList<GeoName>(1000); // (1e3)
@@ -189,13 +184,14 @@ public class Test {
         // run the tests
         for (final String testName : tests) {
             System.out.println("Running " + testName);
+
             Constructor<? extends BloomIndex> constructor = constructors.get(testName);
             for (final int population : POPULATIONS) {
                 final List<Stats> stats = new ArrayList<Stats>();
                 for (int run = 0; run < RUN_COUNT; run++) {
                     stats.add(new Stats(testName, population, run));
                 }
-                table.addAll(runTest(shape, constructor, sample, filters, stats));
+                table.add(testName, runTest(shape, constructor, sample, filters, stats));
             }
         }
 
@@ -232,7 +228,7 @@ public class Test {
 
     private static void doDelete(Stats.Type type, final Constructor<? extends BloomIndex> constructor,
             final BloomFilter[] filters, final BloomFilter[] bfSample, final List<Stats> stats, Shape shape)
-            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi;
         StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
@@ -278,7 +274,7 @@ public class Test {
 
     private static List<Stats> runTest(final Shape shape, final Constructor<? extends BloomIndex> constructor,
             final List<GeoName> sample, final BloomFilter[] filters, List<Stats> stats) throws IOException,
-            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
         BloomIndex bi = doLoad(constructor, filters, shape, stats);
 
@@ -297,7 +293,7 @@ public class Test {
 
     private static BloomIndex doLoad(final Constructor<? extends BloomIndex> constructor, final BloomFilter[] filters,
             final Shape shape, final List<Stats> stats)
-            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi = null;
         StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {

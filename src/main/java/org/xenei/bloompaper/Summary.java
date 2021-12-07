@@ -8,7 +8,13 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
 import org.xenei.bloompaper.Stats.Type;
 
 /**
@@ -31,6 +37,7 @@ public class Summary {
             this.indexName = stat.getName();
             this.population = stat.getPopulation();
             this.n = 0;
+            add(stat);
         }
 
         public double total(Stats.Phase phase, Stats.Type type) {
@@ -68,30 +75,36 @@ public class Summary {
 
     private List<Element> table = new ArrayList<Element>();
 
-    public Summary(List<Stats> table) {
-        Element el = new Element(table.get(0));
-        this.table.add(el);
+    public Summary(Table aTable) throws IOException {
 
-        for (Stats stat : table) {
-            if (!el.add(stat)) {
-                el = new Element(stat);
-                this.table.add(el);
-                el.add(stat);
+        Consumer<Stats> loader = new Consumer<Stats>() {
+            Element el = null;
+
+            @Override
+            public void accept(Stats s) {
+                if (el == null) {
+                    el = new Element(s);
+                    table.add(el);
+                } else {
+                    if (!el.add(s)) {
+                        el = new Element(s);
+                        table.add(el);
+                    }
+                }
             }
-        }
+
+        };
+
+        aTable.forEachSimpleStat(loader);
     }
 
     public List<Element> getTable() {
         return table;
     }
 
-    public static void writeData(PrintStream ps, List<Stats> table) {
+    public static void writeData(PrintStream ps, Table table) throws IOException {
         ps.println(Stats.getHeader());
-        for (final Stats s : table) {
-            for (Stats.Phase phase : Stats.Phase.values()) {
-                ps.println(s.reportStats(phase));
-            }
-        }
+        table.forEachPhase((s, p) -> ps.println(s.reportStats(p)));
     }
 
     public void writeSummary(PrintStream ps) {
@@ -104,28 +117,69 @@ public class Summary {
 
     }
 
+    public static Options getOptions() {
+        Options options = new Options();
+        options.addOption("h", "help", false, "This help");
+        options.addOption("c", "csv", true, "The name of a csv file to read");
+        options.addOption("d", "data", true, "The name of data directory to read");
+        options.addOption("o", "output", true, "Output file.  If not specified results will not be preserved");
+        return options;
+    }
+
     /**
      * Read a datafile and print it out.
      * @param args the arguments.
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        if (args.length == 0 || args.length > 2) {
-            System.out.println("Summary <inputFile> [<outputFile>]");
+
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd = null;
+        try {
+            cmd = parser.parse(getOptions(), args);
+        } catch (Exception e) {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("Summary", "", getOptions(), e.getMessage());
             System.exit(1);
-            ;
         }
 
-        File f = new File(args[0]);
-        BufferedReader br = new BufferedReader(new FileReader(f));
+        if (cmd.hasOption("h")) {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("Test", "", getOptions(), "Options 'c' and 'd' may occure more than once");
+        }
 
-        List<Stats> table = Stats.parse(br);
+        if (cmd.hasOption("c")) {
+            for (String fn : cmd.getOptionValues("c")) {
+                File f = new File(fn);
+                try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+                    Table table = Stats.parse(br);
+                    doOutput(table, cmd.getOptionValue("o"));
+                } catch (IOException e) {
+                    System.err.println(String.format("Error reading %s: %s", fn, e.getMessage()));
+                }
+            }
+
+        }
+        if (cmd.hasOption("d")) {
+            for (String dirs : cmd.getOptionValues("d")) {
+                File d = new File(dirs);
+                Table table = new Table(d);
+                table.scanForFiles();
+                doOutput(table, cmd.getOptionValue("o"));
+            }
+
+        }
+    }
+
+    private static void doOutput(Table table, String fileName) throws IOException {
 
         Summary summary = new Summary(table);
         summary.writeSummary(System.out);
-        if (args.length == 2) {
-            File outFile = new File(args[1]);
+
+        if (fileName != null) {
+            File outFile = new File(fileName);
             summary.writeSummary(new PrintStream(new FileOutputStream(outFile)));
         }
+
     }
 }

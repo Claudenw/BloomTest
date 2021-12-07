@@ -9,7 +9,7 @@ import java.util.Set;
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.junit.Test;
-import org.xenei.bloompaper.RandomBloomFilter;
+import org.xenei.bloompaper.TestingBloomFilter;
 
 public class NumericBloomFilterTest {
     int n = 3;
@@ -35,9 +35,9 @@ public class NumericBloomFilterTest {
                 BitMapProducer.fromLongArray(new long[] { -3025718536694661252L }));
         Set<FrozenBloomFilter> set = new HashSet<FrozenBloomFilter>();
 
-        set.add(FrozenBloomFilter.makeInstance(new RandomBloomFilter(shape)));
+        set.add(FrozenBloomFilter.makeInstance(new TestingBloomFilter(shape)));
         set.add(target);
-        set.add(FrozenBloomFilter.makeInstance(new RandomBloomFilter(shape)));
+        set.add(FrozenBloomFilter.makeInstance(new TestingBloomFilter(shape)));
 
         assertTrue("Target missing from set", set.contains(target));
 
