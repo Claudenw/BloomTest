@@ -50,8 +50,14 @@ public class Verifier {
         }
     }
 
-    public void verify(final Table table) throws IOException {
-
+    /**
+     * Returns false if any error was found.
+     * @param table the table to check.
+     * @return false if any error was found.
+     * @throws IOException
+     */
+    public boolean verify(final Table table) throws IOException {
+        boolean result = true;
         for (Stats.Phase phase : Stats.Phase.values()) {
             for (Stats.Type type : Stats.Type.values()) {
 
@@ -61,32 +67,35 @@ public class Verifier {
 
                     Map<Long, List<Stats>> report = mapGen.getReport();
 
-                    if (report.size() == 1) {
-                        display(String.format("%s %s %s - OK", phase, type, population));
-                    } else {
-
-                        err(String.format("%s %s %s - ERROR", phase, type, population));
-                        for (Map.Entry<Long, List<Stats>> e : report.entrySet()) {
-                            err(String.format("count = %s", e.getKey()));
-                            for (Stats s : e.getValue()) {
-                                err(String.format("     %s (run %s)", s.getName(), s.getRun()));
-                            }
-                        }
-
-                        for (Long x : report.keySet()) {
-                            for (Long y : report.keySet()) {
-                                if (x != y) {
-                                    compare(phase, type, report.get(x).get(0), report.get(y).get(0));
+                    if ( ! report.isEmpty()) {
+                        if (report.size() == 1) {
+                            display(String.format("%s %s %s - OK", phase, type, population));
+                        } else {
+                            result = false;
+                            err(String.format("%s %s %s - ERROR", phase, type, population));
+                            for (Map.Entry<Long, List<Stats>> e : report.entrySet()) {
+                                err(String.format("count = %s", e.getKey()));
+                                for (Stats s : e.getValue()) {
+                                    err(String.format("     %s (run %s)", s.getName(), s.getRun()));
                                 }
                             }
 
-                        }
+                            for (Long x : report.keySet()) {
+                                for (Long y : report.keySet()) {
+                                    if (x != y) {
+                                        compare(phase, type, report.get(x).get(0), report.get(y).get(0));
+                                    }
+                                }
 
-                        display("");
+                            }
+
+                            display("");
+                        }
                     }
                 }
             }
         }
+        return result;
     }
 
     private void compare(Stats.Phase phase, Stats.Type type, Stats statsX, Stats statsY) {
