@@ -122,6 +122,7 @@ public class Summary {
         options.addOption("h", "help", false, "This help");
         options.addOption("c", "csv", true, "The name of a csv file to read");
         options.addOption("d", "data", true, "The name of data directory to read");
+        options.addOption("f", "full", false, "Include full statistics report");
         options.addOption("o", "output", true, "Output file.  If not specified results will not be preserved");
         return options;
     }
@@ -153,7 +154,7 @@ public class Summary {
                 File f = new File(fn);
                 try (BufferedReader br = new BufferedReader(new FileReader(f))) {
                     Table table = Stats.parse(br);
-                    doOutput(table, cmd.getOptionValue("o"));
+                    doOutput(table, cmd.getOptionValue("o"),cmd.hasOption("f"));
                 } catch (IOException e) {
                     System.err.println(String.format("Error reading %s: %s", fn, e.getMessage()));
                 }
@@ -165,15 +166,21 @@ public class Summary {
                 File d = new File(dirs);
                 Table table = new Table(d);
                 table.scanForFiles();
-                doOutput(table, cmd.getOptionValue("o"));
+                doOutput(table, cmd.getOptionValue("o"), cmd.hasOption("f"));
             }
 
         }
     }
 
-    private static void doOutput(Table table, String fileName) throws IOException {
+    public static void doOutput(Table table, String fileName, boolean full ) throws IOException {
 
+        if (full) {
+            System.out.println("===  data ===");
+            Summary.writeData(System.out, table);
+        }
         Summary summary = new Summary(table);
+
+        System.out.println("=== summary data ===");
         summary.writeSummary(System.out);
 
         if (fileName != null) {

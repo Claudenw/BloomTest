@@ -198,29 +198,31 @@ public class Test {
         PrintStream o = null;
 
         System.out.println("=== verification ===");
-        if (dir != null) {
-            o = new PrintStream(new File(dir, "verification.txt"));
-        }
+        try {
+            if (dir != null) {
+                o = new PrintStream(new File(dir, "verification.txt"));
+            }
 
-        Verifier verifier = new Verifier(o);
-        verifier.verify(table);
-
-        System.out.println("===  data ===");
-        Summary.writeData(System.out, table);
-        if (dir != null) {
-            o = new PrintStream(new File(dir, "data.csv"));
-            Summary.writeData(o, table);
-            o.close();
+            Verifier verifier = new Verifier(o);
+            verifier.verify(table);
+        } catch (IOException e) {
+            System.out.println( String.format( "Error during verifier: %s", e.getMessage()));
+        } finally {
+            if (o != null) {
+                o.close();
+            }
         }
 
         final Summary summary = new Summary(table);
+        Summary.doOutput(table, null, true);
 
-        System.out.println("=== summary data ===");
-        summary.writeSummary(System.out);
         if (dir != null) {
-            o = new PrintStream(new File(dir, "summary.csv"));
-            summary.writeSummary(o);
-            o.close();
+            try (PrintStream ps = new PrintStream(new File(dir, "data.csv"))) {
+                Summary.writeData(ps, table);
+            }
+            try (PrintStream ps = new PrintStream(new File(dir, "summary.csv"))){
+                summary.writeSummary(ps);
+            }
         }
 
         System.out.println("=== run complete ===");
