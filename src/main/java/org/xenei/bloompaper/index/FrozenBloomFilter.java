@@ -85,6 +85,15 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     }
 
     @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(String.format("FrozenBloomFilter %s, [ ", getShape()));
+        forEachBitMap(l -> sb.append(String.format("0x%08x, ", l)));
+        sb.deleteCharAt(sb.lastIndexOf(","));
+        sb.append("]");
+        return sb.toString();
+    }
+
+    @Override
     public int compareTo(FrozenBloomFilter other) {
         if (this == other) {
             return 0;

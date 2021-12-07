@@ -25,7 +25,6 @@ public class TestingBloomFilter extends SimpleBloomFilter {
         if (counter == Integer.MIN_VALUE) {
             pfx++;
         }
-
     }
 
 }

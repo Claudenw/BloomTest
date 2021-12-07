@@ -4,7 +4,7 @@
   <groupId>org.xenei.bloompaper</groupId>
   <artifactId>BloomPaper</artifactId>
   <name>Bloom Paper</name>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <description>Code for Bloom Paper Investigation</description>
   <build>
     <plugins>

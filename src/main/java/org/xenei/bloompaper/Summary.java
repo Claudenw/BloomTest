@@ -154,7 +154,7 @@ public class Summary {
                 File f = new File(fn);
                 try (BufferedReader br = new BufferedReader(new FileReader(f))) {
                     Table table = Stats.parse(br);
-                    doOutput(table, cmd.getOptionValue("o"),cmd.hasOption("f"));
+                    doOutput(table, cmd.getOptionValue("o"), cmd.hasOption("f"));
                 } catch (IOException e) {
                     System.err.println(String.format("Error reading %s: %s", fn, e.getMessage()));
                 }
@@ -172,7 +172,7 @@ public class Summary {
         }
     }
 
-    public static void doOutput(Table table, String fileName, boolean full ) throws IOException {
+    public static void doOutput(Table table, String fileName, boolean full) throws IOException {
 
         if (full) {
             System.out.println("===  data ===");

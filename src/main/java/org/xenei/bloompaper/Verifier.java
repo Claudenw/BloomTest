@@ -67,7 +67,7 @@ public class Verifier {
 
                     Map<Long, List<Stats>> report = mapGen.getReport();
 
-                    if ( ! report.isEmpty()) {
+                    if (!report.isEmpty()) {
                         if (report.size() == 1) {
                             display(String.format("%s %s %s - OK", phase, type, population));
                         } else {
