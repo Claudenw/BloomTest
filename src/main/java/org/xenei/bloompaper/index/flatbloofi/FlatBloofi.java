@@ -5,9 +5,11 @@ import java.util.BitSet;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
+import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.IndexProducer;
 import org.apache.commons.collections4.bloomfilter.Shape;
+import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.collections4.bloomfilter.SparseBloomFilter;
 import org.xenei.bloompaper.index.BitUtils;
 
@@ -81,7 +83,8 @@ public final class FlatBloofi {
                 }
             }
         };
-        return new SparseBloomFilter(shape, indexProducer);
+        BitMapProducer bitMapProducer = BitMapProducer.fromIndexProducer(indexProducer, shape);
+        return new SimpleBloomFilter(shape, bitMapProducer);
     }
 
     private void setBloomAt(int i, long[] bits) {

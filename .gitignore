@@ -5,3 +5,4 @@
 /src/main/resources/allCountries.txt
 **/*.swp
 **/.~lock*
+reports/*.dat

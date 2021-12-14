@@ -71,6 +71,7 @@ public class Test {
         options.addOption("i", "iterations", true, "The number of iterations defualt=" + RUN_COUNT);
         options.addOption("s", "size", true,
                 "The population size.  May occure more than once.  defualt=100, 1000, 10000, 100000, and 1000000.  Default = all");
+        options.addOption("v", "short-verify", false, "Skip verification of collected bloom filters. Does not preserve bloom filters in .dat file");
         return options;
     }
 
@@ -146,6 +147,8 @@ public class Test {
             }
         }
 
+        boolean collectFilters = ! cmd.hasOption("v");
+
         final List<String> tests = new ArrayList<String>();
         final Table table = new Table(dir);
         final BloomFilter[] filters = new BloomFilter[1000000]; // (1e6)
@@ -172,7 +175,7 @@ public class Test {
         Collections.sort(tests);
 
         System.out.println("Reading test data");
-        try (GeoNameIterator geoIter = new GeoNameIterator(inputFile)) {
+        try (GeoNameIterator geoIter = new GeoNameIterator(inputFile, shape)) {
             for (int i = 0; i < 1000000; i++) {
                 final GeoName gn = geoIter.next();
                 if ((i % 1000) == 0) {
@@ -191,7 +194,7 @@ public class Test {
                 for (int run = 0; run < RUN_COUNT; run++) {
                     stats.add(new Stats(testName, population, run));
                 }
-                table.add(testName, runTest(shape, constructor, sample, filters, stats));
+                table.add(testName, runTest(shape, constructor, sample, filters, stats, collectFilters));
             }
         }
 
@@ -275,15 +278,18 @@ public class Test {
     }
 
     private static List<Stats> runTest(final Shape shape, final Constructor<? extends BloomIndex> constructor,
-            final List<GeoName> sample, final BloomFilter[] filters, List<Stats> stats) throws IOException,
+            final List<GeoName> sample, final BloomFilter[] filters, List<Stats> stats, boolean collectFilters) throws IOException,
             InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
         BloomIndex bi = doLoad(constructor, filters, shape, stats);
 
         for (Stats.Type type : Stats.Type.values()) {
             BloomFilter[] bfSample = createSample(shape, type, sample);
-            doCount(type, bi, bfSample, stats);
+            doCount(type, bi, bfSample, stats, collectFilters);
         }
+
+        // release the memory
+        bi = null;
 
         for (Stats.Type type : Stats.Type.values()) {
             BloomFilter[] bfSample = createSample(shape, type, sample);
@@ -317,7 +323,7 @@ public class Test {
     }
 
     private static void doCount(final Stats.Type type, final BloomIndex bi, final BloomFilter[] bfSample,
-            final List<Stats> stats) {
+            final List<Stats> stats, boolean collectFilters) {
         final int sampleSize = bfSample.length;
         StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
@@ -331,7 +337,9 @@ public class Test {
                 found += bi.count(filterCapture::add, bfSample[i]);
                 stopwatch.stop();
                 elapsed += stopwatch.getNanoTime();
-                stat.addFoundFilters(type, bfSample[i], filterCapture);
+                if (collectFilters) {
+                    stat.addFoundFilters(type, bfSample[i], filterCapture);
+                }
             }
             stat.registerResult(Stats.Phase.Query, type, elapsed, found);
             System.out.println(stat.displayString(Stats.Phase.Query, type));

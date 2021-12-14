@@ -1,6 +1,7 @@
 package org.xenei.bloompaper.geoname;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 
@@ -71,7 +72,7 @@ public class GeoName {
         private Serde() {
         }
 
-        public static GeoName deserialize(String txt) {
+        public static GeoName deserialize(String txt, Shape shape) {
             String[] parts = txt.split("\t");
             if (parts.length != 19) {
                 System.out.println("too short");
@@ -97,7 +98,7 @@ public class GeoName {
             retval.timezone = parts[17];
             retval.modification_date = parts[18];
             Hasher hasher = GeoNameHasher.createHasher(retval);
-            retval.filter = new SimpleBloomFilter(GeoNameHasher.shape, hasher);
+            retval.filter = new SimpleBloomFilter(shape, hasher);
             return retval;
         }
 
