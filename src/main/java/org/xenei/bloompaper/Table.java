@@ -5,8 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Set;
@@ -26,11 +26,14 @@ public class Table {
     public Table(File dir) throws IOException {
         if (dir == null) {
             this.dir = Files.createTempDirectory(String.format("BloomTest-%s", System.currentTimeMillis())).toFile();
-            ;
         } else {
             this.dir = dir;
         }
         tableNames = new TreeSet<String>();
+    }
+
+    public File getDir() {
+        return dir;
     }
 
     public void scanForFiles() {
@@ -39,12 +42,19 @@ public class Table {
         }
     }
 
+    public void reset() {
+        scanForFiles();
+        tableNames.forEach( (n) -> {new File( dir, n+".dat" ).delete();new File( dir, n+".fmf" ).delete(); }  );
+        tableNames.clear();
+    }
+
     public void add(String tableName, List<Stats> tbl) throws FileNotFoundException, IOException {
         tableNames.add(tableName);
         Stats.Serde serde = new Stats.Serde();
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(statsFile(tableName)))) {
+        try (DataOutputStream out = new DataOutputStream(new FileOutputStream(statsFile(tableName), true))) {
             for (Stats stat : tbl) {
                 serde.writeStats(out, stat);
+                serde.writeFilterMaps( dir, tableName, stat);
             }
         }
     }
@@ -56,17 +66,10 @@ public class Table {
     public void forEachStat(Consumer<Stats> consumer) throws IOException {
         Stats.Serde serde = new Stats.Serde();
         for (String tableName : tableNames) {
-            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(statsFile(tableName)))) {
-                consumer.accept(serde.readStats(in));
-            }
-        }
-    }
-
-    public void forEachSimpleStat(Consumer<Stats> consumer) throws IOException {
-        Stats.Serde serde = new Stats.Serde();
-        for (String tableName : tableNames) {
-            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(statsFile(tableName)))) {
-                consumer.accept(serde.readStats(in, true));
+            try (DataInputStream in = new DataInputStream(new FileInputStream(statsFile(tableName)))) {
+                while(in.available() > 0) {
+                    consumer.accept(serde.readStats(in));
+                }
             }
         }
     }
@@ -76,7 +79,6 @@ public class Table {
             for (Stats.Phase phase : Stats.Phase.values()) {
                 consumer.accept(s, phase);
             }
-            ;
         };
         forEachStat(c);
     }

@@ -1,0 +1,7084 @@
+Reading test data
+read :     1000
+read :     2000
+read :     3000
+read :     4000
+read :     5000
+read :     6000
+read :     7000
+read :     8000
+read :     9000
+read :    10000
+read :    11000
+read :    12000
+read :    13000
+read :    14000
+read :    15000
+read :    16000
+read :    17000
+read :    18000
+read :    19000
+read :    20000
+read :    21000
+read :    22000
+read :    23000
+read :    24000
+read :    25000
+read :    26000
+read :    27000
+read :    28000
+read :    29000
+read :    30000
+read :    31000
+read :    32000
+read :    33000
+read :    34000
+read :    35000
+read :    36000
+read :    37000
+read :    38000
+read :    39000
+read :    40000
+read :    41000
+read :    42000
+read :    43000
+read :    44000
+read :    45000
+read :    46000
+read :    47000
+read :    48000
+read :    49000
+read :    50000
+read :    51000
+read :    52000
+read :    53000
+read :    54000
+read :    55000
+read :    56000
+read :    57000
+read :    58000
+read :    59000
+read :    60000
+read :    61000
+read :    62000
+read :    63000
+read :    64000
+read :    65000
+read :    66000
+read :    67000
+read :    68000
+read :    69000
+read :    70000
+read :    71000
+read :    72000
+read :    73000
+read :    74000
+read :    75000
+read :    76000
+read :    77000
+read :    78000
+read :    79000
+read :    80000
+read :    81000
+read :    82000
+read :    83000
+read :    84000
+read :    85000
+read :    86000
+read :    87000
+read :    88000
+read :    89000
+read :    90000
+read :    91000
+read :    92000
+read :    93000
+read :    94000
+read :    95000
+read :    96000
+read :    97000
+read :    98000
+read :    99000
+read :   100000
+read :   101000
+read :   102000
+read :   103000
+read :   104000
+read :   105000
+read :   106000
+read :   107000
+read :   108000
+read :   109000
+read :   110000
+read :   111000
+read :   112000
+read :   113000
+read :   114000
+read :   115000
+read :   116000
+read :   117000
+read :   118000
+read :   119000
+read :   120000
+read :   121000
+read :   122000
+read :   123000
+read :   124000
+read :   125000
+read :   126000
+read :   127000
+read :   128000
+read :   129000
+read :   130000
+read :   131000
+read :   132000
+read :   133000
+read :   134000
+read :   135000
+read :   136000
+read :   137000
+read :   138000
+read :   139000
+read :   140000
+read :   141000
+read :   142000
+read :   143000
+read :   144000
+read :   145000
+read :   146000
+read :   147000
+read :   148000
+read :   149000
+read :   150000
+read :   151000
+read :   152000
+read :   153000
+read :   154000
+read :   155000
+read :   156000
+read :   157000
+read :   158000
+read :   159000
+read :   160000
+read :   161000
+read :   162000
+read :   163000
+read :   164000
+read :   165000
+read :   166000
+read :   167000
+read :   168000
+read :   169000
+read :   170000
+read :   171000
+read :   172000
+read :   173000
+read :   174000
+read :   175000
+read :   176000
+read :   177000
+read :   178000
+read :   179000
+read :   180000
+read :   181000
+read :   182000
+read :   183000
+read :   184000
+read :   185000
+read :   186000
+read :   187000
+read :   188000
+read :   189000
+read :   190000
+read :   191000
+read :   192000
+read :   193000
+read :   194000
+read :   195000
+read :   196000
+read :   197000
+read :   198000
+read :   199000
+read :   200000
+read :   201000
+read :   202000
+read :   203000
+read :   204000
+read :   205000
+read :   206000
+read :   207000
+read :   208000
+read :   209000
+read :   210000
+read :   211000
+read :   212000
+read :   213000
+read :   214000
+read :   215000
+read :   216000
+read :   217000
+read :   218000
+read :   219000
+read :   220000
+read :   221000
+read :   222000
+read :   223000
+read :   224000
+read :   225000
+read :   226000
+read :   227000
+read :   228000
+read :   229000
+read :   230000
+read :   231000
+read :   232000
+read :   233000
+read :   234000
+read :   235000
+read :   236000
+read :   237000
+read :   238000
+read :   239000
+read :   240000
+read :   241000
+read :   242000
+read :   243000
+read :   244000
+read :   245000
+read :   246000
+read :   247000
+read :   248000
+read :   249000
+read :   250000
+read :   251000
+read :   252000
+read :   253000
+read :   254000
+read :   255000
+read :   256000
+read :   257000
+read :   258000
+read :   259000
+read :   260000
+read :   261000
+read :   262000
+read :   263000
+read :   264000
+read :   265000
+read :   266000
+read :   267000
+read :   268000
+read :   269000
+read :   270000
+read :   271000
+read :   272000
+read :   273000
+read :   274000
+read :   275000
+read :   276000
+read :   277000
+read :   278000
+read :   279000
+read :   280000
+read :   281000
+read :   282000
+read :   283000
+read :   284000
+read :   285000
+read :   286000
+read :   287000
+read :   288000
+read :   289000
+read :   290000
+read :   291000
+read :   292000
+read :   293000
+read :   294000
+read :   295000
+read :   296000
+read :   297000
+read :   298000
+read :   299000
+read :   300000
+read :   301000
+read :   302000
+read :   303000
+read :   304000
+read :   305000
+read :   306000
+read :   307000
+read :   308000
+read :   309000
+read :   310000
+read :   311000
+read :   312000
+read :   313000
+read :   314000
+read :   315000
+read :   316000
+read :   317000
+read :   318000
+read :   319000
+read :   320000
+read :   321000
+read :   322000
+read :   323000
+read :   324000
+read :   325000
+read :   326000
+read :   327000
+read :   328000
+read :   329000
+read :   330000
+read :   331000
+read :   332000
+read :   333000
+read :   334000
+read :   335000
+read :   336000
+read :   337000
+read :   338000
+read :   339000
+read :   340000
+read :   341000
+read :   342000
+read :   343000
+read :   344000
+read :   345000
+read :   346000
+read :   347000
+read :   348000
+read :   349000
+read :   350000
+read :   351000
+read :   352000
+read :   353000
+read :   354000
+read :   355000
+read :   356000
+read :   357000
+read :   358000
+read :   359000
+read :   360000
+read :   361000
+read :   362000
+read :   363000
+read :   364000
+read :   365000
+read :   366000
+read :   367000
+read :   368000
+read :   369000
+read :   370000
+read :   371000
+read :   372000
+read :   373000
+read :   374000
+read :   375000
+read :   376000
+read :   377000
+read :   378000
+read :   379000
+read :   380000
+read :   381000
+read :   382000
+read :   383000
+read :   384000
+read :   385000
+read :   386000
+read :   387000
+read :   388000
+read :   389000
+read :   390000
+read :   391000
+read :   392000
+read :   393000
+read :   394000
+read :   395000
+read :   396000
+read :   397000
+read :   398000
+read :   399000
+read :   400000
+read :   401000
+read :   402000
+read :   403000
+read :   404000
+read :   405000
+read :   406000
+read :   407000
+read :   408000
+read :   409000
+read :   410000
+read :   411000
+read :   412000
+read :   413000
+read :   414000
+read :   415000
+read :   416000
+read :   417000
+read :   418000
+read :   419000
+read :   420000
+read :   421000
+read :   422000
+read :   423000
+read :   424000
+read :   425000
+read :   426000
+read :   427000
+read :   428000
+read :   429000
+read :   430000
+read :   431000
+read :   432000
+read :   433000
+read :   434000
+read :   435000
+read :   436000
+read :   437000
+read :   438000
+read :   439000
+read :   440000
+read :   441000
+read :   442000
+read :   443000
+read :   444000
+read :   445000
+read :   446000
+read :   447000
+read :   448000
+read :   449000
+read :   450000
+read :   451000
+read :   452000
+read :   453000
+read :   454000
+read :   455000
+read :   456000
+read :   457000
+read :   458000
+read :   459000
+read :   460000
+read :   461000
+read :   462000
+read :   463000
+read :   464000
+read :   465000
+read :   466000
+read :   467000
+read :   468000
+read :   469000
+read :   470000
+read :   471000
+read :   472000
+read :   473000
+read :   474000
+read :   475000
+read :   476000
+read :   477000
+read :   478000
+read :   479000
+read :   480000
+read :   481000
+read :   482000
+read :   483000
+read :   484000
+read :   485000
+read :   486000
+read :   487000
+read :   488000
+read :   489000
+read :   490000
+read :   491000
+read :   492000
+read :   493000
+read :   494000
+read :   495000
+read :   496000
+read :   497000
+read :   498000
+read :   499000
+read :   500000
+read :   501000
+read :   502000
+read :   503000
+read :   504000
+read :   505000
+read :   506000
+read :   507000
+read :   508000
+read :   509000
+read :   510000
+read :   511000
+read :   512000
+read :   513000
+read :   514000
+read :   515000
+read :   516000
+read :   517000
+read :   518000
+read :   519000
+read :   520000
+read :   521000
+read :   522000
+read :   523000
+read :   524000
+read :   525000
+read :   526000
+read :   527000
+read :   528000
+read :   529000
+read :   530000
+read :   531000
+read :   532000
+read :   533000
+read :   534000
+read :   535000
+read :   536000
+read :   537000
+read :   538000
+read :   539000
+read :   540000
+read :   541000
+read :   542000
+read :   543000
+read :   544000
+read :   545000
+read :   546000
+read :   547000
+read :   548000
+read :   549000
+read :   550000
+read :   551000
+read :   552000
+read :   553000
+read :   554000
+read :   555000
+read :   556000
+read :   557000
+read :   558000
+read :   559000
+read :   560000
+read :   561000
+read :   562000
+read :   563000
+read :   564000
+read :   565000
+read :   566000
+read :   567000
+read :   568000
+read :   569000
+read :   570000
+read :   571000
+read :   572000
+read :   573000
+read :   574000
+read :   575000
+read :   576000
+read :   577000
+read :   578000
+read :   579000
+read :   580000
+read :   581000
+read :   582000
+read :   583000
+read :   584000
+read :   585000
+read :   586000
+read :   587000
+read :   588000
+read :   589000
+read :   590000
+read :   591000
+read :   592000
+read :   593000
+read :   594000
+read :   595000
+read :   596000
+read :   597000
+read :   598000
+read :   599000
+read :   600000
+read :   601000
+read :   602000
+read :   603000
+read :   604000
+read :   605000
+read :   606000
+read :   607000
+read :   608000
+read :   609000
+read :   610000
+read :   611000
+read :   612000
+read :   613000
+read :   614000
+read :   615000
+read :   616000
+read :   617000
+read :   618000
+read :   619000
+read :   620000
+read :   621000
+read :   622000
+read :   623000
+read :   624000
+read :   625000
+read :   626000
+read :   627000
+read :   628000
+read :   629000
+read :   630000
+read :   631000
+read :   632000
+read :   633000
+read :   634000
+read :   635000
+read :   636000
+read :   637000
+read :   638000
+read :   639000
+read :   640000
+read :   641000
+read :   642000
+read :   643000
+read :   644000
+read :   645000
+read :   646000
+read :   647000
+read :   648000
+read :   649000
+read :   650000
+read :   651000
+read :   652000
+read :   653000
+read :   654000
+read :   655000
+read :   656000
+read :   657000
+read :   658000
+read :   659000
+read :   660000
+read :   661000
+read :   662000
+read :   663000
+read :   664000
+read :   665000
+read :   666000
+read :   667000
+read :   668000
+read :   669000
+read :   670000
+read :   671000
+read :   672000
+read :   673000
+read :   674000
+read :   675000
+read :   676000
+read :   677000
+read :   678000
+read :   679000
+read :   680000
+read :   681000
+read :   682000
+read :   683000
+read :   684000
+read :   685000
+read :   686000
+read :   687000
+read :   688000
+read :   689000
+read :   690000
+read :   691000
+read :   692000
+read :   693000
+read :   694000
+read :   695000
+read :   696000
+read :   697000
+read :   698000
+read :   699000
+read :   700000
+read :   701000
+read :   702000
+read :   703000
+read :   704000
+read :   705000
+read :   706000
+read :   707000
+read :   708000
+read :   709000
+read :   710000
+read :   711000
+read :   712000
+read :   713000
+read :   714000
+read :   715000
+read :   716000
+read :   717000
+read :   718000
+read :   719000
+read :   720000
+read :   721000
+read :   722000
+read :   723000
+read :   724000
+read :   725000
+read :   726000
+read :   727000
+read :   728000
+read :   729000
+read :   730000
+read :   731000
+read :   732000
+read :   733000
+read :   734000
+read :   735000
+read :   736000
+read :   737000
+read :   738000
+read :   739000
+read :   740000
+read :   741000
+read :   742000
+read :   743000
+read :   744000
+read :   745000
+read :   746000
+read :   747000
+read :   748000
+read :   749000
+read :   750000
+read :   751000
+read :   752000
+read :   753000
+read :   754000
+read :   755000
+read :   756000
+read :   757000
+read :   758000
+read :   759000
+read :   760000
+read :   761000
+read :   762000
+read :   763000
+read :   764000
+read :   765000
+read :   766000
+read :   767000
+read :   768000
+read :   769000
+read :   770000
+read :   771000
+read :   772000
+read :   773000
+read :   774000
+read :   775000
+read :   776000
+read :   777000
+read :   778000
+read :   779000
+read :   780000
+read :   781000
+read :   782000
+read :   783000
+read :   784000
+read :   785000
+read :   786000
+read :   787000
+read :   788000
+read :   789000
+read :   790000
+read :   791000
+read :   792000
+read :   793000
+read :   794000
+read :   795000
+read :   796000
+read :   797000
+read :   798000
+read :   799000
+read :   800000
+read :   801000
+read :   802000
+read :   803000
+read :   804000
+read :   805000
+read :   806000
+read :   807000
+read :   808000
+read :   809000
+read :   810000
+read :   811000
+read :   812000
+read :   813000
+read :   814000
+read :   815000
+read :   816000
+read :   817000
+read :   818000
+read :   819000
+read :   820000
+read :   821000
+read :   822000
+read :   823000
+read :   824000
+read :   825000
+read :   826000
+read :   827000
+read :   828000
+read :   829000
+read :   830000
+read :   831000
+read :   832000
+read :   833000
+read :   834000
+read :   835000
+read :   836000
+read :   837000
+read :   838000
+read :   839000
+read :   840000
+read :   841000
+read :   842000
+read :   843000
+read :   844000
+read :   845000
+read :   846000
+read :   847000
+read :   848000
+read :   849000
+read :   850000
+read :   851000
+read :   852000
+read :   853000
+read :   854000
+read :   855000
+read :   856000
+read :   857000
+read :   858000
+read :   859000
+read :   860000
+read :   861000
+read :   862000
+read :   863000
+read :   864000
+read :   865000
+read :   866000
+read :   867000
+read :   868000
+read :   869000
+read :   870000
+read :   871000
+read :   872000
+read :   873000
+read :   874000
+read :   875000
+read :   876000
+read :   877000
+read :   878000
+read :   879000
+read :   880000
+read :   881000
+read :   882000
+read :   883000
+read :   884000
+read :   885000
+read :   886000
+read :   887000
+read :   888000
+read :   889000
+read :   890000
+read :   891000
+read :   892000
+read :   893000
+read :   894000
+read :   895000
+read :   896000
+read :   897000
+read :   898000
+read :   899000
+read :   900000
+read :   901000
+read :   902000
+read :   903000
+read :   904000
+read :   905000
+read :   906000
+read :   907000
+read :   908000
+read :   909000
+read :   910000
+read :   911000
+read :   912000
+read :   913000
+read :   914000
+read :   915000
+read :   916000
+read :   917000
+read :   918000
+read :   919000
+read :   920000
+read :   921000
+read :   922000
+read :   923000
+read :   924000
+read :   925000
+read :   926000
+read :   927000
+read :   928000
+read :   929000
+read :   930000
+read :   931000
+read :   932000
+read :   933000
+read :   934000
+read :   935000
+read :   936000
+read :   937000
+read :   938000
+read :   939000
+read :   940000
+read :   941000
+read :   942000
+read :   943000
+read :   944000
+read :   945000
+read :   946000
+read :   947000
+read :   948000
+read :   949000
+read :   950000
+read :   951000
+read :   952000
+read :   953000
+read :   954000
+read :   955000
+read :   956000
+read :   957000
+read :   958000
+read :   959000
+read :   960000
+read :   961000
+read :   962000
+read :   963000
+read :   964000
+read :   965000
+read :   966000
+read :   967000
+read :   968000
+read :   969000
+read :   970000
+read :   971000
+read :   972000
+read :   973000
+read :   974000
+read :   975000
+read :   976000
+read :   977000
+read :   978000
+read :   979000
+read :   980000
+read :   981000
+read :   982000
+read :   983000
+read :   984000
+read :   985000
+read :   986000
+read :   987000
+read :   988000
+read :   989000
+read :   990000
+read :   991000
+read :   992000
+read :   993000
+read :   994000
+read :   995000
+read :   996000
+read :   997000
+read :   998000
+read :   999000
+read :  1000000
+read :  1001000
+read :  1002000
+read :  1003000
+read :  1004000
+read :  1005000
+read :  1006000
+read :  1007000
+read :  1008000
+read :  1009000
+read :  1010000
+read :  1011000
+read :  1012000
+read :  1013000
+read :  1014000
+read :  1015000
+read :  1016000
+read :  1017000
+read :  1018000
+read :  1019000
+read :  1020000
+read :  1021000
+read :  1022000
+read :  1023000
+read :  1024000
+read :  1025000
+read :  1026000
+read :  1027000
+read :  1028000
+read :  1029000
+read :  1030000
+read :  1031000
+read :  1032000
+read :  1033000
+read :  1034000
+read :  1035000
+read :  1036000
+read :  1037000
+read :  1038000
+read :  1039000
+read :  1040000
+read :  1041000
+read :  1042000
+read :  1043000
+read :  1044000
+read :  1045000
+read :  1046000
+read :  1047000
+read :  1048000
+read :  1049000
+read :  1050000
+read :  1051000
+read :  1052000
+read :  1053000
+read :  1054000
+read :  1055000
+read :  1056000
+read :  1057000
+read :  1058000
+read :  1059000
+read :  1060000
+read :  1061000
+read :  1062000
+read :  1063000
+read :  1064000
+read :  1065000
+read :  1066000
+read :  1067000
+read :  1068000
+read :  1069000
+read :  1070000
+read :  1071000
+read :  1072000
+read :  1073000
+read :  1074000
+read :  1075000
+read :  1076000
+read :  1077000
+read :  1078000
+read :  1079000
+read :  1080000
+read :  1081000
+read :  1082000
+read :  1083000
+read :  1084000
+read :  1085000
+read :  1086000
+read :  1087000
+read :  1088000
+read :  1089000
+read :  1090000
+read :  1091000
+read :  1092000
+read :  1093000
+read :  1094000
+read :  1095000
+read :  1096000
+read :  1097000
+read :  1098000
+read :  1099000
+read :  1100000
+read :  1101000
+read :  1102000
+read :  1103000
+read :  1104000
+read :  1105000
+read :  1106000
+read :  1107000
+read :  1108000
+read :  1109000
+read :  1110000
+read :  1111000
+read :  1112000
+read :  1113000
+read :  1114000
+read :  1115000
+read :  1116000
+read :  1117000
+read :  1118000
+read :  1119000
+read :  1120000
+read :  1121000
+read :  1122000
+read :  1123000
+read :  1124000
+read :  1125000
+read :  1126000
+read :  1127000
+read :  1128000
+read :  1129000
+read :  1130000
+read :  1131000
+read :  1132000
+read :  1133000
+read :  1134000
+read :  1135000
+read :  1136000
+read :  1137000
+read :  1138000
+read :  1139000
+read :  1140000
+read :  1141000
+read :  1142000
+read :  1143000
+read :  1144000
+read :  1145000
+read :  1146000
+read :  1147000
+read :  1148000
+read :  1149000
+read :  1150000
+read :  1151000
+read :  1152000
+read :  1153000
+read :  1154000
+read :  1155000
+read :  1156000
+read :  1157000
+read :  1158000
+read :  1159000
+read :  1160000
+read :  1161000
+read :  1162000
+read :  1163000
+read :  1164000
+read :  1165000
+read :  1166000
+read :  1167000
+read :  1168000
+read :  1169000
+read :  1170000
+read :  1171000
+read :  1172000
+read :  1173000
+read :  1174000
+read :  1175000
+read :  1176000
+read :  1177000
+read :  1178000
+read :  1179000
+read :  1180000
+read :  1181000
+read :  1182000
+read :  1183000
+read :  1184000
+read :  1185000
+read :  1186000
+read :  1187000
+read :  1188000
+read :  1189000
+read :  1190000
+read :  1191000
+read :  1192000
+read :  1193000
+read :  1194000
+read :  1195000
+read :  1196000
+read :  1197000
+read :  1198000
+read :  1199000
+read :  1200000
+read :  1201000
+read :  1202000
+read :  1203000
+read :  1204000
+read :  1205000
+read :  1206000
+read :  1207000
+read :  1208000
+read :  1209000
+read :  1210000
+read :  1211000
+read :  1212000
+read :  1213000
+read :  1214000
+read :  1215000
+read :  1216000
+read :  1217000
+read :  1218000
+read :  1219000
+read :  1220000
+read :  1221000
+read :  1222000
+read :  1223000
+read :  1224000
+read :  1225000
+read :  1226000
+read :  1227000
+read :  1228000
+read :  1229000
+read :  1230000
+read :  1231000
+read :  1232000
+read :  1233000
+read :  1234000
+read :  1235000
+read :  1236000
+read :  1237000
+read :  1238000
+read :  1239000
+read :  1240000
+read :  1241000
+read :  1242000
+read :  1243000
+read :  1244000
+read :  1245000
+read :  1246000
+read :  1247000
+read :  1248000
+read :  1249000
+read :  1250000
+read :  1251000
+read :  1252000
+read :  1253000
+read :  1254000
+read :  1255000
+read :  1256000
+read :  1257000
+read :  1258000
+read :  1259000
+read :  1260000
+read :  1261000
+read :  1262000
+read :  1263000
+read :  1264000
+read :  1265000
+read :  1266000
+read :  1267000
+read :  1268000
+read :  1269000
+read :  1270000
+read :  1271000
+read :  1272000
+read :  1273000
+read :  1274000
+read :  1275000
+read :  1276000
+read :  1277000
+read :  1278000
+read :  1279000
+read :  1280000
+read :  1281000
+read :  1282000
+read :  1283000
+read :  1284000
+read :  1285000
+read :  1286000
+read :  1287000
+read :  1288000
+read :  1289000
+read :  1290000
+read :  1291000
+read :  1292000
+read :  1293000
+read :  1294000
+read :  1295000
+read :  1296000
+read :  1297000
+read :  1298000
+read :  1299000
+read :  1300000
+read :  1301000
+read :  1302000
+read :  1303000
+read :  1304000
+read :  1305000
+read :  1306000
+read :  1307000
+read :  1308000
+read :  1309000
+read :  1310000
+read :  1311000
+read :  1312000
+read :  1313000
+read :  1314000
+read :  1315000
+read :  1316000
+read :  1317000
+read :  1318000
+read :  1319000
+read :  1320000
+read :  1321000
+read :  1322000
+read :  1323000
+read :  1324000
+read :  1325000
+read :  1326000
+read :  1327000
+read :  1328000
+read :  1329000
+read :  1330000
+read :  1331000
+read :  1332000
+read :  1333000
+read :  1334000
+read :  1335000
+read :  1336000
+read :  1337000
+read :  1338000
+read :  1339000
+read :  1340000
+read :  1341000
+read :  1342000
+read :  1343000
+read :  1344000
+read :  1345000
+read :  1346000
+read :  1347000
+read :  1348000
+read :  1349000
+read :  1350000
+read :  1351000
+read :  1352000
+read :  1353000
+read :  1354000
+read :  1355000
+read :  1356000
+read :  1357000
+read :  1358000
+read :  1359000
+read :  1360000
+read :  1361000
+read :  1362000
+read :  1363000
+read :  1364000
+read :  1365000
+read :  1366000
+read :  1367000
+read :  1368000
+read :  1369000
+read :  1370000
+read :  1371000
+read :  1372000
+read :  1373000
+read :  1374000
+read :  1375000
+read :  1376000
+read :  1377000
+read :  1378000
+read :  1379000
+read :  1380000
+read :  1381000
+read :  1382000
+read :  1383000
+read :  1384000
+read :  1385000
+read :  1386000
+read :  1387000
+read :  1388000
+read :  1389000
+read :  1390000
+read :  1391000
+read :  1392000
+read :  1393000
+read :  1394000
+read :  1395000
+read :  1396000
+read :  1397000
+read :  1398000
+read :  1399000
+read :  1400000
+read :  1401000
+read :  1402000
+read :  1403000
+read :  1404000
+read :  1405000
+read :  1406000
+read :  1407000
+read :  1408000
+read :  1409000
+read :  1410000
+read :  1411000
+read :  1412000
+read :  1413000
+read :  1414000
+read :  1415000
+read :  1416000
+read :  1417000
+read :  1418000
+read :  1419000
+read :  1420000
+read :  1421000
+read :  1422000
+read :  1423000
+read :  1424000
+read :  1425000
+read :  1426000
+read :  1427000
+read :  1428000
+read :  1429000
+read :  1430000
+read :  1431000
+read :  1432000
+read :  1433000
+read :  1434000
+read :  1435000
+read :  1436000
+read :  1437000
+read :  1438000
+read :  1439000
+read :  1440000
+read :  1441000
+read :  1442000
+read :  1443000
+read :  1444000
+read :  1445000
+read :  1446000
+read :  1447000
+read :  1448000
+read :  1449000
+read :  1450000
+read :  1451000
+read :  1452000
+read :  1453000
+read :  1454000
+read :  1455000
+read :  1456000
+read :  1457000
+read :  1458000
+read :  1459000
+read :  1460000
+read :  1461000
+read :  1462000
+read :  1463000
+read :  1464000
+read :  1465000
+read :  1466000
+read :  1467000
+read :  1468000
+read :  1469000
+read :  1470000
+read :  1471000
+read :  1472000
+read :  1473000
+read :  1474000
+read :  1475000
+read :  1476000
+read :  1477000
+read :  1478000
+read :  1479000
+read :  1480000
+read :  1481000
+read :  1482000
+read :  1483000
+read :  1484000
+read :  1485000
+read :  1486000
+read :  1487000
+read :  1488000
+read :  1489000
+read :  1490000
+read :  1491000
+read :  1492000
+read :  1493000
+read :  1494000
+read :  1495000
+read :  1496000
+read :  1497000
+read :  1498000
+read :  1499000
+read :  1500000
+read :  1501000
+read :  1502000
+read :  1503000
+read :  1504000
+read :  1505000
+read :  1506000
+read :  1507000
+read :  1508000
+read :  1509000
+read :  1510000
+read :  1511000
+read :  1512000
+read :  1513000
+read :  1514000
+read :  1515000
+read :  1516000
+read :  1517000
+read :  1518000
+read :  1519000
+read :  1520000
+read :  1521000
+read :  1522000
+read :  1523000
+read :  1524000
+read :  1525000
+read :  1526000
+read :  1527000
+read :  1528000
+read :  1529000
+read :  1530000
+read :  1531000
+read :  1532000
+read :  1533000
+read :  1534000
+read :  1535000
+read :  1536000
+read :  1537000
+read :  1538000
+read :  1539000
+read :  1540000
+read :  1541000
+read :  1542000
+read :  1543000
+read :  1544000
+read :  1545000
+read :  1546000
+read :  1547000
+read :  1548000
+read :  1549000
+read :  1550000
+read :  1551000
+read :  1552000
+read :  1553000
+read :  1554000
+read :  1555000
+read :  1556000
+read :  1557000
+read :  1558000
+read :  1559000
+read :  1560000
+read :  1561000
+read :  1562000
+read :  1563000
+read :  1564000
+read :  1565000
+read :  1566000
+read :  1567000
+read :  1568000
+read :  1569000
+read :  1570000
+read :  1571000
+read :  1572000
+read :  1573000
+read :  1574000
+read :  1575000
+read :  1576000
+read :  1577000
+read :  1578000
+read :  1579000
+read :  1580000
+read :  1581000
+read :  1582000
+read :  1583000
+read :  1584000
+read :  1585000
+read :  1586000
+read :  1587000
+read :  1588000
+read :  1589000
+read :  1590000
+read :  1591000
+read :  1592000
+read :  1593000
+read :  1594000
+read :  1595000
+read :  1596000
+read :  1597000
+read :  1598000
+read :  1599000
+read :  1600000
+read :  1601000
+read :  1602000
+read :  1603000
+read :  1604000
+read :  1605000
+read :  1606000
+read :  1607000
+read :  1608000
+read :  1609000
+read :  1610000
+read :  1611000
+read :  1612000
+read :  1613000
+read :  1614000
+read :  1615000
+read :  1616000
+read :  1617000
+read :  1618000
+read :  1619000
+read :  1620000
+read :  1621000
+read :  1622000
+read :  1623000
+read :  1624000
+read :  1625000
+read :  1626000
+read :  1627000
+read :  1628000
+read :  1629000
+read :  1630000
+read :  1631000
+read :  1632000
+read :  1633000
+read :  1634000
+read :  1635000
+read :  1636000
+read :  1637000
+read :  1638000
+read :  1639000
+read :  1640000
+read :  1641000
+read :  1642000
+read :  1643000
+read :  1644000
+read :  1645000
+read :  1646000
+read :  1647000
+read :  1648000
+read :  1649000
+read :  1650000
+read :  1651000
+read :  1652000
+read :  1653000
+read :  1654000
+read :  1655000
+read :  1656000
+read :  1657000
+read :  1658000
+read :  1659000
+read :  1660000
+read :  1661000
+read :  1662000
+read :  1663000
+read :  1664000
+read :  1665000
+read :  1666000
+read :  1667000
+read :  1668000
+read :  1669000
+read :  1670000
+read :  1671000
+read :  1672000
+read :  1673000
+read :  1674000
+read :  1675000
+read :  1676000
+read :  1677000
+read :  1678000
+read :  1679000
+read :  1680000
+read :  1681000
+read :  1682000
+read :  1683000
+read :  1684000
+read :  1685000
+read :  1686000
+read :  1687000
+read :  1688000
+read :  1689000
+read :  1690000
+read :  1691000
+read :  1692000
+read :  1693000
+read :  1694000
+read :  1695000
+read :  1696000
+read :  1697000
+read :  1698000
+read :  1699000
+read :  1700000
+read :  1701000
+read :  1702000
+read :  1703000
+read :  1704000
+read :  1705000
+read :  1706000
+read :  1707000
+read :  1708000
+read :  1709000
+read :  1710000
+read :  1711000
+read :  1712000
+read :  1713000
+read :  1714000
+read :  1715000
+read :  1716000
+read :  1717000
+read :  1718000
+read :  1719000
+read :  1720000
+read :  1721000
+read :  1722000
+read :  1723000
+read :  1724000
+read :  1725000
+read :  1726000
+read :  1727000
+read :  1728000
+read :  1729000
+read :  1730000
+read :  1731000
+read :  1732000
+read :  1733000
+read :  1734000
+read :  1735000
+read :  1736000
+read :  1737000
+read :  1738000
+read :  1739000
+read :  1740000
+read :  1741000
+read :  1742000
+read :  1743000
+read :  1744000
+read :  1745000
+read :  1746000
+read :  1747000
+read :  1748000
+read :  1749000
+read :  1750000
+read :  1751000
+read :  1752000
+read :  1753000
+read :  1754000
+read :  1755000
+read :  1756000
+read :  1757000
+read :  1758000
+read :  1759000
+read :  1760000
+read :  1761000
+read :  1762000
+read :  1763000
+read :  1764000
+read :  1765000
+read :  1766000
+read :  1767000
+read :  1768000
+read :  1769000
+read :  1770000
+read :  1771000
+read :  1772000
+read :  1773000
+read :  1774000
+read :  1775000
+read :  1776000
+read :  1777000
+read :  1778000
+read :  1779000
+read :  1780000
+read :  1781000
+read :  1782000
+read :  1783000
+read :  1784000
+read :  1785000
+read :  1786000
+read :  1787000
+read :  1788000
+read :  1789000
+read :  1790000
+read :  1791000
+read :  1792000
+read :  1793000
+read :  1794000
+read :  1795000
+read :  1796000
+read :  1797000
+read :  1798000
+read :  1799000
+read :  1800000
+read :  1801000
+read :  1802000
+read :  1803000
+read :  1804000
+read :  1805000
+read :  1806000
+read :  1807000
+read :  1808000
+read :  1809000
+read :  1810000
+read :  1811000
+read :  1812000
+read :  1813000
+read :  1814000
+read :  1815000
+read :  1816000
+read :  1817000
+read :  1818000
+read :  1819000
+read :  1820000
+read :  1821000
+read :  1822000
+read :  1823000
+read :  1824000
+read :  1825000
+read :  1826000
+read :  1827000
+read :  1828000
+read :  1829000
+read :  1830000
+read :  1831000
+read :  1832000
+read :  1833000
+read :  1834000
+read :  1835000
+read :  1836000
+read :  1837000
+read :  1838000
+read :  1839000
+read :  1840000
+read :  1841000
+read :  1842000
+read :  1843000
+read :  1844000
+read :  1845000
+read :  1846000
+read :  1847000
+read :  1848000
+read :  1849000
+read :  1850000
+read :  1851000
+read :  1852000
+read :  1853000
+read :  1854000
+read :  1855000
+read :  1856000
+read :  1857000
+read :  1858000
+read :  1859000
+read :  1860000
+read :  1861000
+read :  1862000
+read :  1863000
+read :  1864000
+read :  1865000
+read :  1866000
+read :  1867000
+read :  1868000
+read :  1869000
+read :  1870000
+read :  1871000
+read :  1872000
+read :  1873000
+read :  1874000
+read :  1875000
+read :  1876000
+read :  1877000
+read :  1878000
+read :  1879000
+read :  1880000
+read :  1881000
+read :  1882000
+read :  1883000
+read :  1884000
+read :  1885000
+read :  1886000
+read :  1887000
+read :  1888000
+read :  1889000
+read :  1890000
+read :  1891000
+read :  1892000
+read :  1893000
+read :  1894000
+read :  1895000
+read :  1896000
+read :  1897000
+read :  1898000
+read :  1899000
+read :  1900000
+read :  1901000
+read :  1902000
+read :  1903000
+read :  1904000
+read :  1905000
+read :  1906000
+read :  1907000
+read :  1908000
+read :  1909000
+read :  1910000
+read :  1911000
+read :  1912000
+read :  1913000
+read :  1914000
+read :  1915000
+read :  1916000
+read :  1917000
+read :  1918000
+read :  1919000
+read :  1920000
+read :  1921000
+read :  1922000
+read :  1923000
+read :  1924000
+read :  1925000
+read :  1926000
+read :  1927000
+read :  1928000
+read :  1929000
+read :  1930000
+read :  1931000
+read :  1932000
+read :  1933000
+read :  1934000
+read :  1935000
+read :  1936000
+read :  1937000
+read :  1938000
+read :  1939000
+read :  1940000
+read :  1941000
+read :  1942000
+read :  1943000
+read :  1944000
+read :  1945000
+read :  1946000
+read :  1947000
+read :  1948000
+read :  1949000
+read :  1950000
+read :  1951000
+read :  1952000
+read :  1953000
+read :  1954000
+read :  1955000
+read :  1956000
+read :  1957000
+read :  1958000
+read :  1959000
+read :  1960000
+read :  1961000
+read :  1962000
+read :  1963000
+read :  1964000
+read :  1965000
+read :  1966000
+read :  1967000
+read :  1968000
+read :  1969000
+read :  1970000
+read :  1971000
+read :  1972000
+read :  1973000
+read :  1974000
+read :  1975000
+read :  1976000
+read :  1977000
+read :  1978000
+read :  1979000
+read :  1980000
+read :  1981000
+read :  1982000
+read :  1983000
+read :  1984000
+read :  1985000
+read :  1986000
+read :  1987000
+read :  1988000
+read :  1989000
+read :  1990000
+read :  1991000
+read :  1992000
+read :  1993000
+read :  1994000
+read :  1995000
+read :  1996000
+read :  1997000
+read :  1998000
+read :  1999000
+read :  2000000
+Running BF-Trie
+BF-Trie population 100 run 0 load time 0.0020727270000000003
+BF-Trie population 100 run 1 load time 5.44505E-4
+BF-Trie population 100 run 2 load time 3.5244400000000004E-4
+BF-Trie population 100 run 3 load time 4.50359E-4
+BF-Trie population 100 run 4 load time 4.3015800000000004E-4
+BF-Trie Query COMPLETE population 100 run 0  exec time 0.008547 (3)
+BF-Trie Query COMPLETE population 100 run 1  exec time 0.002110 (3)
+BF-Trie Query COMPLETE population 100 run 2  exec time 0.001228 (3)
+BF-Trie Query COMPLETE population 100 run 3  exec time 0.001226 (3)
+BF-Trie Query COMPLETE population 100 run 4  exec time 0.001151 (3)
+BF-Trie Query HIGHCARD population 100 run 0  exec time 0.019356 (2477)
+BF-Trie Query HIGHCARD population 100 run 1  exec time 0.009678 (2477)
+BF-Trie Query HIGHCARD population 100 run 2  exec time 0.008400 (2477)
+BF-Trie Query HIGHCARD population 100 run 3  exec time 0.008543 (2477)
+BF-Trie Query HIGHCARD population 100 run 4  exec time 0.008392 (2477)
+BF-Trie Query LOWCARD population 100 run 0  exec time 0.011567 (5500)
+BF-Trie Query LOWCARD population 100 run 1  exec time 0.011487 (5500)
+BF-Trie Query LOWCARD population 100 run 2  exec time 0.011065 (5500)
+BF-Trie Query LOWCARD population 100 run 3  exec time 0.011169 (5500)
+BF-Trie Query LOWCARD population 100 run 4  exec time 0.011083 (5500)
+BF-Trie Delete COMPLETE population 100 run 0  exec time 0.000786 (1)
+BF-Trie Delete COMPLETE population 100 run 1  exec time 0.000562 (1)
+BF-Trie Delete COMPLETE population 100 run 2  exec time 0.000254 (1)
+BF-Trie Delete COMPLETE population 100 run 3  exec time 0.000242 (1)
+BF-Trie Delete COMPLETE population 100 run 4  exec time 0.000294 (1)
+BF-Trie Delete HIGHCARD population 100 run 0  exec time 0.000338 (0)
+BF-Trie Delete HIGHCARD population 100 run 1  exec time 0.000250 (0)
+BF-Trie Delete HIGHCARD population 100 run 2  exec time 0.000193 (0)
+BF-Trie Delete HIGHCARD population 100 run 3  exec time 0.000249 (0)
+BF-Trie Delete HIGHCARD population 100 run 4  exec time 0.000218 (0)
+BF-Trie Delete LOWCARD population 100 run 0  exec time 0.000377 (0)
+BF-Trie Delete LOWCARD population 100 run 1  exec time 0.000284 (0)
+BF-Trie Delete LOWCARD population 100 run 2  exec time 0.000228 (0)
+BF-Trie Delete LOWCARD population 100 run 3  exec time 0.000221 (0)
+BF-Trie Delete LOWCARD population 100 run 4  exec time 0.000217 (0)
+BF-Trie population 1000 run 0 load time 8.78017E-4
+BF-Trie population 1000 run 1 load time 8.39691E-4
+BF-Trie population 1000 run 2 load time 8.75257E-4
+BF-Trie population 1000 run 3 load time 8.226720000000001E-4
+BF-Trie population 1000 run 4 load time 9.256360000000001E-4
+BF-Trie Query COMPLETE population 1000 run 0  exec time 0.002416 (48)
+BF-Trie Query COMPLETE population 1000 run 1  exec time 0.002171 (48)
+BF-Trie Query COMPLETE population 1000 run 2  exec time 0.002129 (48)
+BF-Trie Query COMPLETE population 1000 run 3  exec time 0.002041 (48)
+BF-Trie Query COMPLETE population 1000 run 4  exec time 0.002076 (48)
+BF-Trie Query HIGHCARD population 1000 run 0  exec time 0.059942 (23569)
+BF-Trie Query HIGHCARD population 1000 run 1  exec time 0.057314 (23569)
+BF-Trie Query HIGHCARD population 1000 run 2  exec time 0.054344 (23569)
+BF-Trie Query HIGHCARD population 1000 run 3  exec time 0.051719 (23569)
+BF-Trie Query HIGHCARD population 1000 run 4  exec time 0.046984 (23569)
+BF-Trie Query LOWCARD population 1000 run 0  exec time 0.050468 (50483)
+BF-Trie Query LOWCARD population 1000 run 1  exec time 0.047186 (50483)
+BF-Trie Query LOWCARD population 1000 run 2  exec time 0.047116 (50483)
+BF-Trie Query LOWCARD population 1000 run 3  exec time 0.046759 (50483)
+BF-Trie Query LOWCARD population 1000 run 4  exec time 0.050928 (50483)
+BF-Trie Delete COMPLETE population 1000 run 0  exec time 0.000409 (2)
+BF-Trie Delete COMPLETE population 1000 run 1  exec time 0.000551 (2)
+BF-Trie Delete COMPLETE population 1000 run 2  exec time 0.000456 (2)
+BF-Trie Delete COMPLETE population 1000 run 3  exec time 0.000288 (2)
+BF-Trie Delete COMPLETE population 1000 run 4  exec time 0.000269 (2)
+BF-Trie Delete HIGHCARD population 1000 run 0  exec time 0.000429 (0)
+BF-Trie Delete HIGHCARD population 1000 run 1  exec time 0.000388 (0)
+BF-Trie Delete HIGHCARD population 1000 run 2  exec time 0.000320 (0)
+BF-Trie Delete HIGHCARD population 1000 run 3  exec time 0.000266 (0)
+BF-Trie Delete HIGHCARD population 1000 run 4  exec time 0.000254 (0)
+BF-Trie Delete LOWCARD population 1000 run 0  exec time 0.000378 (0)
+BF-Trie Delete LOWCARD population 1000 run 1  exec time 0.000303 (0)
+BF-Trie Delete LOWCARD population 1000 run 2  exec time 0.000247 (0)
+BF-Trie Delete LOWCARD population 1000 run 3  exec time 0.000284 (0)
+BF-Trie Delete LOWCARD population 1000 run 4  exec time 0.000219 (0)
+BF-Trie population 10000 run 0 load time 0.008474564
+BF-Trie population 10000 run 1 load time 0.008048154
+BF-Trie population 10000 run 2 load time 0.006121472
+BF-Trie population 10000 run 3 load time 0.004358405
+BF-Trie population 10000 run 4 load time 0.004534357
+BF-Trie Query COMPLETE population 10000 run 0  exec time 0.025984 (4186)
+BF-Trie Query COMPLETE population 10000 run 1  exec time 0.020993 (4186)
+BF-Trie Query COMPLETE population 10000 run 2  exec time 0.020393 (4186)
+BF-Trie Query COMPLETE population 10000 run 3  exec time 0.028143 (4186)
+BF-Trie Query COMPLETE population 10000 run 4  exec time 0.027204 (4186)
+BF-Trie Query HIGHCARD population 10000 run 0  exec time 0.434144 (247757)
+BF-Trie Query HIGHCARD population 10000 run 1  exec time 0.389551 (247757)
+BF-Trie Query HIGHCARD population 10000 run 2  exec time 0.389455 (247757)
+BF-Trie Query HIGHCARD population 10000 run 3  exec time 0.388535 (247757)
+BF-Trie Query HIGHCARD population 10000 run 4  exec time 0.565445 (247757)
+BF-Trie Query LOWCARD population 10000 run 0  exec time 1.248582 (1916522)
+BF-Trie Query LOWCARD population 10000 run 1  exec time 1.187695 (1916522)
+BF-Trie Query LOWCARD population 10000 run 2  exec time 1.153654 (1916522)
+BF-Trie Query LOWCARD population 10000 run 3  exec time 1.176393 (1916522)
+BF-Trie Query LOWCARD population 10000 run 4  exec time 1.271311 (1916522)
+BF-Trie Delete COMPLETE population 10000 run 0  exec time 0.000462 (10)
+BF-Trie Delete COMPLETE population 10000 run 1  exec time 0.000464 (10)
+BF-Trie Delete COMPLETE population 10000 run 2  exec time 0.000447 (10)
+BF-Trie Delete COMPLETE population 10000 run 3  exec time 0.000454 (10)
+BF-Trie Delete COMPLETE population 10000 run 4  exec time 0.000506 (10)
+BF-Trie Delete HIGHCARD population 10000 run 0  exec time 0.000325 (0)
+BF-Trie Delete HIGHCARD population 10000 run 1  exec time 0.000328 (0)
+BF-Trie Delete HIGHCARD population 10000 run 2  exec time 0.000276 (0)
+BF-Trie Delete HIGHCARD population 10000 run 3  exec time 0.000272 (0)
+BF-Trie Delete HIGHCARD population 10000 run 4  exec time 0.000290 (0)
+BF-Trie Delete LOWCARD population 10000 run 0  exec time 0.000262 (0)
+BF-Trie Delete LOWCARD population 10000 run 1  exec time 0.000237 (0)
+BF-Trie Delete LOWCARD population 10000 run 2  exec time 0.000240 (0)
+BF-Trie Delete LOWCARD population 10000 run 3  exec time 0.000253 (0)
+BF-Trie Delete LOWCARD population 10000 run 4  exec time 0.000240 (0)
+BF-Trie population 100000 run 0 load time 0.081890348
+BF-Trie population 100000 run 1 load time 0.180752787
+BF-Trie population 100000 run 2 load time 0.179184004
+BF-Trie population 100000 run 3 load time 0.080336004
+BF-Trie population 100000 run 4 load time 0.05413114300000001
+BF-Trie Query COMPLETE population 100000 run 0  exec time 0.098839 (26349)
+BF-Trie Query COMPLETE population 100000 run 1  exec time 0.096465 (26349)
+BF-Trie Query COMPLETE population 100000 run 2  exec time 0.097327 (26349)
+BF-Trie Query COMPLETE population 100000 run 3  exec time 0.099106 (26349)
+BF-Trie Query COMPLETE population 100000 run 4  exec time 0.101392 (26349)
+BF-Trie Query HIGHCARD population 100000 run 0  exec time 3.213568 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 1  exec time 2.974953 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 2  exec time 3.034319 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 3  exec time 3.619380 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 4  exec time 3.567575 (1920312)
+BF-Trie Query LOWCARD population 100000 run 0  exec time 11.971638 (14989587)
+BF-Trie Query LOWCARD population 100000 run 1  exec time 12.160984 (14989587)
+BF-Trie Query LOWCARD population 100000 run 2  exec time 12.058254 (14989587)
+BF-Trie Query LOWCARD population 100000 run 3  exec time 12.290499 (14989587)
+BF-Trie Query LOWCARD population 100000 run 4  exec time 12.346092 (14989587)
+BF-Trie Delete COMPLETE population 100000 run 0  exec time 0.000408 (41)
+BF-Trie Delete COMPLETE population 100000 run 1  exec time 0.000587 (41)
+BF-Trie Delete COMPLETE population 100000 run 2  exec time 0.000418 (41)
+BF-Trie Delete COMPLETE population 100000 run 3  exec time 0.000413 (41)
+BF-Trie Delete COMPLETE population 100000 run 4  exec time 0.001969 (41)
+BF-Trie Delete HIGHCARD population 100000 run 0  exec time 0.000089 (2)
+BF-Trie Delete HIGHCARD population 100000 run 1  exec time 0.000090 (2)
+BF-Trie Delete HIGHCARD population 100000 run 2  exec time 0.000108 (2)
+BF-Trie Delete HIGHCARD population 100000 run 3  exec time 0.000085 (2)
+BF-Trie Delete HIGHCARD population 100000 run 4  exec time 2.057318 (2)
+BF-Trie Delete LOWCARD population 100000 run 0  exec time 0.000090 (2)
+BF-Trie Delete LOWCARD population 100000 run 1  exec time 0.000062 (2)
+BF-Trie Delete LOWCARD population 100000 run 2  exec time 0.000062 (2)
+BF-Trie Delete LOWCARD population 100000 run 3  exec time 0.000087 (2)
+BF-Trie Delete LOWCARD population 100000 run 4  exec time 0.000060 (2)
+BF-Trie population 1000000 run 0 load time 2.90331287
+BF-Trie population 1000000 run 1 load time 4.191251408
+BF-Trie population 1000000 run 2 load time 3.644326571
+BF-Trie population 1000000 run 3 load time 2.8662429520000003
+BF-Trie population 1000000 run 4 load time 2.716465653
+BF-Trie Query COMPLETE population 1000000 run 0  exec time 1.461069 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 1  exec time 1.431461 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 2  exec time 1.455105 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 3  exec time 1.282376 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 4  exec time 1.354121 (1316235)
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+	at java.base/java.util.HashMap.newTreeNode(HashMap.java:1807)
+	at java.base/java.util.HashMap$TreeNode.putTreeVal(HashMap.java:2052)
+	at java.base/java.util.HashMap.putVal(HashMap.java:633)
+	at java.base/java.util.HashMap.put(HashMap.java:607)
+	at java.base/java.util.HashSet.add(HashSet.java:220)
+	at org.xenei.bloompaper.Stats$$Lambda$14/0x0000000840063440.accept(Unknown Source)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:195)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1655)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:484)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
+	at org.xenei.bloompaper.Stats.addFoundFilters(Stats.java:64)
+	at org.xenei.bloompaper.Test.doCount(Test.java:338)
+	at org.xenei.bloompaper.Test.runTest(Test.java:288)
+	at org.xenei.bloompaper.Test.main(Test.java:197)
+Reading test data
+read :     1000
+read :     2000
+read :     3000
+read :     4000
+read :     5000
+read :     6000
+read :     7000
+read :     8000
+read :     9000
+read :    10000
+read :    11000
+read :    12000
+read :    13000
+read :    14000
+read :    15000
+read :    16000
+read :    17000
+read :    18000
+read :    19000
+read :    20000
+read :    21000
+read :    22000
+read :    23000
+read :    24000
+read :    25000
+read :    26000
+read :    27000
+read :    28000
+read :    29000
+read :    30000
+read :    31000
+read :    32000
+read :    33000
+read :    34000
+read :    35000
+read :    36000
+read :    37000
+read :    38000
+read :    39000
+read :    40000
+read :    41000
+read :    42000
+read :    43000
+read :    44000
+read :    45000
+read :    46000
+read :    47000
+read :    48000
+read :    49000
+read :    50000
+read :    51000
+read :    52000
+read :    53000
+read :    54000
+read :    55000
+read :    56000
+read :    57000
+read :    58000
+read :    59000
+read :    60000
+read :    61000
+read :    62000
+read :    63000
+read :    64000
+read :    65000
+read :    66000
+read :    67000
+read :    68000
+read :    69000
+read :    70000
+read :    71000
+read :    72000
+read :    73000
+read :    74000
+read :    75000
+read :    76000
+read :    77000
+read :    78000
+read :    79000
+read :    80000
+read :    81000
+read :    82000
+read :    83000
+read :    84000
+read :    85000
+read :    86000
+read :    87000
+read :    88000
+read :    89000
+read :    90000
+read :    91000
+read :    92000
+read :    93000
+read :    94000
+read :    95000
+read :    96000
+read :    97000
+read :    98000
+read :    99000
+read :   100000
+read :   101000
+read :   102000
+read :   103000
+read :   104000
+read :   105000
+read :   106000
+read :   107000
+read :   108000
+read :   109000
+read :   110000
+read :   111000
+read :   112000
+read :   113000
+read :   114000
+read :   115000
+read :   116000
+read :   117000
+read :   118000
+read :   119000
+read :   120000
+read :   121000
+read :   122000
+read :   123000
+read :   124000
+read :   125000
+read :   126000
+read :   127000
+read :   128000
+read :   129000
+read :   130000
+read :   131000
+read :   132000
+read :   133000
+read :   134000
+read :   135000
+read :   136000
+read :   137000
+read :   138000
+read :   139000
+read :   140000
+read :   141000
+read :   142000
+read :   143000
+read :   144000
+read :   145000
+read :   146000
+read :   147000
+read :   148000
+read :   149000
+read :   150000
+read :   151000
+read :   152000
+read :   153000
+read :   154000
+read :   155000
+read :   156000
+read :   157000
+read :   158000
+read :   159000
+read :   160000
+read :   161000
+read :   162000
+read :   163000
+read :   164000
+read :   165000
+read :   166000
+read :   167000
+read :   168000
+read :   169000
+read :   170000
+read :   171000
+read :   172000
+read :   173000
+read :   174000
+read :   175000
+read :   176000
+read :   177000
+read :   178000
+read :   179000
+read :   180000
+read :   181000
+read :   182000
+read :   183000
+read :   184000
+read :   185000
+read :   186000
+read :   187000
+read :   188000
+read :   189000
+read :   190000
+read :   191000
+read :   192000
+read :   193000
+read :   194000
+read :   195000
+read :   196000
+read :   197000
+read :   198000
+read :   199000
+read :   200000
+read :   201000
+read :   202000
+read :   203000
+read :   204000
+read :   205000
+read :   206000
+read :   207000
+read :   208000
+read :   209000
+read :   210000
+read :   211000
+read :   212000
+read :   213000
+read :   214000
+read :   215000
+read :   216000
+read :   217000
+read :   218000
+read :   219000
+read :   220000
+read :   221000
+read :   222000
+read :   223000
+read :   224000
+read :   225000
+read :   226000
+read :   227000
+read :   228000
+read :   229000
+read :   230000
+read :   231000
+read :   232000
+read :   233000
+read :   234000
+read :   235000
+read :   236000
+read :   237000
+read :   238000
+read :   239000
+read :   240000
+read :   241000
+read :   242000
+read :   243000
+read :   244000
+read :   245000
+read :   246000
+read :   247000
+read :   248000
+read :   249000
+read :   250000
+read :   251000
+read :   252000
+read :   253000
+read :   254000
+read :   255000
+read :   256000
+read :   257000
+read :   258000
+read :   259000
+read :   260000
+read :   261000
+read :   262000
+read :   263000
+read :   264000
+read :   265000
+read :   266000
+read :   267000
+read :   268000
+read :   269000
+read :   270000
+read :   271000
+read :   272000
+read :   273000
+read :   274000
+read :   275000
+read :   276000
+read :   277000
+read :   278000
+read :   279000
+read :   280000
+read :   281000
+read :   282000
+read :   283000
+read :   284000
+read :   285000
+read :   286000
+read :   287000
+read :   288000
+read :   289000
+read :   290000
+read :   291000
+read :   292000
+read :   293000
+read :   294000
+read :   295000
+read :   296000
+read :   297000
+read :   298000
+read :   299000
+read :   300000
+read :   301000
+read :   302000
+read :   303000
+read :   304000
+read :   305000
+read :   306000
+read :   307000
+read :   308000
+read :   309000
+read :   310000
+read :   311000
+read :   312000
+read :   313000
+read :   314000
+read :   315000
+read :   316000
+read :   317000
+read :   318000
+read :   319000
+read :   320000
+read :   321000
+read :   322000
+read :   323000
+read :   324000
+read :   325000
+read :   326000
+read :   327000
+read :   328000
+read :   329000
+read :   330000
+read :   331000
+read :   332000
+read :   333000
+read :   334000
+read :   335000
+read :   336000
+read :   337000
+read :   338000
+read :   339000
+read :   340000
+read :   341000
+read :   342000
+read :   343000
+read :   344000
+read :   345000
+read :   346000
+read :   347000
+read :   348000
+read :   349000
+read :   350000
+read :   351000
+read :   352000
+read :   353000
+read :   354000
+read :   355000
+read :   356000
+read :   357000
+read :   358000
+read :   359000
+read :   360000
+read :   361000
+read :   362000
+read :   363000
+read :   364000
+read :   365000
+read :   366000
+read :   367000
+read :   368000
+read :   369000
+read :   370000
+read :   371000
+read :   372000
+read :   373000
+read :   374000
+read :   375000
+read :   376000
+read :   377000
+read :   378000
+read :   379000
+read :   380000
+read :   381000
+read :   382000
+read :   383000
+read :   384000
+read :   385000
+read :   386000
+read :   387000
+read :   388000
+read :   389000
+read :   390000
+read :   391000
+read :   392000
+read :   393000
+read :   394000
+read :   395000
+read :   396000
+read :   397000
+read :   398000
+read :   399000
+read :   400000
+read :   401000
+read :   402000
+read :   403000
+read :   404000
+read :   405000
+read :   406000
+read :   407000
+read :   408000
+read :   409000
+read :   410000
+read :   411000
+read :   412000
+read :   413000
+read :   414000
+read :   415000
+read :   416000
+read :   417000
+read :   418000
+read :   419000
+read :   420000
+read :   421000
+read :   422000
+read :   423000
+read :   424000
+read :   425000
+read :   426000
+read :   427000
+read :   428000
+read :   429000
+read :   430000
+read :   431000
+read :   432000
+read :   433000
+read :   434000
+read :   435000
+read :   436000
+read :   437000
+read :   438000
+read :   439000
+read :   440000
+read :   441000
+read :   442000
+read :   443000
+read :   444000
+read :   445000
+read :   446000
+read :   447000
+read :   448000
+read :   449000
+read :   450000
+read :   451000
+read :   452000
+read :   453000
+read :   454000
+read :   455000
+read :   456000
+read :   457000
+read :   458000
+read :   459000
+read :   460000
+read :   461000
+read :   462000
+read :   463000
+read :   464000
+read :   465000
+read :   466000
+read :   467000
+read :   468000
+read :   469000
+read :   470000
+read :   471000
+read :   472000
+read :   473000
+read :   474000
+read :   475000
+read :   476000
+read :   477000
+read :   478000
+read :   479000
+read :   480000
+read :   481000
+read :   482000
+read :   483000
+read :   484000
+read :   485000
+read :   486000
+read :   487000
+read :   488000
+read :   489000
+read :   490000
+read :   491000
+read :   492000
+read :   493000
+read :   494000
+read :   495000
+read :   496000
+read :   497000
+read :   498000
+read :   499000
+read :   500000
+read :   501000
+read :   502000
+read :   503000
+read :   504000
+read :   505000
+read :   506000
+read :   507000
+read :   508000
+read :   509000
+read :   510000
+read :   511000
+read :   512000
+read :   513000
+read :   514000
+read :   515000
+read :   516000
+read :   517000
+read :   518000
+read :   519000
+read :   520000
+read :   521000
+read :   522000
+read :   523000
+read :   524000
+read :   525000
+read :   526000
+read :   527000
+read :   528000
+read :   529000
+read :   530000
+read :   531000
+read :   532000
+read :   533000
+read :   534000
+read :   535000
+read :   536000
+read :   537000
+read :   538000
+read :   539000
+read :   540000
+read :   541000
+read :   542000
+read :   543000
+read :   544000
+read :   545000
+read :   546000
+read :   547000
+read :   548000
+read :   549000
+read :   550000
+read :   551000
+read :   552000
+read :   553000
+read :   554000
+read :   555000
+read :   556000
+read :   557000
+read :   558000
+read :   559000
+read :   560000
+read :   561000
+read :   562000
+read :   563000
+read :   564000
+read :   565000
+read :   566000
+read :   567000
+read :   568000
+read :   569000
+read :   570000
+read :   571000
+read :   572000
+read :   573000
+read :   574000
+read :   575000
+read :   576000
+read :   577000
+read :   578000
+read :   579000
+read :   580000
+read :   581000
+read :   582000
+read :   583000
+read :   584000
+read :   585000
+read :   586000
+read :   587000
+read :   588000
+read :   589000
+read :   590000
+read :   591000
+read :   592000
+read :   593000
+read :   594000
+read :   595000
+read :   596000
+read :   597000
+read :   598000
+read :   599000
+read :   600000
+read :   601000
+read :   602000
+read :   603000
+read :   604000
+read :   605000
+read :   606000
+read :   607000
+read :   608000
+read :   609000
+read :   610000
+read :   611000
+read :   612000
+read :   613000
+read :   614000
+read :   615000
+read :   616000
+read :   617000
+read :   618000
+read :   619000
+read :   620000
+read :   621000
+read :   622000
+read :   623000
+read :   624000
+read :   625000
+read :   626000
+read :   627000
+read :   628000
+read :   629000
+read :   630000
+read :   631000
+read :   632000
+read :   633000
+read :   634000
+read :   635000
+read :   636000
+read :   637000
+read :   638000
+read :   639000
+read :   640000
+read :   641000
+read :   642000
+read :   643000
+read :   644000
+read :   645000
+read :   646000
+read :   647000
+read :   648000
+read :   649000
+read :   650000
+read :   651000
+read :   652000
+read :   653000
+read :   654000
+read :   655000
+read :   656000
+read :   657000
+read :   658000
+read :   659000
+read :   660000
+read :   661000
+read :   662000
+read :   663000
+read :   664000
+read :   665000
+read :   666000
+read :   667000
+read :   668000
+read :   669000
+read :   670000
+read :   671000
+read :   672000
+read :   673000
+read :   674000
+read :   675000
+read :   676000
+read :   677000
+read :   678000
+read :   679000
+read :   680000
+read :   681000
+read :   682000
+read :   683000
+read :   684000
+read :   685000
+read :   686000
+read :   687000
+read :   688000
+read :   689000
+read :   690000
+read :   691000
+read :   692000
+read :   693000
+read :   694000
+read :   695000
+read :   696000
+read :   697000
+read :   698000
+read :   699000
+read :   700000
+read :   701000
+read :   702000
+read :   703000
+read :   704000
+read :   705000
+read :   706000
+read :   707000
+read :   708000
+read :   709000
+read :   710000
+read :   711000
+read :   712000
+read :   713000
+read :   714000
+read :   715000
+read :   716000
+read :   717000
+read :   718000
+read :   719000
+read :   720000
+read :   721000
+read :   722000
+read :   723000
+read :   724000
+read :   725000
+read :   726000
+read :   727000
+read :   728000
+read :   729000
+read :   730000
+read :   731000
+read :   732000
+read :   733000
+read :   734000
+read :   735000
+read :   736000
+read :   737000
+read :   738000
+read :   739000
+read :   740000
+read :   741000
+read :   742000
+read :   743000
+read :   744000
+read :   745000
+read :   746000
+read :   747000
+read :   748000
+read :   749000
+read :   750000
+read :   751000
+read :   752000
+read :   753000
+read :   754000
+read :   755000
+read :   756000
+read :   757000
+read :   758000
+read :   759000
+read :   760000
+read :   761000
+read :   762000
+read :   763000
+read :   764000
+read :   765000
+read :   766000
+read :   767000
+read :   768000
+read :   769000
+read :   770000
+read :   771000
+read :   772000
+read :   773000
+read :   774000
+read :   775000
+read :   776000
+read :   777000
+read :   778000
+read :   779000
+read :   780000
+read :   781000
+read :   782000
+read :   783000
+read :   784000
+read :   785000
+read :   786000
+read :   787000
+read :   788000
+read :   789000
+read :   790000
+read :   791000
+read :   792000
+read :   793000
+read :   794000
+read :   795000
+read :   796000
+read :   797000
+read :   798000
+read :   799000
+read :   800000
+read :   801000
+read :   802000
+read :   803000
+read :   804000
+read :   805000
+read :   806000
+read :   807000
+read :   808000
+read :   809000
+read :   810000
+read :   811000
+read :   812000
+read :   813000
+read :   814000
+read :   815000
+read :   816000
+read :   817000
+read :   818000
+read :   819000
+read :   820000
+read :   821000
+read :   822000
+read :   823000
+read :   824000
+read :   825000
+read :   826000
+read :   827000
+read :   828000
+read :   829000
+read :   830000
+read :   831000
+read :   832000
+read :   833000
+read :   834000
+read :   835000
+read :   836000
+read :   837000
+read :   838000
+read :   839000
+read :   840000
+read :   841000
+read :   842000
+read :   843000
+read :   844000
+read :   845000
+read :   846000
+read :   847000
+read :   848000
+read :   849000
+read :   850000
+read :   851000
+read :   852000
+read :   853000
+read :   854000
+read :   855000
+read :   856000
+read :   857000
+read :   858000
+read :   859000
+read :   860000
+read :   861000
+read :   862000
+read :   863000
+read :   864000
+read :   865000
+read :   866000
+read :   867000
+read :   868000
+read :   869000
+read :   870000
+read :   871000
+read :   872000
+read :   873000
+read :   874000
+read :   875000
+read :   876000
+read :   877000
+read :   878000
+read :   879000
+read :   880000
+read :   881000
+read :   882000
+read :   883000
+read :   884000
+read :   885000
+read :   886000
+read :   887000
+read :   888000
+read :   889000
+read :   890000
+read :   891000
+read :   892000
+read :   893000
+read :   894000
+read :   895000
+read :   896000
+read :   897000
+read :   898000
+read :   899000
+read :   900000
+read :   901000
+read :   902000
+read :   903000
+read :   904000
+read :   905000
+read :   906000
+read :   907000
+read :   908000
+read :   909000
+read :   910000
+read :   911000
+read :   912000
+read :   913000
+read :   914000
+read :   915000
+read :   916000
+read :   917000
+read :   918000
+read :   919000
+read :   920000
+read :   921000
+read :   922000
+read :   923000
+read :   924000
+read :   925000
+read :   926000
+read :   927000
+read :   928000
+read :   929000
+read :   930000
+read :   931000
+read :   932000
+read :   933000
+read :   934000
+read :   935000
+read :   936000
+read :   937000
+read :   938000
+read :   939000
+read :   940000
+read :   941000
+read :   942000
+read :   943000
+read :   944000
+read :   945000
+read :   946000
+read :   947000
+read :   948000
+read :   949000
+read :   950000
+read :   951000
+read :   952000
+read :   953000
+read :   954000
+read :   955000
+read :   956000
+read :   957000
+read :   958000
+read :   959000
+read :   960000
+read :   961000
+read :   962000
+read :   963000
+read :   964000
+read :   965000
+read :   966000
+read :   967000
+read :   968000
+read :   969000
+read :   970000
+read :   971000
+read :   972000
+read :   973000
+read :   974000
+read :   975000
+read :   976000
+read :   977000
+read :   978000
+read :   979000
+read :   980000
+read :   981000
+read :   982000
+read :   983000
+read :   984000
+read :   985000
+read :   986000
+read :   987000
+read :   988000
+read :   989000
+read :   990000
+read :   991000
+read :   992000
+read :   993000
+read :   994000
+read :   995000
+read :   996000
+read :   997000
+read :   998000
+read :   999000
+read :  1000000
+read :  1001000
+read :  1002000
+read :  1003000
+read :  1004000
+read :  1005000
+read :  1006000
+read :  1007000
+read :  1008000
+read :  1009000
+read :  1010000
+read :  1011000
+read :  1012000
+read :  1013000
+read :  1014000
+read :  1015000
+read :  1016000
+read :  1017000
+read :  1018000
+read :  1019000
+read :  1020000
+read :  1021000
+read :  1022000
+read :  1023000
+read :  1024000
+read :  1025000
+read :  1026000
+read :  1027000
+read :  1028000
+read :  1029000
+read :  1030000
+read :  1031000
+read :  1032000
+read :  1033000
+read :  1034000
+read :  1035000
+read :  1036000
+read :  1037000
+read :  1038000
+read :  1039000
+read :  1040000
+read :  1041000
+read :  1042000
+read :  1043000
+read :  1044000
+read :  1045000
+read :  1046000
+read :  1047000
+read :  1048000
+read :  1049000
+read :  1050000
+read :  1051000
+read :  1052000
+read :  1053000
+read :  1054000
+read :  1055000
+read :  1056000
+read :  1057000
+read :  1058000
+read :  1059000
+read :  1060000
+read :  1061000
+read :  1062000
+read :  1063000
+read :  1064000
+read :  1065000
+read :  1066000
+read :  1067000
+read :  1068000
+read :  1069000
+read :  1070000
+read :  1071000
+read :  1072000
+read :  1073000
+read :  1074000
+read :  1075000
+read :  1076000
+read :  1077000
+read :  1078000
+read :  1079000
+read :  1080000
+read :  1081000
+read :  1082000
+read :  1083000
+read :  1084000
+read :  1085000
+read :  1086000
+read :  1087000
+read :  1088000
+read :  1089000
+read :  1090000
+read :  1091000
+read :  1092000
+read :  1093000
+read :  1094000
+read :  1095000
+read :  1096000
+read :  1097000
+read :  1098000
+read :  1099000
+read :  1100000
+read :  1101000
+read :  1102000
+read :  1103000
+read :  1104000
+read :  1105000
+read :  1106000
+read :  1107000
+read :  1108000
+read :  1109000
+read :  1110000
+read :  1111000
+read :  1112000
+read :  1113000
+read :  1114000
+read :  1115000
+read :  1116000
+read :  1117000
+read :  1118000
+read :  1119000
+read :  1120000
+read :  1121000
+read :  1122000
+read :  1123000
+read :  1124000
+read :  1125000
+read :  1126000
+read :  1127000
+read :  1128000
+read :  1129000
+read :  1130000
+read :  1131000
+read :  1132000
+read :  1133000
+read :  1134000
+read :  1135000
+read :  1136000
+read :  1137000
+read :  1138000
+read :  1139000
+read :  1140000
+read :  1141000
+read :  1142000
+read :  1143000
+read :  1144000
+read :  1145000
+read :  1146000
+read :  1147000
+read :  1148000
+read :  1149000
+read :  1150000
+read :  1151000
+read :  1152000
+read :  1153000
+read :  1154000
+read :  1155000
+read :  1156000
+read :  1157000
+read :  1158000
+read :  1159000
+read :  1160000
+read :  1161000
+read :  1162000
+read :  1163000
+read :  1164000
+read :  1165000
+read :  1166000
+read :  1167000
+read :  1168000
+read :  1169000
+read :  1170000
+read :  1171000
+read :  1172000
+read :  1173000
+read :  1174000
+read :  1175000
+read :  1176000
+read :  1177000
+read :  1178000
+read :  1179000
+read :  1180000
+read :  1181000
+read :  1182000
+read :  1183000
+read :  1184000
+read :  1185000
+read :  1186000
+read :  1187000
+read :  1188000
+read :  1189000
+read :  1190000
+read :  1191000
+read :  1192000
+read :  1193000
+read :  1194000
+read :  1195000
+read :  1196000
+read :  1197000
+read :  1198000
+read :  1199000
+read :  1200000
+read :  1201000
+read :  1202000
+read :  1203000
+read :  1204000
+read :  1205000
+read :  1206000
+read :  1207000
+read :  1208000
+read :  1209000
+read :  1210000
+read :  1211000
+read :  1212000
+read :  1213000
+read :  1214000
+read :  1215000
+read :  1216000
+read :  1217000
+read :  1218000
+read :  1219000
+read :  1220000
+read :  1221000
+read :  1222000
+read :  1223000
+read :  1224000
+read :  1225000
+read :  1226000
+read :  1227000
+read :  1228000
+read :  1229000
+read :  1230000
+read :  1231000
+read :  1232000
+read :  1233000
+read :  1234000
+read :  1235000
+read :  1236000
+read :  1237000
+read :  1238000
+read :  1239000
+read :  1240000
+read :  1241000
+read :  1242000
+read :  1243000
+read :  1244000
+read :  1245000
+read :  1246000
+read :  1247000
+read :  1248000
+read :  1249000
+read :  1250000
+read :  1251000
+read :  1252000
+read :  1253000
+read :  1254000
+read :  1255000
+read :  1256000
+read :  1257000
+read :  1258000
+read :  1259000
+read :  1260000
+read :  1261000
+read :  1262000
+read :  1263000
+read :  1264000
+read :  1265000
+read :  1266000
+read :  1267000
+read :  1268000
+read :  1269000
+read :  1270000
+read :  1271000
+read :  1272000
+read :  1273000
+read :  1274000
+read :  1275000
+read :  1276000
+read :  1277000
+read :  1278000
+read :  1279000
+read :  1280000
+read :  1281000
+read :  1282000
+read :  1283000
+read :  1284000
+read :  1285000
+read :  1286000
+read :  1287000
+read :  1288000
+read :  1289000
+read :  1290000
+read :  1291000
+read :  1292000
+read :  1293000
+read :  1294000
+read :  1295000
+read :  1296000
+read :  1297000
+read :  1298000
+read :  1299000
+read :  1300000
+read :  1301000
+read :  1302000
+read :  1303000
+read :  1304000
+read :  1305000
+read :  1306000
+read :  1307000
+read :  1308000
+read :  1309000
+read :  1310000
+read :  1311000
+read :  1312000
+read :  1313000
+read :  1314000
+read :  1315000
+read :  1316000
+read :  1317000
+read :  1318000
+read :  1319000
+read :  1320000
+read :  1321000
+read :  1322000
+read :  1323000
+read :  1324000
+read :  1325000
+read :  1326000
+read :  1327000
+read :  1328000
+read :  1329000
+read :  1330000
+read :  1331000
+read :  1332000
+read :  1333000
+read :  1334000
+read :  1335000
+read :  1336000
+read :  1337000
+read :  1338000
+read :  1339000
+read :  1340000
+read :  1341000
+read :  1342000
+read :  1343000
+read :  1344000
+read :  1345000
+read :  1346000
+read :  1347000
+read :  1348000
+read :  1349000
+read :  1350000
+read :  1351000
+read :  1352000
+read :  1353000
+read :  1354000
+read :  1355000
+read :  1356000
+read :  1357000
+read :  1358000
+read :  1359000
+read :  1360000
+read :  1361000
+read :  1362000
+read :  1363000
+read :  1364000
+read :  1365000
+read :  1366000
+read :  1367000
+read :  1368000
+read :  1369000
+read :  1370000
+read :  1371000
+read :  1372000
+read :  1373000
+read :  1374000
+read :  1375000
+read :  1376000
+read :  1377000
+read :  1378000
+read :  1379000
+read :  1380000
+read :  1381000
+read :  1382000
+read :  1383000
+read :  1384000
+read :  1385000
+read :  1386000
+read :  1387000
+read :  1388000
+read :  1389000
+read :  1390000
+read :  1391000
+read :  1392000
+read :  1393000
+read :  1394000
+read :  1395000
+read :  1396000
+read :  1397000
+read :  1398000
+read :  1399000
+read :  1400000
+read :  1401000
+read :  1402000
+read :  1403000
+read :  1404000
+read :  1405000
+read :  1406000
+read :  1407000
+read :  1408000
+read :  1409000
+read :  1410000
+read :  1411000
+read :  1412000
+read :  1413000
+read :  1414000
+read :  1415000
+read :  1416000
+read :  1417000
+read :  1418000
+read :  1419000
+read :  1420000
+read :  1421000
+read :  1422000
+read :  1423000
+read :  1424000
+read :  1425000
+read :  1426000
+read :  1427000
+read :  1428000
+read :  1429000
+read :  1430000
+read :  1431000
+read :  1432000
+read :  1433000
+read :  1434000
+read :  1435000
+read :  1436000
+read :  1437000
+read :  1438000
+read :  1439000
+read :  1440000
+read :  1441000
+read :  1442000
+read :  1443000
+read :  1444000
+read :  1445000
+read :  1446000
+read :  1447000
+read :  1448000
+read :  1449000
+read :  1450000
+read :  1451000
+read :  1452000
+read :  1453000
+read :  1454000
+read :  1455000
+read :  1456000
+read :  1457000
+read :  1458000
+read :  1459000
+read :  1460000
+read :  1461000
+read :  1462000
+read :  1463000
+read :  1464000
+read :  1465000
+read :  1466000
+read :  1467000
+read :  1468000
+read :  1469000
+read :  1470000
+read :  1471000
+read :  1472000
+read :  1473000
+read :  1474000
+read :  1475000
+read :  1476000
+read :  1477000
+read :  1478000
+read :  1479000
+read :  1480000
+read :  1481000
+read :  1482000
+read :  1483000
+read :  1484000
+read :  1485000
+read :  1486000
+read :  1487000
+read :  1488000
+read :  1489000
+read :  1490000
+read :  1491000
+read :  1492000
+read :  1493000
+read :  1494000
+read :  1495000
+read :  1496000
+read :  1497000
+read :  1498000
+read :  1499000
+read :  1500000
+read :  1501000
+read :  1502000
+read :  1503000
+read :  1504000
+read :  1505000
+read :  1506000
+read :  1507000
+read :  1508000
+read :  1509000
+read :  1510000
+read :  1511000
+read :  1512000
+read :  1513000
+read :  1514000
+read :  1515000
+read :  1516000
+read :  1517000
+read :  1518000
+read :  1519000
+read :  1520000
+read :  1521000
+read :  1522000
+read :  1523000
+read :  1524000
+read :  1525000
+read :  1526000
+read :  1527000
+read :  1528000
+read :  1529000
+read :  1530000
+read :  1531000
+read :  1532000
+read :  1533000
+read :  1534000
+read :  1535000
+read :  1536000
+read :  1537000
+read :  1538000
+read :  1539000
+read :  1540000
+read :  1541000
+read :  1542000
+read :  1543000
+read :  1544000
+read :  1545000
+read :  1546000
+read :  1547000
+read :  1548000
+read :  1549000
+read :  1550000
+read :  1551000
+read :  1552000
+read :  1553000
+read :  1554000
+read :  1555000
+read :  1556000
+read :  1557000
+read :  1558000
+read :  1559000
+read :  1560000
+read :  1561000
+read :  1562000
+read :  1563000
+read :  1564000
+read :  1565000
+read :  1566000
+read :  1567000
+read :  1568000
+read :  1569000
+read :  1570000
+read :  1571000
+read :  1572000
+read :  1573000
+read :  1574000
+read :  1575000
+read :  1576000
+read :  1577000
+read :  1578000
+read :  1579000
+read :  1580000
+read :  1581000
+read :  1582000
+read :  1583000
+read :  1584000
+read :  1585000
+read :  1586000
+read :  1587000
+read :  1588000
+read :  1589000
+read :  1590000
+read :  1591000
+read :  1592000
+read :  1593000
+read :  1594000
+read :  1595000
+read :  1596000
+read :  1597000
+read :  1598000
+read :  1599000
+read :  1600000
+read :  1601000
+read :  1602000
+read :  1603000
+read :  1604000
+read :  1605000
+read :  1606000
+read :  1607000
+read :  1608000
+read :  1609000
+read :  1610000
+read :  1611000
+read :  1612000
+read :  1613000
+read :  1614000
+read :  1615000
+read :  1616000
+read :  1617000
+read :  1618000
+read :  1619000
+read :  1620000
+read :  1621000
+read :  1622000
+read :  1623000
+read :  1624000
+read :  1625000
+read :  1626000
+read :  1627000
+read :  1628000
+read :  1629000
+read :  1630000
+read :  1631000
+read :  1632000
+read :  1633000
+read :  1634000
+read :  1635000
+read :  1636000
+read :  1637000
+read :  1638000
+read :  1639000
+read :  1640000
+read :  1641000
+read :  1642000
+read :  1643000
+read :  1644000
+read :  1645000
+read :  1646000
+read :  1647000
+read :  1648000
+read :  1649000
+read :  1650000
+read :  1651000
+read :  1652000
+read :  1653000
+read :  1654000
+read :  1655000
+read :  1656000
+read :  1657000
+read :  1658000
+read :  1659000
+read :  1660000
+read :  1661000
+read :  1662000
+read :  1663000
+read :  1664000
+read :  1665000
+read :  1666000
+read :  1667000
+read :  1668000
+read :  1669000
+read :  1670000
+read :  1671000
+read :  1672000
+read :  1673000
+read :  1674000
+read :  1675000
+read :  1676000
+read :  1677000
+read :  1678000
+read :  1679000
+read :  1680000
+read :  1681000
+read :  1682000
+read :  1683000
+read :  1684000
+read :  1685000
+read :  1686000
+read :  1687000
+read :  1688000
+read :  1689000
+read :  1690000
+read :  1691000
+read :  1692000
+read :  1693000
+read :  1694000
+read :  1695000
+read :  1696000
+read :  1697000
+read :  1698000
+read :  1699000
+read :  1700000
+read :  1701000
+read :  1702000
+read :  1703000
+read :  1704000
+read :  1705000
+read :  1706000
+read :  1707000
+read :  1708000
+read :  1709000
+read :  1710000
+read :  1711000
+read :  1712000
+read :  1713000
+read :  1714000
+read :  1715000
+read :  1716000
+read :  1717000
+read :  1718000
+read :  1719000
+read :  1720000
+read :  1721000
+read :  1722000
+read :  1723000
+read :  1724000
+read :  1725000
+read :  1726000
+read :  1727000
+read :  1728000
+read :  1729000
+read :  1730000
+read :  1731000
+read :  1732000
+read :  1733000
+read :  1734000
+read :  1735000
+read :  1736000
+read :  1737000
+read :  1738000
+read :  1739000
+read :  1740000
+read :  1741000
+read :  1742000
+read :  1743000
+read :  1744000
+read :  1745000
+read :  1746000
+read :  1747000
+read :  1748000
+read :  1749000
+read :  1750000
+read :  1751000
+read :  1752000
+read :  1753000
+read :  1754000
+read :  1755000
+read :  1756000
+read :  1757000
+read :  1758000
+read :  1759000
+read :  1760000
+read :  1761000
+read :  1762000
+read :  1763000
+read :  1764000
+read :  1765000
+read :  1766000
+read :  1767000
+read :  1768000
+read :  1769000
+read :  1770000
+read :  1771000
+read :  1772000
+read :  1773000
+read :  1774000
+read :  1775000
+read :  1776000
+read :  1777000
+read :  1778000
+read :  1779000
+read :  1780000
+read :  1781000
+read :  1782000
+read :  1783000
+read :  1784000
+read :  1785000
+read :  1786000
+read :  1787000
+read :  1788000
+read :  1789000
+read :  1790000
+read :  1791000
+read :  1792000
+read :  1793000
+read :  1794000
+read :  1795000
+read :  1796000
+read :  1797000
+read :  1798000
+read :  1799000
+read :  1800000
+read :  1801000
+read :  1802000
+read :  1803000
+read :  1804000
+read :  1805000
+read :  1806000
+read :  1807000
+read :  1808000
+read :  1809000
+read :  1810000
+read :  1811000
+read :  1812000
+read :  1813000
+read :  1814000
+read :  1815000
+read :  1816000
+read :  1817000
+read :  1818000
+read :  1819000
+read :  1820000
+read :  1821000
+read :  1822000
+read :  1823000
+read :  1824000
+read :  1825000
+read :  1826000
+read :  1827000
+read :  1828000
+read :  1829000
+read :  1830000
+read :  1831000
+read :  1832000
+read :  1833000
+read :  1834000
+read :  1835000
+read :  1836000
+read :  1837000
+read :  1838000
+read :  1839000
+read :  1840000
+read :  1841000
+read :  1842000
+read :  1843000
+read :  1844000
+read :  1845000
+read :  1846000
+read :  1847000
+read :  1848000
+read :  1849000
+read :  1850000
+read :  1851000
+read :  1852000
+read :  1853000
+read :  1854000
+read :  1855000
+read :  1856000
+read :  1857000
+read :  1858000
+read :  1859000
+read :  1860000
+read :  1861000
+read :  1862000
+read :  1863000
+read :  1864000
+read :  1865000
+read :  1866000
+read :  1867000
+read :  1868000
+read :  1869000
+read :  1870000
+read :  1871000
+read :  1872000
+read :  1873000
+read :  1874000
+read :  1875000
+read :  1876000
+read :  1877000
+read :  1878000
+read :  1879000
+read :  1880000
+read :  1881000
+read :  1882000
+read :  1883000
+read :  1884000
+read :  1885000
+read :  1886000
+read :  1887000
+read :  1888000
+read :  1889000
+read :  1890000
+read :  1891000
+read :  1892000
+read :  1893000
+read :  1894000
+read :  1895000
+read :  1896000
+read :  1897000
+read :  1898000
+read :  1899000
+read :  1900000
+read :  1901000
+read :  1902000
+read :  1903000
+read :  1904000
+read :  1905000
+read :  1906000
+read :  1907000
+read :  1908000
+read :  1909000
+read :  1910000
+read :  1911000
+read :  1912000
+read :  1913000
+read :  1914000
+read :  1915000
+read :  1916000
+read :  1917000
+read :  1918000
+read :  1919000
+read :  1920000
+read :  1921000
+read :  1922000
+read :  1923000
+read :  1924000
+read :  1925000
+read :  1926000
+read :  1927000
+read :  1928000
+read :  1929000
+read :  1930000
+read :  1931000
+read :  1932000
+read :  1933000
+read :  1934000
+read :  1935000
+read :  1936000
+read :  1937000
+read :  1938000
+read :  1939000
+read :  1940000
+read :  1941000
+read :  1942000
+read :  1943000
+read :  1944000
+read :  1945000
+read :  1946000
+read :  1947000
+read :  1948000
+read :  1949000
+read :  1950000
+read :  1951000
+read :  1952000
+read :  1953000
+read :  1954000
+read :  1955000
+read :  1956000
+read :  1957000
+read :  1958000
+read :  1959000
+read :  1960000
+read :  1961000
+read :  1962000
+read :  1963000
+read :  1964000
+read :  1965000
+read :  1966000
+read :  1967000
+read :  1968000
+read :  1969000
+read :  1970000
+read :  1971000
+read :  1972000
+read :  1973000
+read :  1974000
+read :  1975000
+read :  1976000
+read :  1977000
+read :  1978000
+read :  1979000
+read :  1980000
+read :  1981000
+read :  1982000
+read :  1983000
+read :  1984000
+read :  1985000
+read :  1986000
+read :  1987000
+read :  1988000
+read :  1989000
+read :  1990000
+read :  1991000
+read :  1992000
+read :  1993000
+read :  1994000
+read :  1995000
+read :  1996000
+read :  1997000
+read :  1998000
+read :  1999000
+read :  2000000
+Running BF-Trie
+BF-Trie population 100 run 0 load time 0.002475217
+BF-Trie population 100 run 1 load time 4.7870100000000005E-4
+BF-Trie population 100 run 2 load time 3.53073E-4
+BF-Trie population 100 run 3 load time 3.3533500000000003E-4
+BF-Trie population 100 run 4 load time 3.2686E-4
+BF-Trie Query COMPLETE population 100 run 0  exec time 0.011235 (3)
+BF-Trie Query COMPLETE population 100 run 1  exec time 0.001997 (3)
+BF-Trie Query COMPLETE population 100 run 2  exec time 0.001431 (3)
+BF-Trie Query COMPLETE population 100 run 3  exec time 0.001388 (3)
+BF-Trie Query COMPLETE population 100 run 4  exec time 0.001371 (3)
+BF-Trie Query HIGHCARD population 100 run 0  exec time 0.019923 (2477)
+BF-Trie Query HIGHCARD population 100 run 1  exec time 0.013080 (2477)
+BF-Trie Query HIGHCARD population 100 run 2  exec time 0.012225 (2477)
+BF-Trie Query HIGHCARD population 100 run 3  exec time 0.034929 (2477)
+BF-Trie Query HIGHCARD population 100 run 4  exec time 0.007685 (2477)
+BF-Trie Query LOWCARD population 100 run 0  exec time 0.011173 (5500)
+BF-Trie Query LOWCARD population 100 run 1  exec time 0.011068 (5500)
+BF-Trie Query LOWCARD population 100 run 2  exec time 0.010909 (5500)
+BF-Trie Query LOWCARD population 100 run 3  exec time 0.010544 (5500)
+BF-Trie Query LOWCARD population 100 run 4  exec time 0.010357 (5500)
+BF-Trie Delete COMPLETE population 100 run 0  exec time 0.000800 (1)
+BF-Trie Delete COMPLETE population 100 run 1  exec time 0.000348 (1)
+BF-Trie Delete COMPLETE population 100 run 2  exec time 0.000219 (1)
+BF-Trie Delete COMPLETE population 100 run 3  exec time 0.000196 (1)
+BF-Trie Delete COMPLETE population 100 run 4  exec time 0.000200 (1)
+BF-Trie Delete HIGHCARD population 100 run 0  exec time 0.000310 (0)
+BF-Trie Delete HIGHCARD population 100 run 1  exec time 0.000258 (0)
+BF-Trie Delete HIGHCARD population 100 run 2  exec time 0.000172 (0)
+BF-Trie Delete HIGHCARD population 100 run 3  exec time 0.000172 (0)
+BF-Trie Delete HIGHCARD population 100 run 4  exec time 0.000164 (0)
+BF-Trie Delete LOWCARD population 100 run 0  exec time 0.000327 (0)
+BF-Trie Delete LOWCARD population 100 run 1  exec time 0.000295 (0)
+BF-Trie Delete LOWCARD population 100 run 2  exec time 0.000182 (0)
+BF-Trie Delete LOWCARD population 100 run 3  exec time 0.000186 (0)
+BF-Trie Delete LOWCARD population 100 run 4  exec time 0.000161 (0)
+BF-Trie population 1000 run 0 load time 8.079630000000001E-4
+BF-Trie population 1000 run 1 load time 7.852800000000001E-4
+BF-Trie population 1000 run 2 load time 7.14688E-4
+BF-Trie population 1000 run 3 load time 7.660010000000001E-4
+BF-Trie population 1000 run 4 load time 8.203560000000001E-4
+BF-Trie Query COMPLETE population 1000 run 0  exec time 0.002358 (48)
+BF-Trie Query COMPLETE population 1000 run 1  exec time 0.002033 (48)
+BF-Trie Query COMPLETE population 1000 run 2  exec time 0.002020 (48)
+BF-Trie Query COMPLETE population 1000 run 3  exec time 0.001941 (48)
+BF-Trie Query COMPLETE population 1000 run 4  exec time 0.001947 (48)
+BF-Trie Query HIGHCARD population 1000 run 0  exec time 0.039160 (23569)
+BF-Trie Query HIGHCARD population 1000 run 1  exec time 0.035617 (23569)
+BF-Trie Query HIGHCARD population 1000 run 2  exec time 0.034500 (23569)
+BF-Trie Query HIGHCARD population 1000 run 3  exec time 0.034587 (23569)
+BF-Trie Query HIGHCARD population 1000 run 4  exec time 0.036593 (23569)
+BF-Trie Query LOWCARD population 1000 run 0  exec time 0.044950 (50483)
+BF-Trie Query LOWCARD population 1000 run 1  exec time 0.044843 (50483)
+BF-Trie Query LOWCARD population 1000 run 2  exec time 0.045182 (50483)
+BF-Trie Query LOWCARD population 1000 run 3  exec time 0.044835 (50483)
+BF-Trie Query LOWCARD population 1000 run 4  exec time 0.044937 (50483)
+BF-Trie Delete COMPLETE population 1000 run 0  exec time 0.000421 (2)
+BF-Trie Delete COMPLETE population 1000 run 1  exec time 0.000435 (2)
+BF-Trie Delete COMPLETE population 1000 run 2  exec time 0.000387 (2)
+BF-Trie Delete COMPLETE population 1000 run 3  exec time 0.000330 (2)
+BF-Trie Delete COMPLETE population 1000 run 4  exec time 0.000330 (2)
+BF-Trie Delete HIGHCARD population 1000 run 0  exec time 0.000370 (0)
+BF-Trie Delete HIGHCARD population 1000 run 1  exec time 0.000294 (0)
+BF-Trie Delete HIGHCARD population 1000 run 2  exec time 0.000247 (0)
+BF-Trie Delete HIGHCARD population 1000 run 3  exec time 0.000260 (0)
+BF-Trie Delete HIGHCARD population 1000 run 4  exec time 0.000228 (0)
+BF-Trie Delete LOWCARD population 1000 run 0  exec time 0.000340 (0)
+BF-Trie Delete LOWCARD population 1000 run 1  exec time 0.000292 (0)
+BF-Trie Delete LOWCARD population 1000 run 2  exec time 0.000245 (0)
+BF-Trie Delete LOWCARD population 1000 run 3  exec time 0.000228 (0)
+BF-Trie Delete LOWCARD population 1000 run 4  exec time 0.000237 (0)
+BF-Trie population 10000 run 0 load time 0.0072182290000000005
+BF-Trie population 10000 run 1 load time 0.007053232
+BF-Trie population 10000 run 2 load time 0.007075171000000001
+BF-Trie population 10000 run 3 load time 0.0070116350000000004
+BF-Trie population 10000 run 4 load time 0.005591858000000001
+BF-Trie Query COMPLETE population 10000 run 0  exec time 0.019609 (4186)
+BF-Trie Query COMPLETE population 10000 run 1  exec time 0.019301 (4186)
+BF-Trie Query COMPLETE population 10000 run 2  exec time 0.019568 (4186)
+BF-Trie Query COMPLETE population 10000 run 3  exec time 0.019174 (4186)
+BF-Trie Query COMPLETE population 10000 run 4  exec time 0.019676 (4186)
+BF-Trie Query HIGHCARD population 10000 run 0  exec time 0.535871 (247757)
+BF-Trie Query HIGHCARD population 10000 run 1  exec time 0.473625 (247757)
+BF-Trie Query HIGHCARD population 10000 run 2  exec time 0.450438 (247757)
+BF-Trie Query HIGHCARD population 10000 run 3  exec time 0.448079 (247757)
+BF-Trie Query HIGHCARD population 10000 run 4  exec time 0.377096 (247757)
+BF-Trie Query LOWCARD population 10000 run 0  exec time 1.002216 (1916522)
+BF-Trie Query LOWCARD population 10000 run 1  exec time 1.014459 (1916522)
+BF-Trie Query LOWCARD population 10000 run 2  exec time 1.073749 (1916522)
+BF-Trie Query LOWCARD population 10000 run 3  exec time 1.038132 (1916522)
+BF-Trie Query LOWCARD population 10000 run 4  exec time 1.000113 (1916522)
+BF-Trie Delete COMPLETE population 10000 run 0  exec time 0.000405 (10)
+BF-Trie Delete COMPLETE population 10000 run 1  exec time 0.000433 (10)
+BF-Trie Delete COMPLETE population 10000 run 2  exec time 0.000320 (10)
+BF-Trie Delete COMPLETE population 10000 run 3  exec time 0.000348 (10)
+BF-Trie Delete COMPLETE population 10000 run 4  exec time 0.000324 (10)
+BF-Trie Delete HIGHCARD population 10000 run 0  exec time 0.000306 (0)
+BF-Trie Delete HIGHCARD population 10000 run 1  exec time 0.000287 (0)
+BF-Trie Delete HIGHCARD population 10000 run 2  exec time 0.000287 (0)
+BF-Trie Delete HIGHCARD population 10000 run 3  exec time 0.000300 (0)
+BF-Trie Delete HIGHCARD population 10000 run 4  exec time 0.000291 (0)
+BF-Trie Delete LOWCARD population 10000 run 0  exec time 0.000239 (0)
+BF-Trie Delete LOWCARD population 10000 run 1  exec time 0.000251 (0)
+BF-Trie Delete LOWCARD population 10000 run 2  exec time 0.000231 (0)
+BF-Trie Delete LOWCARD population 10000 run 3  exec time 0.000238 (0)
+BF-Trie Delete LOWCARD population 10000 run 4  exec time 0.000231 (0)
+BF-Trie population 100000 run 0 load time 0.075545022
+BF-Trie population 100000 run 1 load time 0.215395772
+BF-Trie population 100000 run 2 load time 0.08130825300000001
+BF-Trie population 100000 run 3 load time 0.08357853100000001
+BF-Trie population 100000 run 4 load time 0.07599739100000001
+BF-Trie Query COMPLETE population 100000 run 0  exec time 0.116871 (26349)
+BF-Trie Query COMPLETE population 100000 run 1  exec time 0.116188 (26349)
+BF-Trie Query COMPLETE population 100000 run 2  exec time 0.097086 (26349)
+BF-Trie Query COMPLETE population 100000 run 3  exec time 0.089839 (26349)
+BF-Trie Query COMPLETE population 100000 run 4  exec time 0.092126 (26349)
+BF-Trie Query HIGHCARD population 100000 run 0  exec time 3.011798 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 1  exec time 2.802820 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 2  exec time 2.752121 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 3  exec time 2.767375 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 4  exec time 2.921442 (1920312)
+BF-Trie Query LOWCARD population 100000 run 0  exec time 8.758567 (14989587)
+BF-Trie Query LOWCARD population 100000 run 1  exec time 8.896111 (14989587)
+BF-Trie Query LOWCARD population 100000 run 2  exec time 8.744376 (14989587)
+BF-Trie Query LOWCARD population 100000 run 3  exec time 8.726472 (14989587)
+BF-Trie Query LOWCARD population 100000 run 4  exec time 8.759863 (14989587)
+BF-Trie Delete COMPLETE population 100000 run 0  exec time 0.000511 (41)
+BF-Trie Delete COMPLETE population 100000 run 1  exec time 0.000328 (41)
+BF-Trie Delete COMPLETE population 100000 run 2  exec time 0.000408 (41)
+BF-Trie Delete COMPLETE population 100000 run 3  exec time 0.000325 (41)
+BF-Trie Delete COMPLETE population 100000 run 4  exec time 0.000357 (41)
+BF-Trie Delete HIGHCARD population 100000 run 0  exec time 0.000132 (2)
+BF-Trie Delete HIGHCARD population 100000 run 1  exec time 0.000099 (2)
+BF-Trie Delete HIGHCARD population 100000 run 2  exec time 0.000094 (2)
+BF-Trie Delete HIGHCARD population 100000 run 3  exec time 0.000090 (2)
+BF-Trie Delete HIGHCARD population 100000 run 4  exec time 0.000094 (2)
+BF-Trie Delete LOWCARD population 100000 run 0  exec time 0.000231 (2)
+BF-Trie Delete LOWCARD population 100000 run 1  exec time 0.000223 (2)
+BF-Trie Delete LOWCARD population 100000 run 2  exec time 0.000237 (2)
+BF-Trie Delete LOWCARD population 100000 run 3  exec time 0.000071 (2)
+BF-Trie Delete LOWCARD population 100000 run 4  exec time 0.000075 (2)
+BF-Trie population 1000000 run 0 load time 2.337832804
+BF-Trie population 1000000 run 1 load time 2.863218342
+BF-Trie population 1000000 run 2 load time 2.9131593540000003
+BF-Trie population 1000000 run 3 load time 2.6983138330000003
+BF-Trie population 1000000 run 4 load time 3.166795275
+BF-Trie Query COMPLETE population 1000000 run 0  exec time 1.314391 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 1  exec time 1.265302 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 2  exec time 1.237636 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 3  exec time 1.182842 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 4  exec time 1.286939 (1316235)
+BF-Trie Query HIGHCARD population 1000000 run 0  exec time 22.578027 (14313576)
+BF-Trie Query HIGHCARD population 1000000 run 1  exec time 22.691845 (14313576)
+BF-Trie Query HIGHCARD population 1000000 run 2  exec time 22.666463 (14313576)
+BF-Trie Query HIGHCARD population 1000000 run 3  exec time 22.449577 (14313576)
+BF-Trie Query HIGHCARD population 1000000 run 4  exec time 22.648326 (14313576)
+BF-Trie Query LOWCARD population 1000000 run 0  exec time 128.983074 (204745637)
+BF-Trie Query LOWCARD population 1000000 run 1  exec time 129.902533 (204745637)
+BF-Trie Query LOWCARD population 1000000 run 2  exec time 129.061401 (204745637)
+BF-Trie Query LOWCARD population 1000000 run 3  exec time 129.264221 (204745637)
+BF-Trie Query LOWCARD population 1000000 run 4  exec time 129.411922 (204745637)
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+	at org.xenei.bloompaper.index.bftrie.InnerNode.add(InnerNode.java:64)
+	at org.xenei.bloompaper.index.bftrie.InnerNode.add(InnerNode.java:67)
+	at org.xenei.bloompaper.index.bftrie.InnerNode.add(InnerNode.java:67)
+	at org.xenei.bloompaper.index.bftrie.InnerNode.add(InnerNode.java:67)
+	at org.xenei.bloompaper.index.bftrie.InnerNode.add(InnerNode.java:67)
+	at org.xenei.bloompaper.index.bftrie.InnerNode.add(InnerNode.java:67)
+	at org.xenei.bloompaper.index.bftrie.InnerNode.add(InnerNode.java:67)
+	at org.xenei.bloompaper.index.bftrie.InnerNode.add(InnerNode.java:67)
+	at org.xenei.bloompaper.index.bftrie.InnerNode.add(InnerNode.java:67)
+	at org.xenei.bloompaper.index.bftrie.InnerNode.add(InnerNode.java:67)
+	at org.xenei.bloompaper.index.bftrie.InnerNode.add(InnerNode.java:67)
+	at org.xenei.bloompaper.index.bftrie.BFTrie4.add(BFTrie4.java:28)
+	at org.xenei.bloompaper.index.BloomIndexBFTrie.add(BloomIndexBFTrie.java:31)
+	at org.xenei.bloompaper.Test.doDelete(Test.java:244)
+	at org.xenei.bloompaper.Test.runTest(Test.java:293)
+	at org.xenei.bloompaper.Test.main(Test.java:197)
+Reading test data
+read :     1000
+read :     2000
+read :     3000
+read :     4000
+read :     5000
+read :     6000
+read :     7000
+read :     8000
+read :     9000
+read :    10000
+read :    11000
+read :    12000
+read :    13000
+read :    14000
+read :    15000
+read :    16000
+read :    17000
+read :    18000
+read :    19000
+read :    20000
+read :    21000
+read :    22000
+read :    23000
+read :    24000
+read :    25000
+read :    26000
+read :    27000
+read :    28000
+read :    29000
+read :    30000
+read :    31000
+read :    32000
+read :    33000
+read :    34000
+read :    35000
+read :    36000
+read :    37000
+read :    38000
+read :    39000
+read :    40000
+read :    41000
+read :    42000
+read :    43000
+read :    44000
+read :    45000
+read :    46000
+read :    47000
+read :    48000
+read :    49000
+read :    50000
+read :    51000
+read :    52000
+read :    53000
+read :    54000
+read :    55000
+read :    56000
+read :    57000
+read :    58000
+read :    59000
+read :    60000
+read :    61000
+read :    62000
+read :    63000
+read :    64000
+read :    65000
+read :    66000
+read :    67000
+read :    68000
+read :    69000
+read :    70000
+read :    71000
+read :    72000
+read :    73000
+read :    74000
+read :    75000
+read :    76000
+read :    77000
+read :    78000
+read :    79000
+read :    80000
+read :    81000
+read :    82000
+read :    83000
+read :    84000
+read :    85000
+read :    86000
+read :    87000
+read :    88000
+read :    89000
+read :    90000
+read :    91000
+read :    92000
+read :    93000
+read :    94000
+read :    95000
+read :    96000
+read :    97000
+read :    98000
+read :    99000
+read :   100000
+read :   101000
+read :   102000
+read :   103000
+read :   104000
+read :   105000
+read :   106000
+read :   107000
+read :   108000
+read :   109000
+read :   110000
+read :   111000
+read :   112000
+read :   113000
+read :   114000
+read :   115000
+read :   116000
+read :   117000
+read :   118000
+read :   119000
+read :   120000
+read :   121000
+read :   122000
+read :   123000
+read :   124000
+read :   125000
+read :   126000
+read :   127000
+read :   128000
+read :   129000
+read :   130000
+read :   131000
+read :   132000
+read :   133000
+read :   134000
+read :   135000
+read :   136000
+read :   137000
+read :   138000
+read :   139000
+read :   140000
+read :   141000
+read :   142000
+read :   143000
+read :   144000
+read :   145000
+read :   146000
+read :   147000
+read :   148000
+read :   149000
+read :   150000
+read :   151000
+read :   152000
+read :   153000
+read :   154000
+read :   155000
+read :   156000
+read :   157000
+read :   158000
+read :   159000
+read :   160000
+read :   161000
+read :   162000
+read :   163000
+read :   164000
+read :   165000
+read :   166000
+read :   167000
+read :   168000
+read :   169000
+read :   170000
+read :   171000
+read :   172000
+read :   173000
+read :   174000
+read :   175000
+read :   176000
+read :   177000
+read :   178000
+read :   179000
+read :   180000
+read :   181000
+read :   182000
+read :   183000
+read :   184000
+read :   185000
+read :   186000
+read :   187000
+read :   188000
+read :   189000
+read :   190000
+read :   191000
+read :   192000
+read :   193000
+read :   194000
+read :   195000
+read :   196000
+read :   197000
+read :   198000
+read :   199000
+read :   200000
+read :   201000
+read :   202000
+read :   203000
+read :   204000
+read :   205000
+read :   206000
+read :   207000
+read :   208000
+read :   209000
+read :   210000
+read :   211000
+read :   212000
+read :   213000
+read :   214000
+read :   215000
+read :   216000
+read :   217000
+read :   218000
+read :   219000
+read :   220000
+read :   221000
+read :   222000
+read :   223000
+read :   224000
+read :   225000
+read :   226000
+read :   227000
+read :   228000
+read :   229000
+read :   230000
+read :   231000
+read :   232000
+read :   233000
+read :   234000
+read :   235000
+read :   236000
+read :   237000
+read :   238000
+read :   239000
+read :   240000
+read :   241000
+read :   242000
+read :   243000
+read :   244000
+read :   245000
+read :   246000
+read :   247000
+read :   248000
+read :   249000
+read :   250000
+read :   251000
+read :   252000
+read :   253000
+read :   254000
+read :   255000
+read :   256000
+read :   257000
+read :   258000
+read :   259000
+read :   260000
+read :   261000
+read :   262000
+read :   263000
+read :   264000
+read :   265000
+read :   266000
+read :   267000
+read :   268000
+read :   269000
+read :   270000
+read :   271000
+read :   272000
+read :   273000
+read :   274000
+read :   275000
+read :   276000
+read :   277000
+read :   278000
+read :   279000
+read :   280000
+read :   281000
+read :   282000
+read :   283000
+read :   284000
+read :   285000
+read :   286000
+read :   287000
+read :   288000
+read :   289000
+read :   290000
+read :   291000
+read :   292000
+read :   293000
+read :   294000
+read :   295000
+read :   296000
+read :   297000
+read :   298000
+read :   299000
+read :   300000
+read :   301000
+read :   302000
+read :   303000
+read :   304000
+read :   305000
+read :   306000
+read :   307000
+read :   308000
+read :   309000
+read :   310000
+read :   311000
+read :   312000
+read :   313000
+read :   314000
+read :   315000
+read :   316000
+read :   317000
+read :   318000
+read :   319000
+read :   320000
+read :   321000
+read :   322000
+read :   323000
+read :   324000
+read :   325000
+read :   326000
+read :   327000
+read :   328000
+read :   329000
+read :   330000
+read :   331000
+read :   332000
+read :   333000
+read :   334000
+read :   335000
+read :   336000
+read :   337000
+read :   338000
+read :   339000
+read :   340000
+read :   341000
+read :   342000
+read :   343000
+read :   344000
+read :   345000
+read :   346000
+read :   347000
+read :   348000
+read :   349000
+read :   350000
+read :   351000
+read :   352000
+read :   353000
+read :   354000
+read :   355000
+read :   356000
+read :   357000
+read :   358000
+read :   359000
+read :   360000
+read :   361000
+read :   362000
+read :   363000
+read :   364000
+read :   365000
+read :   366000
+read :   367000
+read :   368000
+read :   369000
+read :   370000
+read :   371000
+read :   372000
+read :   373000
+read :   374000
+read :   375000
+read :   376000
+read :   377000
+read :   378000
+read :   379000
+read :   380000
+read :   381000
+read :   382000
+read :   383000
+read :   384000
+read :   385000
+read :   386000
+read :   387000
+read :   388000
+read :   389000
+read :   390000
+read :   391000
+read :   392000
+read :   393000
+read :   394000
+read :   395000
+read :   396000
+read :   397000
+read :   398000
+read :   399000
+read :   400000
+read :   401000
+read :   402000
+read :   403000
+read :   404000
+read :   405000
+read :   406000
+read :   407000
+read :   408000
+read :   409000
+read :   410000
+read :   411000
+read :   412000
+read :   413000
+read :   414000
+read :   415000
+read :   416000
+read :   417000
+read :   418000
+read :   419000
+read :   420000
+read :   421000
+read :   422000
+read :   423000
+read :   424000
+read :   425000
+read :   426000
+read :   427000
+read :   428000
+read :   429000
+read :   430000
+read :   431000
+read :   432000
+read :   433000
+read :   434000
+read :   435000
+read :   436000
+read :   437000
+read :   438000
+read :   439000
+read :   440000
+read :   441000
+read :   442000
+read :   443000
+read :   444000
+read :   445000
+read :   446000
+read :   447000
+read :   448000
+read :   449000
+read :   450000
+read :   451000
+read :   452000
+read :   453000
+read :   454000
+read :   455000
+read :   456000
+read :   457000
+read :   458000
+read :   459000
+read :   460000
+read :   461000
+read :   462000
+read :   463000
+read :   464000
+read :   465000
+read :   466000
+read :   467000
+read :   468000
+read :   469000
+read :   470000
+read :   471000
+read :   472000
+read :   473000
+read :   474000
+read :   475000
+read :   476000
+read :   477000
+read :   478000
+read :   479000
+read :   480000
+read :   481000
+read :   482000
+read :   483000
+read :   484000
+read :   485000
+read :   486000
+read :   487000
+read :   488000
+read :   489000
+read :   490000
+read :   491000
+read :   492000
+read :   493000
+read :   494000
+read :   495000
+read :   496000
+read :   497000
+read :   498000
+read :   499000
+read :   500000
+read :   501000
+read :   502000
+read :   503000
+read :   504000
+read :   505000
+read :   506000
+read :   507000
+read :   508000
+read :   509000
+read :   510000
+read :   511000
+read :   512000
+read :   513000
+read :   514000
+read :   515000
+read :   516000
+read :   517000
+read :   518000
+read :   519000
+read :   520000
+read :   521000
+read :   522000
+read :   523000
+read :   524000
+read :   525000
+read :   526000
+read :   527000
+read :   528000
+read :   529000
+read :   530000
+read :   531000
+read :   532000
+read :   533000
+read :   534000
+read :   535000
+read :   536000
+read :   537000
+read :   538000
+read :   539000
+read :   540000
+read :   541000
+read :   542000
+read :   543000
+read :   544000
+read :   545000
+read :   546000
+read :   547000
+read :   548000
+read :   549000
+read :   550000
+read :   551000
+read :   552000
+read :   553000
+read :   554000
+read :   555000
+read :   556000
+read :   557000
+read :   558000
+read :   559000
+read :   560000
+read :   561000
+read :   562000
+read :   563000
+read :   564000
+read :   565000
+read :   566000
+read :   567000
+read :   568000
+read :   569000
+read :   570000
+read :   571000
+read :   572000
+read :   573000
+read :   574000
+read :   575000
+read :   576000
+read :   577000
+read :   578000
+read :   579000
+read :   580000
+read :   581000
+read :   582000
+read :   583000
+read :   584000
+read :   585000
+read :   586000
+read :   587000
+read :   588000
+read :   589000
+read :   590000
+read :   591000
+read :   592000
+read :   593000
+read :   594000
+read :   595000
+read :   596000
+read :   597000
+read :   598000
+read :   599000
+read :   600000
+read :   601000
+read :   602000
+read :   603000
+read :   604000
+read :   605000
+read :   606000
+read :   607000
+read :   608000
+read :   609000
+read :   610000
+read :   611000
+read :   612000
+read :   613000
+read :   614000
+read :   615000
+read :   616000
+read :   617000
+read :   618000
+read :   619000
+read :   620000
+read :   621000
+read :   622000
+read :   623000
+read :   624000
+read :   625000
+read :   626000
+read :   627000
+read :   628000
+read :   629000
+read :   630000
+read :   631000
+read :   632000
+read :   633000
+read :   634000
+read :   635000
+read :   636000
+read :   637000
+read :   638000
+read :   639000
+read :   640000
+read :   641000
+read :   642000
+read :   643000
+read :   644000
+read :   645000
+read :   646000
+read :   647000
+read :   648000
+read :   649000
+read :   650000
+read :   651000
+read :   652000
+read :   653000
+read :   654000
+read :   655000
+read :   656000
+read :   657000
+read :   658000
+read :   659000
+read :   660000
+read :   661000
+read :   662000
+read :   663000
+read :   664000
+read :   665000
+read :   666000
+read :   667000
+read :   668000
+read :   669000
+read :   670000
+read :   671000
+read :   672000
+read :   673000
+read :   674000
+read :   675000
+read :   676000
+read :   677000
+read :   678000
+read :   679000
+read :   680000
+read :   681000
+read :   682000
+read :   683000
+read :   684000
+read :   685000
+read :   686000
+read :   687000
+read :   688000
+read :   689000
+read :   690000
+read :   691000
+read :   692000
+read :   693000
+read :   694000
+read :   695000
+read :   696000
+read :   697000
+read :   698000
+read :   699000
+read :   700000
+read :   701000
+read :   702000
+read :   703000
+read :   704000
+read :   705000
+read :   706000
+read :   707000
+read :   708000
+read :   709000
+read :   710000
+read :   711000
+read :   712000
+read :   713000
+read :   714000
+read :   715000
+read :   716000
+read :   717000
+read :   718000
+read :   719000
+read :   720000
+read :   721000
+read :   722000
+read :   723000
+read :   724000
+read :   725000
+read :   726000
+read :   727000
+read :   728000
+read :   729000
+read :   730000
+read :   731000
+read :   732000
+read :   733000
+read :   734000
+read :   735000
+read :   736000
+read :   737000
+read :   738000
+read :   739000
+read :   740000
+read :   741000
+read :   742000
+read :   743000
+read :   744000
+read :   745000
+read :   746000
+read :   747000
+read :   748000
+read :   749000
+read :   750000
+read :   751000
+read :   752000
+read :   753000
+read :   754000
+read :   755000
+read :   756000
+read :   757000
+read :   758000
+read :   759000
+read :   760000
+read :   761000
+read :   762000
+read :   763000
+read :   764000
+read :   765000
+read :   766000
+read :   767000
+read :   768000
+read :   769000
+read :   770000
+read :   771000
+read :   772000
+read :   773000
+read :   774000
+read :   775000
+read :   776000
+read :   777000
+read :   778000
+read :   779000
+read :   780000
+read :   781000
+read :   782000
+read :   783000
+read :   784000
+read :   785000
+read :   786000
+read :   787000
+read :   788000
+read :   789000
+read :   790000
+read :   791000
+read :   792000
+read :   793000
+read :   794000
+read :   795000
+read :   796000
+read :   797000
+read :   798000
+read :   799000
+read :   800000
+read :   801000
+read :   802000
+read :   803000
+read :   804000
+read :   805000
+read :   806000
+read :   807000
+read :   808000
+read :   809000
+read :   810000
+read :   811000
+read :   812000
+read :   813000
+read :   814000
+read :   815000
+read :   816000
+read :   817000
+read :   818000
+read :   819000
+read :   820000
+read :   821000
+read :   822000
+read :   823000
+read :   824000
+read :   825000
+read :   826000
+read :   827000
+read :   828000
+read :   829000
+read :   830000
+read :   831000
+read :   832000
+read :   833000
+read :   834000
+read :   835000
+read :   836000
+read :   837000
+read :   838000
+read :   839000
+read :   840000
+read :   841000
+read :   842000
+read :   843000
+read :   844000
+read :   845000
+read :   846000
+read :   847000
+read :   848000
+read :   849000
+read :   850000
+read :   851000
+read :   852000
+read :   853000
+read :   854000
+read :   855000
+read :   856000
+read :   857000
+read :   858000
+read :   859000
+read :   860000
+read :   861000
+read :   862000
+read :   863000
+read :   864000
+read :   865000
+read :   866000
+read :   867000
+read :   868000
+read :   869000
+read :   870000
+read :   871000
+read :   872000
+read :   873000
+read :   874000
+read :   875000
+read :   876000
+read :   877000
+read :   878000
+read :   879000
+read :   880000
+read :   881000
+read :   882000
+read :   883000
+read :   884000
+read :   885000
+read :   886000
+read :   887000
+read :   888000
+read :   889000
+read :   890000
+read :   891000
+read :   892000
+read :   893000
+read :   894000
+read :   895000
+read :   896000
+read :   897000
+read :   898000
+read :   899000
+read :   900000
+read :   901000
+read :   902000
+read :   903000
+read :   904000
+read :   905000
+read :   906000
+read :   907000
+read :   908000
+read :   909000
+read :   910000
+read :   911000
+read :   912000
+read :   913000
+read :   914000
+read :   915000
+read :   916000
+read :   917000
+read :   918000
+read :   919000
+read :   920000
+read :   921000
+read :   922000
+read :   923000
+read :   924000
+read :   925000
+read :   926000
+read :   927000
+read :   928000
+read :   929000
+read :   930000
+read :   931000
+read :   932000
+read :   933000
+read :   934000
+read :   935000
+read :   936000
+read :   937000
+read :   938000
+read :   939000
+read :   940000
+read :   941000
+read :   942000
+read :   943000
+read :   944000
+read :   945000
+read :   946000
+read :   947000
+read :   948000
+read :   949000
+read :   950000
+read :   951000
+read :   952000
+read :   953000
+read :   954000
+read :   955000
+read :   956000
+read :   957000
+read :   958000
+read :   959000
+read :   960000
+read :   961000
+read :   962000
+read :   963000
+read :   964000
+read :   965000
+read :   966000
+read :   967000
+read :   968000
+read :   969000
+read :   970000
+read :   971000
+read :   972000
+read :   973000
+read :   974000
+read :   975000
+read :   976000
+read :   977000
+read :   978000
+read :   979000
+read :   980000
+read :   981000
+read :   982000
+read :   983000
+read :   984000
+read :   985000
+read :   986000
+read :   987000
+read :   988000
+read :   989000
+read :   990000
+read :   991000
+read :   992000
+read :   993000
+read :   994000
+read :   995000
+read :   996000
+read :   997000
+read :   998000
+read :   999000
+read :  1000000
+read :  1001000
+read :  1002000
+read :  1003000
+read :  1004000
+read :  1005000
+read :  1006000
+read :  1007000
+read :  1008000
+read :  1009000
+read :  1010000
+read :  1011000
+read :  1012000
+read :  1013000
+read :  1014000
+read :  1015000
+read :  1016000
+read :  1017000
+read :  1018000
+read :  1019000
+read :  1020000
+read :  1021000
+read :  1022000
+read :  1023000
+read :  1024000
+read :  1025000
+read :  1026000
+read :  1027000
+read :  1028000
+read :  1029000
+read :  1030000
+read :  1031000
+read :  1032000
+read :  1033000
+read :  1034000
+read :  1035000
+read :  1036000
+read :  1037000
+read :  1038000
+read :  1039000
+read :  1040000
+read :  1041000
+read :  1042000
+read :  1043000
+read :  1044000
+read :  1045000
+read :  1046000
+read :  1047000
+read :  1048000
+read :  1049000
+read :  1050000
+read :  1051000
+read :  1052000
+read :  1053000
+read :  1054000
+read :  1055000
+read :  1056000
+read :  1057000
+read :  1058000
+read :  1059000
+read :  1060000
+read :  1061000
+read :  1062000
+read :  1063000
+read :  1064000
+read :  1065000
+read :  1066000
+read :  1067000
+read :  1068000
+read :  1069000
+read :  1070000
+read :  1071000
+read :  1072000
+read :  1073000
+read :  1074000
+read :  1075000
+read :  1076000
+read :  1077000
+read :  1078000
+read :  1079000
+read :  1080000
+read :  1081000
+read :  1082000
+read :  1083000
+read :  1084000
+read :  1085000
+read :  1086000
+read :  1087000
+read :  1088000
+read :  1089000
+read :  1090000
+read :  1091000
+read :  1092000
+read :  1093000
+read :  1094000
+read :  1095000
+read :  1096000
+read :  1097000
+read :  1098000
+read :  1099000
+read :  1100000
+read :  1101000
+read :  1102000
+read :  1103000
+read :  1104000
+read :  1105000
+read :  1106000
+read :  1107000
+read :  1108000
+read :  1109000
+read :  1110000
+read :  1111000
+read :  1112000
+read :  1113000
+read :  1114000
+read :  1115000
+read :  1116000
+read :  1117000
+read :  1118000
+read :  1119000
+read :  1120000
+read :  1121000
+read :  1122000
+read :  1123000
+read :  1124000
+read :  1125000
+read :  1126000
+read :  1127000
+read :  1128000
+read :  1129000
+read :  1130000
+read :  1131000
+read :  1132000
+read :  1133000
+read :  1134000
+read :  1135000
+read :  1136000
+read :  1137000
+read :  1138000
+read :  1139000
+read :  1140000
+read :  1141000
+read :  1142000
+read :  1143000
+read :  1144000
+read :  1145000
+read :  1146000
+read :  1147000
+read :  1148000
+read :  1149000
+read :  1150000
+read :  1151000
+read :  1152000
+read :  1153000
+read :  1154000
+read :  1155000
+read :  1156000
+read :  1157000
+read :  1158000
+read :  1159000
+read :  1160000
+read :  1161000
+read :  1162000
+read :  1163000
+read :  1164000
+read :  1165000
+read :  1166000
+read :  1167000
+read :  1168000
+read :  1169000
+read :  1170000
+read :  1171000
+read :  1172000
+read :  1173000
+read :  1174000
+read :  1175000
+read :  1176000
+read :  1177000
+read :  1178000
+read :  1179000
+read :  1180000
+read :  1181000
+read :  1182000
+read :  1183000
+read :  1184000
+read :  1185000
+read :  1186000
+read :  1187000
+read :  1188000
+read :  1189000
+read :  1190000
+read :  1191000
+read :  1192000
+read :  1193000
+read :  1194000
+read :  1195000
+read :  1196000
+read :  1197000
+read :  1198000
+read :  1199000
+read :  1200000
+read :  1201000
+read :  1202000
+read :  1203000
+read :  1204000
+read :  1205000
+read :  1206000
+read :  1207000
+read :  1208000
+read :  1209000
+read :  1210000
+read :  1211000
+read :  1212000
+read :  1213000
+read :  1214000
+read :  1215000
+read :  1216000
+read :  1217000
+read :  1218000
+read :  1219000
+read :  1220000
+read :  1221000
+read :  1222000
+read :  1223000
+read :  1224000
+read :  1225000
+read :  1226000
+read :  1227000
+read :  1228000
+read :  1229000
+read :  1230000
+read :  1231000
+read :  1232000
+read :  1233000
+read :  1234000
+read :  1235000
+read :  1236000
+read :  1237000
+read :  1238000
+read :  1239000
+read :  1240000
+read :  1241000
+read :  1242000
+read :  1243000
+read :  1244000
+read :  1245000
+read :  1246000
+read :  1247000
+read :  1248000
+read :  1249000
+read :  1250000
+read :  1251000
+read :  1252000
+read :  1253000
+read :  1254000
+read :  1255000
+read :  1256000
+read :  1257000
+read :  1258000
+read :  1259000
+read :  1260000
+read :  1261000
+read :  1262000
+read :  1263000
+read :  1264000
+read :  1265000
+read :  1266000
+read :  1267000
+read :  1268000
+read :  1269000
+read :  1270000
+read :  1271000
+read :  1272000
+read :  1273000
+read :  1274000
+read :  1275000
+read :  1276000
+read :  1277000
+read :  1278000
+read :  1279000
+read :  1280000
+read :  1281000
+read :  1282000
+read :  1283000
+read :  1284000
+read :  1285000
+read :  1286000
+read :  1287000
+read :  1288000
+read :  1289000
+read :  1290000
+read :  1291000
+read :  1292000
+read :  1293000
+read :  1294000
+read :  1295000
+read :  1296000
+read :  1297000
+read :  1298000
+read :  1299000
+read :  1300000
+read :  1301000
+read :  1302000
+read :  1303000
+read :  1304000
+read :  1305000
+read :  1306000
+read :  1307000
+read :  1308000
+read :  1309000
+read :  1310000
+read :  1311000
+read :  1312000
+read :  1313000
+read :  1314000
+read :  1315000
+read :  1316000
+read :  1317000
+read :  1318000
+read :  1319000
+read :  1320000
+read :  1321000
+read :  1322000
+read :  1323000
+read :  1324000
+read :  1325000
+read :  1326000
+read :  1327000
+read :  1328000
+read :  1329000
+read :  1330000
+read :  1331000
+read :  1332000
+read :  1333000
+read :  1334000
+read :  1335000
+read :  1336000
+read :  1337000
+read :  1338000
+read :  1339000
+read :  1340000
+read :  1341000
+read :  1342000
+read :  1343000
+read :  1344000
+read :  1345000
+read :  1346000
+read :  1347000
+read :  1348000
+read :  1349000
+read :  1350000
+read :  1351000
+read :  1352000
+read :  1353000
+read :  1354000
+read :  1355000
+read :  1356000
+read :  1357000
+read :  1358000
+read :  1359000
+read :  1360000
+read :  1361000
+read :  1362000
+read :  1363000
+read :  1364000
+read :  1365000
+read :  1366000
+read :  1367000
+read :  1368000
+read :  1369000
+read :  1370000
+read :  1371000
+read :  1372000
+read :  1373000
+read :  1374000
+read :  1375000
+read :  1376000
+read :  1377000
+read :  1378000
+read :  1379000
+read :  1380000
+read :  1381000
+read :  1382000
+read :  1383000
+read :  1384000
+read :  1385000
+read :  1386000
+read :  1387000
+read :  1388000
+read :  1389000
+read :  1390000
+read :  1391000
+read :  1392000
+read :  1393000
+read :  1394000
+read :  1395000
+read :  1396000
+read :  1397000
+read :  1398000
+read :  1399000
+read :  1400000
+read :  1401000
+read :  1402000
+read :  1403000
+read :  1404000
+read :  1405000
+read :  1406000
+read :  1407000
+read :  1408000
+read :  1409000
+read :  1410000
+read :  1411000
+read :  1412000
+read :  1413000
+read :  1414000
+read :  1415000
+read :  1416000
+read :  1417000
+read :  1418000
+read :  1419000
+read :  1420000
+read :  1421000
+read :  1422000
+read :  1423000
+read :  1424000
+read :  1425000
+read :  1426000
+read :  1427000
+read :  1428000
+read :  1429000
+read :  1430000
+read :  1431000
+read :  1432000
+read :  1433000
+read :  1434000
+read :  1435000
+read :  1436000
+read :  1437000
+read :  1438000
+read :  1439000
+read :  1440000
+read :  1441000
+read :  1442000
+read :  1443000
+read :  1444000
+read :  1445000
+read :  1446000
+read :  1447000
+read :  1448000
+read :  1449000
+read :  1450000
+read :  1451000
+read :  1452000
+read :  1453000
+read :  1454000
+read :  1455000
+read :  1456000
+read :  1457000
+read :  1458000
+read :  1459000
+read :  1460000
+read :  1461000
+read :  1462000
+read :  1463000
+read :  1464000
+read :  1465000
+read :  1466000
+read :  1467000
+read :  1468000
+read :  1469000
+read :  1470000
+read :  1471000
+read :  1472000
+read :  1473000
+read :  1474000
+read :  1475000
+read :  1476000
+read :  1477000
+read :  1478000
+read :  1479000
+read :  1480000
+read :  1481000
+read :  1482000
+read :  1483000
+read :  1484000
+read :  1485000
+read :  1486000
+read :  1487000
+read :  1488000
+read :  1489000
+read :  1490000
+read :  1491000
+read :  1492000
+read :  1493000
+read :  1494000
+read :  1495000
+read :  1496000
+read :  1497000
+read :  1498000
+read :  1499000
+read :  1500000
+read :  1501000
+read :  1502000
+read :  1503000
+read :  1504000
+read :  1505000
+read :  1506000
+read :  1507000
+read :  1508000
+read :  1509000
+read :  1510000
+read :  1511000
+read :  1512000
+read :  1513000
+read :  1514000
+read :  1515000
+read :  1516000
+read :  1517000
+read :  1518000
+read :  1519000
+read :  1520000
+read :  1521000
+read :  1522000
+read :  1523000
+read :  1524000
+read :  1525000
+read :  1526000
+read :  1527000
+read :  1528000
+read :  1529000
+read :  1530000
+read :  1531000
+read :  1532000
+read :  1533000
+read :  1534000
+read :  1535000
+read :  1536000
+read :  1537000
+read :  1538000
+read :  1539000
+read :  1540000
+read :  1541000
+read :  1542000
+read :  1543000
+read :  1544000
+read :  1545000
+read :  1546000
+read :  1547000
+read :  1548000
+read :  1549000
+read :  1550000
+read :  1551000
+read :  1552000
+read :  1553000
+read :  1554000
+read :  1555000
+read :  1556000
+read :  1557000
+read :  1558000
+read :  1559000
+read :  1560000
+read :  1561000
+read :  1562000
+read :  1563000
+read :  1564000
+read :  1565000
+read :  1566000
+read :  1567000
+read :  1568000
+read :  1569000
+read :  1570000
+read :  1571000
+read :  1572000
+read :  1573000
+read :  1574000
+read :  1575000
+read :  1576000
+read :  1577000
+read :  1578000
+read :  1579000
+read :  1580000
+read :  1581000
+read :  1582000
+read :  1583000
+read :  1584000
+read :  1585000
+read :  1586000
+read :  1587000
+read :  1588000
+read :  1589000
+read :  1590000
+read :  1591000
+read :  1592000
+read :  1593000
+read :  1594000
+read :  1595000
+read :  1596000
+read :  1597000
+read :  1598000
+read :  1599000
+read :  1600000
+read :  1601000
+read :  1602000
+read :  1603000
+read :  1604000
+read :  1605000
+read :  1606000
+read :  1607000
+read :  1608000
+read :  1609000
+read :  1610000
+read :  1611000
+read :  1612000
+read :  1613000
+read :  1614000
+read :  1615000
+read :  1616000
+read :  1617000
+read :  1618000
+read :  1619000
+read :  1620000
+read :  1621000
+read :  1622000
+read :  1623000
+read :  1624000
+read :  1625000
+read :  1626000
+read :  1627000
+read :  1628000
+read :  1629000
+read :  1630000
+read :  1631000
+read :  1632000
+read :  1633000
+read :  1634000
+read :  1635000
+read :  1636000
+read :  1637000
+read :  1638000
+read :  1639000
+read :  1640000
+read :  1641000
+read :  1642000
+read :  1643000
+read :  1644000
+read :  1645000
+read :  1646000
+read :  1647000
+read :  1648000
+read :  1649000
+read :  1650000
+read :  1651000
+read :  1652000
+read :  1653000
+read :  1654000
+read :  1655000
+read :  1656000
+read :  1657000
+read :  1658000
+read :  1659000
+read :  1660000
+read :  1661000
+read :  1662000
+read :  1663000
+read :  1664000
+read :  1665000
+read :  1666000
+read :  1667000
+read :  1668000
+read :  1669000
+read :  1670000
+read :  1671000
+read :  1672000
+read :  1673000
+read :  1674000
+read :  1675000
+read :  1676000
+read :  1677000
+read :  1678000
+read :  1679000
+read :  1680000
+read :  1681000
+read :  1682000
+read :  1683000
+read :  1684000
+read :  1685000
+read :  1686000
+read :  1687000
+read :  1688000
+read :  1689000
+read :  1690000
+read :  1691000
+read :  1692000
+read :  1693000
+read :  1694000
+read :  1695000
+read :  1696000
+read :  1697000
+read :  1698000
+read :  1699000
+read :  1700000
+read :  1701000
+read :  1702000
+read :  1703000
+read :  1704000
+read :  1705000
+read :  1706000
+read :  1707000
+read :  1708000
+read :  1709000
+read :  1710000
+read :  1711000
+read :  1712000
+read :  1713000
+read :  1714000
+read :  1715000
+read :  1716000
+read :  1717000
+read :  1718000
+read :  1719000
+read :  1720000
+read :  1721000
+read :  1722000
+read :  1723000
+read :  1724000
+read :  1725000
+read :  1726000
+read :  1727000
+read :  1728000
+read :  1729000
+read :  1730000
+read :  1731000
+read :  1732000
+read :  1733000
+read :  1734000
+read :  1735000
+read :  1736000
+read :  1737000
+read :  1738000
+read :  1739000
+read :  1740000
+read :  1741000
+read :  1742000
+read :  1743000
+read :  1744000
+read :  1745000
+read :  1746000
+read :  1747000
+read :  1748000
+read :  1749000
+read :  1750000
+read :  1751000
+read :  1752000
+read :  1753000
+read :  1754000
+read :  1755000
+read :  1756000
+read :  1757000
+read :  1758000
+read :  1759000
+read :  1760000
+read :  1761000
+read :  1762000
+read :  1763000
+read :  1764000
+read :  1765000
+read :  1766000
+read :  1767000
+read :  1768000
+read :  1769000
+read :  1770000
+read :  1771000
+read :  1772000
+read :  1773000
+read :  1774000
+read :  1775000
+read :  1776000
+read :  1777000
+read :  1778000
+read :  1779000
+read :  1780000
+read :  1781000
+read :  1782000
+read :  1783000
+read :  1784000
+read :  1785000
+read :  1786000
+read :  1787000
+read :  1788000
+read :  1789000
+read :  1790000
+read :  1791000
+read :  1792000
+read :  1793000
+read :  1794000
+read :  1795000
+read :  1796000
+read :  1797000
+read :  1798000
+read :  1799000
+read :  1800000
+read :  1801000
+read :  1802000
+read :  1803000
+read :  1804000
+read :  1805000
+read :  1806000
+read :  1807000
+read :  1808000
+read :  1809000
+read :  1810000
+read :  1811000
+read :  1812000
+read :  1813000
+read :  1814000
+read :  1815000
+read :  1816000
+read :  1817000
+read :  1818000
+read :  1819000
+read :  1820000
+read :  1821000
+read :  1822000
+read :  1823000
+read :  1824000
+read :  1825000
+read :  1826000
+read :  1827000
+read :  1828000
+read :  1829000
+read :  1830000
+read :  1831000
+read :  1832000
+read :  1833000
+read :  1834000
+read :  1835000
+read :  1836000
+read :  1837000
+read :  1838000
+read :  1839000
+read :  1840000
+read :  1841000
+read :  1842000
+read :  1843000
+read :  1844000
+read :  1845000
+read :  1846000
+read :  1847000
+read :  1848000
+read :  1849000
+read :  1850000
+read :  1851000
+read :  1852000
+read :  1853000
+read :  1854000
+read :  1855000
+read :  1856000
+read :  1857000
+read :  1858000
+read :  1859000
+read :  1860000
+read :  1861000
+read :  1862000
+read :  1863000
+read :  1864000
+read :  1865000
+read :  1866000
+read :  1867000
+read :  1868000
+read :  1869000
+read :  1870000
+read :  1871000
+read :  1872000
+read :  1873000
+read :  1874000
+read :  1875000
+read :  1876000
+read :  1877000
+read :  1878000
+read :  1879000
+read :  1880000
+read :  1881000
+read :  1882000
+read :  1883000
+read :  1884000
+read :  1885000
+read :  1886000
+read :  1887000
+read :  1888000
+read :  1889000
+read :  1890000
+read :  1891000
+read :  1892000
+read :  1893000
+read :  1894000
+read :  1895000
+read :  1896000
+read :  1897000
+read :  1898000
+read :  1899000
+read :  1900000
+read :  1901000
+read :  1902000
+read :  1903000
+read :  1904000
+read :  1905000
+read :  1906000
+read :  1907000
+read :  1908000
+read :  1909000
+read :  1910000
+read :  1911000
+read :  1912000
+read :  1913000
+read :  1914000
+read :  1915000
+read :  1916000
+read :  1917000
+read :  1918000
+read :  1919000
+read :  1920000
+read :  1921000
+read :  1922000
+read :  1923000
+read :  1924000
+read :  1925000
+read :  1926000
+read :  1927000
+read :  1928000
+read :  1929000
+read :  1930000
+read :  1931000
+read :  1932000
+read :  1933000
+read :  1934000
+read :  1935000
+read :  1936000
+read :  1937000
+read :  1938000
+read :  1939000
+read :  1940000
+read :  1941000
+read :  1942000
+read :  1943000
+read :  1944000
+read :  1945000
+read :  1946000
+read :  1947000
+read :  1948000
+read :  1949000
+read :  1950000
+read :  1951000
+read :  1952000
+read :  1953000
+read :  1954000
+read :  1955000
+read :  1956000
+read :  1957000
+read :  1958000
+read :  1959000
+read :  1960000
+read :  1961000
+read :  1962000
+read :  1963000
+read :  1964000
+read :  1965000
+read :  1966000
+read :  1967000
+read :  1968000
+read :  1969000
+read :  1970000
+read :  1971000
+read :  1972000
+read :  1973000
+read :  1974000
+read :  1975000
+read :  1976000
+read :  1977000
+read :  1978000
+read :  1979000
+read :  1980000
+read :  1981000
+read :  1982000
+read :  1983000
+read :  1984000
+read :  1985000
+read :  1986000
+read :  1987000
+read :  1988000
+read :  1989000
+read :  1990000
+read :  1991000
+read :  1992000
+read :  1993000
+read :  1994000
+read :  1995000
+read :  1996000
+read :  1997000
+read :  1998000
+read :  1999000
+read :  2000000
+Running BF-Trie
+BF-Trie population 100 run 0 load time 0.0020092110000000003
+BF-Trie population 100 run 1 load time 4.61164E-4
+BF-Trie population 100 run 2 load time 3.0221800000000004E-4
+BF-Trie population 100 run 3 load time 3.62658E-4
+BF-Trie population 100 run 4 load time 3.12747E-4
+BF-Trie Query COMPLETE population 100 run 0  exec time 0.009114 (3)
+BF-Trie Query COMPLETE population 100 run 1  exec time 0.002080 (3)
+BF-Trie Query COMPLETE population 100 run 2  exec time 0.001677 (3)
+BF-Trie Query COMPLETE population 100 run 3  exec time 0.001708 (3)
+BF-Trie Query COMPLETE population 100 run 4  exec time 0.001649 (3)
+BF-Trie Query HIGHCARD population 100 run 0  exec time 0.023729 (2477)
+BF-Trie Query HIGHCARD population 100 run 1  exec time 0.017032 (2477)
+BF-Trie Query HIGHCARD population 100 run 2  exec time 0.012805 (2477)
+BF-Trie Query HIGHCARD population 100 run 3  exec time 0.007655 (2477)
+BF-Trie Query HIGHCARD population 100 run 4  exec time 0.007989 (2477)
+BF-Trie Query LOWCARD population 100 run 0  exec time 0.011537 (5500)
+BF-Trie Query LOWCARD population 100 run 1  exec time 0.011390 (5500)
+BF-Trie Query LOWCARD population 100 run 2  exec time 0.010677 (5500)
+BF-Trie Query LOWCARD population 100 run 3  exec time 0.010655 (5500)
+BF-Trie Query LOWCARD population 100 run 4  exec time 0.010613 (5500)
+BF-Trie Delete COMPLETE population 100 run 0  exec time 0.000793 (1)
+BF-Trie Delete COMPLETE population 100 run 1  exec time 0.000333 (1)
+BF-Trie Delete COMPLETE population 100 run 2  exec time 0.000224 (1)
+BF-Trie Delete COMPLETE population 100 run 3  exec time 0.000213 (1)
+BF-Trie Delete COMPLETE population 100 run 4  exec time 0.000201 (1)
+BF-Trie Delete HIGHCARD population 100 run 0  exec time 0.000279 (0)
+BF-Trie Delete HIGHCARD population 100 run 1  exec time 0.000236 (0)
+BF-Trie Delete HIGHCARD population 100 run 2  exec time 0.000194 (0)
+BF-Trie Delete HIGHCARD population 100 run 3  exec time 0.000201 (0)
+BF-Trie Delete HIGHCARD population 100 run 4  exec time 0.000167 (0)
+BF-Trie Delete LOWCARD population 100 run 0  exec time 0.000331 (0)
+BF-Trie Delete LOWCARD population 100 run 1  exec time 0.000271 (0)
+BF-Trie Delete LOWCARD population 100 run 2  exec time 0.000178 (0)
+BF-Trie Delete LOWCARD population 100 run 3  exec time 0.000174 (0)
+BF-Trie Delete LOWCARD population 100 run 4  exec time 0.000167 (0)
+BF-Trie population 1000 run 0 load time 7.84201E-4
+BF-Trie population 1000 run 1 load time 7.794330000000001E-4
+BF-Trie population 1000 run 2 load time 7.775190000000001E-4
+BF-Trie population 1000 run 3 load time 7.17134E-4
+BF-Trie population 1000 run 4 load time 7.69383E-4
+BF-Trie Query COMPLETE population 1000 run 0  exec time 0.002231 (48)
+BF-Trie Query COMPLETE population 1000 run 1  exec time 0.002020 (48)
+BF-Trie Query COMPLETE population 1000 run 2  exec time 0.001958 (48)
+BF-Trie Query COMPLETE population 1000 run 3  exec time 0.001962 (48)
+BF-Trie Query COMPLETE population 1000 run 4  exec time 0.001921 (48)
+BF-Trie Query HIGHCARD population 1000 run 0  exec time 0.051259 (23569)
+BF-Trie Query HIGHCARD population 1000 run 1  exec time 0.037322 (23569)
+BF-Trie Query HIGHCARD population 1000 run 2  exec time 0.034509 (23569)
+BF-Trie Query HIGHCARD population 1000 run 3  exec time 0.034373 (23569)
+BF-Trie Query HIGHCARD population 1000 run 4  exec time 0.034596 (23569)
+BF-Trie Query LOWCARD population 1000 run 0  exec time 0.045072 (50483)
+BF-Trie Query LOWCARD population 1000 run 1  exec time 0.045046 (50483)
+BF-Trie Query LOWCARD population 1000 run 2  exec time 0.045304 (50483)
+BF-Trie Query LOWCARD population 1000 run 3  exec time 0.045019 (50483)
+BF-Trie Query LOWCARD population 1000 run 4  exec time 0.045077 (50483)
+BF-Trie Delete COMPLETE population 1000 run 0  exec time 0.000388 (2)
+BF-Trie Delete COMPLETE population 1000 run 1  exec time 0.000373 (2)
+BF-Trie Delete COMPLETE population 1000 run 2  exec time 0.000363 (2)
+BF-Trie Delete COMPLETE population 1000 run 3  exec time 0.000281 (2)
+BF-Trie Delete COMPLETE population 1000 run 4  exec time 0.000285 (2)
+BF-Trie Delete HIGHCARD population 1000 run 0  exec time 0.000397 (0)
+BF-Trie Delete HIGHCARD population 1000 run 1  exec time 0.000370 (0)
+BF-Trie Delete HIGHCARD population 1000 run 2  exec time 0.000327 (0)
+BF-Trie Delete HIGHCARD population 1000 run 3  exec time 0.000272 (0)
+BF-Trie Delete HIGHCARD population 1000 run 4  exec time 0.000270 (0)
+BF-Trie Delete LOWCARD population 1000 run 0  exec time 0.000348 (0)
+BF-Trie Delete LOWCARD population 1000 run 1  exec time 0.000301 (0)
+BF-Trie Delete LOWCARD population 1000 run 2  exec time 0.000264 (0)
+BF-Trie Delete LOWCARD population 1000 run 3  exec time 0.000239 (0)
+BF-Trie Delete LOWCARD population 1000 run 4  exec time 0.000256 (0)
+BF-Trie population 10000 run 0 load time 0.007318186000000001
+BF-Trie population 10000 run 1 load time 0.007497926
+BF-Trie population 10000 run 2 load time 0.0071438940000000005
+BF-Trie population 10000 run 3 load time 0.0044377620000000005
+BF-Trie population 10000 run 4 load time 0.004620169
+BF-Trie Query COMPLETE population 10000 run 0  exec time 0.020211 (4186)
+BF-Trie Query COMPLETE population 10000 run 1  exec time 0.019551 (4186)
+BF-Trie Query COMPLETE population 10000 run 2  exec time 0.019140 (4186)
+BF-Trie Query COMPLETE population 10000 run 3  exec time 0.019600 (4186)
+BF-Trie Query COMPLETE population 10000 run 4  exec time 0.020088 (4186)
+BF-Trie Query HIGHCARD population 10000 run 0  exec time 0.474306 (247757)
+BF-Trie Query HIGHCARD population 10000 run 1  exec time 0.454337 (247757)
+BF-Trie Query HIGHCARD population 10000 run 2  exec time 0.462147 (247757)
+BF-Trie Query HIGHCARD population 10000 run 3  exec time 0.461002 (247757)
+BF-Trie Query HIGHCARD population 10000 run 4  exec time 0.466297 (247757)
+BF-Trie Query LOWCARD population 10000 run 0  exec time 1.164132 (1916522)
+BF-Trie Query LOWCARD population 10000 run 1  exec time 1.167154 (1916522)
+BF-Trie Query LOWCARD population 10000 run 2  exec time 1.053717 (1916522)
+BF-Trie Query LOWCARD population 10000 run 3  exec time 1.026600 (1916522)
+BF-Trie Query LOWCARD population 10000 run 4  exec time 1.036026 (1916522)
+BF-Trie Delete COMPLETE population 10000 run 0  exec time 0.000356 (10)
+BF-Trie Delete COMPLETE population 10000 run 1  exec time 0.000347 (10)
+BF-Trie Delete COMPLETE population 10000 run 2  exec time 0.000265 (10)
+BF-Trie Delete COMPLETE population 10000 run 3  exec time 0.000265 (10)
+BF-Trie Delete COMPLETE population 10000 run 4  exec time 0.000266 (10)
+BF-Trie Delete HIGHCARD population 10000 run 0  exec time 0.000291 (0)
+BF-Trie Delete HIGHCARD population 10000 run 1  exec time 0.000257 (0)
+BF-Trie Delete HIGHCARD population 10000 run 2  exec time 0.000252 (0)
+BF-Trie Delete HIGHCARD population 10000 run 3  exec time 0.000103 (0)
+BF-Trie Delete HIGHCARD population 10000 run 4  exec time 0.000101 (0)
+BF-Trie Delete LOWCARD population 10000 run 0  exec time 0.000271 (0)
+BF-Trie Delete LOWCARD population 10000 run 1  exec time 0.000260 (0)
+BF-Trie Delete LOWCARD population 10000 run 2  exec time 0.000263 (0)
+BF-Trie Delete LOWCARD population 10000 run 3  exec time 0.000268 (0)
+BF-Trie Delete LOWCARD population 10000 run 4  exec time 0.000259 (0)
+BF-Trie population 100000 run 0 load time 0.07554859900000001
+BF-Trie population 100000 run 1 load time 0.07432099
+BF-Trie population 100000 run 2 load time 0.07526991100000001
+BF-Trie population 100000 run 3 load time 0.19002345
+BF-Trie population 100000 run 4 load time 0.080705046
+BF-Trie Query COMPLETE population 100000 run 0  exec time 0.127716 (26349)
+BF-Trie Query COMPLETE population 100000 run 1  exec time 0.126283 (26349)
+BF-Trie Query COMPLETE population 100000 run 2  exec time 0.106740 (26349)
+BF-Trie Query COMPLETE population 100000 run 3  exec time 0.097044 (26349)
+BF-Trie Query COMPLETE population 100000 run 4  exec time 0.096371 (26349)
+BF-Trie Query HIGHCARD population 100000 run 0  exec time 3.540737 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 1  exec time 2.832133 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 2  exec time 2.767744 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 3  exec time 2.790664 (1920312)
+BF-Trie Query HIGHCARD population 100000 run 4  exec time 2.825934 (1920312)
+BF-Trie Query LOWCARD population 100000 run 0  exec time 8.736966 (14989587)
+BF-Trie Query LOWCARD population 100000 run 1  exec time 8.754533 (14989587)
+BF-Trie Query LOWCARD population 100000 run 2  exec time 8.815152 (14989587)
+BF-Trie Query LOWCARD population 100000 run 3  exec time 8.623442 (14989587)
+BF-Trie Query LOWCARD population 100000 run 4  exec time 8.658113 (14989587)
+BF-Trie Delete COMPLETE population 100000 run 0  exec time 0.000478 (41)
+BF-Trie Delete COMPLETE population 100000 run 1  exec time 0.000466 (41)
+BF-Trie Delete COMPLETE population 100000 run 2  exec time 0.000363 (41)
+BF-Trie Delete COMPLETE population 100000 run 3  exec time 0.000321 (41)
+BF-Trie Delete COMPLETE population 100000 run 4  exec time 0.001869 (41)
+BF-Trie Delete HIGHCARD population 100000 run 0  exec time 0.000258 (2)
+BF-Trie Delete HIGHCARD population 100000 run 1  exec time 0.000090 (2)
+BF-Trie Delete HIGHCARD population 100000 run 2  exec time 0.000088 (2)
+BF-Trie Delete HIGHCARD population 100000 run 3  exec time 0.000085 (2)
+BF-Trie Delete HIGHCARD population 100000 run 4  exec time 0.000086 (2)
+BF-Trie Delete LOWCARD population 100000 run 0  exec time 0.000068 (2)
+BF-Trie Delete LOWCARD population 100000 run 1  exec time 0.000062 (2)
+BF-Trie Delete LOWCARD population 100000 run 2  exec time 0.000064 (2)
+BF-Trie Delete LOWCARD population 100000 run 3  exec time 0.000061 (2)
+BF-Trie Delete LOWCARD population 100000 run 4  exec time 0.000063 (2)
+BF-Trie population 1000000 run 0 load time 2.2679015170000003
+BF-Trie population 1000000 run 1 load time 2.663795666
+BF-Trie population 1000000 run 2 load time 2.8569921500000004
+BF-Trie population 1000000 run 3 load time 2.8848322320000004
+BF-Trie population 1000000 run 4 load time 2.868144876
+BF-Trie Query COMPLETE population 1000000 run 0  exec time 1.366785 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 1  exec time 1.369560 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 2  exec time 1.313372 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 3  exec time 1.263894 (1316235)
+BF-Trie Query COMPLETE population 1000000 run 4  exec time 1.298450 (1316235)
+BF-Trie Query HIGHCARD population 1000000 run 0  exec time 22.696235 (14313576)
+BF-Trie Query HIGHCARD population 1000000 run 1  exec time 22.775922 (14313576)
+BF-Trie Query HIGHCARD population 1000000 run 2  exec time 22.661332 (14313576)
+BF-Trie Query HIGHCARD population 1000000 run 3  exec time 22.622793 (14313576)
+BF-Trie Query HIGHCARD population 1000000 run 4  exec time 23.591833 (14313576)
+BF-Trie Query LOWCARD population 1000000 run 0  exec time 130.023891 (204745637)
+BF-Trie Query LOWCARD population 1000000 run 1  exec time 130.410599 (204745637)
+BF-Trie Query LOWCARD population 1000000 run 2  exec time 130.158214 (204745637)
+BF-Trie Query LOWCARD population 1000000 run 3  exec time 130.453086 (204745637)
+BF-Trie Query LOWCARD population 1000000 run 4  exec time 129.525316 (204745637)
+BF-Trie Delete COMPLETE population 1000000 run 0  exec time 0.001623 (520)
+BF-Trie Delete COMPLETE population 1000000 run 1  exec time 0.001497 (520)
+BF-Trie Delete COMPLETE population 1000000 run 2  exec time 0.001553 (520)
+BF-Trie Delete COMPLETE population 1000000 run 3  exec time 0.001562 (520)
+BF-Trie Delete COMPLETE population 1000000 run 4  exec time 0.001534 (520)
+BF-Trie Delete HIGHCARD population 1000000 run 0  exec time 0.000233 (13)
+BF-Trie Delete HIGHCARD population 1000000 run 1  exec time 0.000233 (13)
+BF-Trie Delete HIGHCARD population 1000000 run 2  exec time 0.000230 (13)
+BF-Trie Delete HIGHCARD population 1000000 run 3  exec time 0.000284 (13)
+BF-Trie Delete HIGHCARD population 1000000 run 4  exec time 0.000223 (13)
+BF-Trie Delete LOWCARD population 1000000 run 0  exec time 0.000127 (13)
+BF-Trie Delete LOWCARD population 1000000 run 1  exec time 0.000123 (13)
+BF-Trie Delete LOWCARD population 1000000 run 2  exec time 0.000125 (13)
+BF-Trie Delete LOWCARD population 1000000 run 3  exec time 0.000184 (13)
+BF-Trie Delete LOWCARD population 1000000 run 4  exec time 0.000121 (13)
+Running Bloofi
+Bloofi population 100 run 0 load time 0.023013214
+Bloofi population 100 run 1 load time 0.003649208
+Bloofi population 100 run 2 load time 0.0029603800000000003
+Bloofi population 100 run 3 load time 0.0021781960000000003
+Bloofi population 100 run 4 load time 0.063209029
+Bloofi Query COMPLETE population 100 run 0  exec time 0.112490 (3)
+Bloofi Query COMPLETE population 100 run 1  exec time 0.086985 (3)
+Bloofi Query COMPLETE population 100 run 2  exec time 0.067626 (3)
+Bloofi Query COMPLETE population 100 run 3  exec time 0.068670 (3)
+Bloofi Query COMPLETE population 100 run 4  exec time 0.068533 (3)
+Bloofi Query HIGHCARD population 100 run 0  exec time 0.107302 (2477)
+Bloofi Query HIGHCARD population 100 run 1  exec time 0.108102 (2477)
+Bloofi Query HIGHCARD population 100 run 2  exec time 0.105499 (2477)
+Bloofi Query HIGHCARD population 100 run 3  exec time 0.104582 (2477)
+Bloofi Query HIGHCARD population 100 run 4  exec time 0.105178 (2477)
+Bloofi Query LOWCARD population 100 run 0  exec time 0.111431 (5500)
+Bloofi Query LOWCARD population 100 run 1  exec time 0.111264 (5500)
+Bloofi Query LOWCARD population 100 run 2  exec time 0.107787 (5500)
+Bloofi Query LOWCARD population 100 run 3  exec time 0.108664 (5500)
+Bloofi Query LOWCARD population 100 run 4  exec time 0.107252 (5500)
+Bloofi Delete COMPLETE population 100 run 0  exec time 0.143631 (1)
+Bloofi Delete COMPLETE population 100 run 1  exec time 0.124150 (1)
+Bloofi Delete COMPLETE population 100 run 2  exec time 0.158938 (1)
+Bloofi Delete COMPLETE population 100 run 3  exec time 0.175246 (1)
+Bloofi Delete COMPLETE population 100 run 4  exec time 0.124810 (1)
+Bloofi Delete HIGHCARD population 100 run 0  exec time 0.156803 (0)
+Bloofi Delete HIGHCARD population 100 run 1  exec time 0.110867 (0)
+Bloofi Delete HIGHCARD population 100 run 2  exec time 0.103824 (0)
+Bloofi Delete HIGHCARD population 100 run 3  exec time 0.087477 (0)
+Bloofi Delete HIGHCARD population 100 run 4  exec time 0.058138 (0)
+Bloofi Delete LOWCARD population 100 run 0  exec time 0.093083 (0)
+Bloofi Delete LOWCARD population 100 run 1  exec time 0.062270 (0)
+Bloofi Delete LOWCARD population 100 run 2  exec time 0.062403 (0)
+Bloofi Delete LOWCARD population 100 run 3  exec time 0.061984 (0)
+Bloofi Delete LOWCARD population 100 run 4  exec time 0.062102 (0)
+Bloofi population 1000 run 0 load time 0.008966116000000001
+Bloofi population 1000 run 1 load time 0.010581823
+Bloofi population 1000 run 2 load time 0.009017540000000001
+Bloofi population 1000 run 3 load time 0.008724753
+Bloofi population 1000 run 4 load time 0.009815028
+Bloofi Query COMPLETE population 1000 run 0  exec time 0.380138 (48)
+Bloofi Query COMPLETE population 1000 run 1  exec time 0.344075 (48)
+Bloofi Query COMPLETE population 1000 run 2  exec time 0.206215 (48)
+Bloofi Query COMPLETE population 1000 run 3  exec time 0.206565 (48)
+Bloofi Query COMPLETE population 1000 run 4  exec time 0.206006 (48)
+Bloofi Query HIGHCARD population 1000 run 0  exec time 0.471712 (23569)
+Bloofi Query HIGHCARD population 1000 run 1  exec time 0.469117 (23569)
+Bloofi Query HIGHCARD population 1000 run 2  exec time 0.470718 (23569)
+Bloofi Query HIGHCARD population 1000 run 3  exec time 0.469782 (23569)
+Bloofi Query HIGHCARD population 1000 run 4  exec time 0.467284 (23569)
+Bloofi Query LOWCARD population 1000 run 0  exec time 0.489813 (50483)
+Bloofi Query LOWCARD population 1000 run 1  exec time 0.671497 (50483)
+Bloofi Query LOWCARD population 1000 run 2  exec time 0.494690 (50483)
+Bloofi Query LOWCARD population 1000 run 3  exec time 0.492892 (50483)
+Bloofi Query LOWCARD population 1000 run 4  exec time 0.494246 (50483)
+Bloofi Delete COMPLETE population 1000 run 0  exec time 0.366288 (2)
+Bloofi Delete COMPLETE population 1000 run 1  exec time 0.221071 (2)
+Bloofi Delete COMPLETE population 1000 run 2  exec time 0.201207 (2)
+Bloofi Delete COMPLETE population 1000 run 3  exec time 0.198661 (2)
+Bloofi Delete COMPLETE population 1000 run 4  exec time 0.199531 (2)
+Bloofi Delete HIGHCARD population 1000 run 0  exec time 0.498660 (0)
+Bloofi Delete HIGHCARD population 1000 run 1  exec time 0.596651 (0)
+Bloofi Delete HIGHCARD population 1000 run 2  exec time 0.474090 (0)
+Bloofi Delete HIGHCARD population 1000 run 3  exec time 0.471710 (0)
+Bloofi Delete HIGHCARD population 1000 run 4  exec time 0.481317 (0)
+Bloofi Delete LOWCARD population 1000 run 0  exec time 0.518392 (0)
+Bloofi Delete LOWCARD population 1000 run 1  exec time 0.513748 (0)
+Bloofi Delete LOWCARD population 1000 run 2  exec time 0.515868 (0)
+Bloofi Delete LOWCARD population 1000 run 3  exec time 0.515784 (0)
+Bloofi Delete LOWCARD population 1000 run 4  exec time 0.517160 (0)
+Bloofi population 10000 run 0 load time 0.12284624300000001
+Bloofi population 10000 run 1 load time 0.121354319
+Bloofi population 10000 run 2 load time 0.12100213500000001
+Bloofi population 10000 run 3 load time 0.12496091000000001
+Bloofi population 10000 run 4 load time 0.12157028700000001
+Bloofi Query COMPLETE population 10000 run 0  exec time 2.403240 (4186)
+Bloofi Query COMPLETE population 10000 run 1  exec time 2.389838 (4186)
+Bloofi Query COMPLETE population 10000 run 2  exec time 2.385376 (4186)
+Bloofi Query COMPLETE population 10000 run 3  exec time 2.391853 (4186)
+Bloofi Query COMPLETE population 10000 run 4  exec time 2.602128 (4186)
+Bloofi Query HIGHCARD population 10000 run 0  exec time 5.008742 (247757)
+Bloofi Query HIGHCARD population 10000 run 1  exec time 4.708751 (247757)
+Bloofi Query HIGHCARD population 10000 run 2  exec time 4.715666 (247757)
+Bloofi Query HIGHCARD population 10000 run 3  exec time 4.827074 (247757)
+Bloofi Query HIGHCARD population 10000 run 4  exec time 4.863506 (247757)
+Bloofi Query LOWCARD population 10000 run 0  exec time 5.210385 (1916522)
+Bloofi Query LOWCARD population 10000 run 1  exec time 5.198381 (1916522)
+Bloofi Query LOWCARD population 10000 run 2  exec time 5.195694 (1916522)
+Bloofi Query LOWCARD population 10000 run 3  exec time 5.376970 (1916522)
+Bloofi Query LOWCARD population 10000 run 4  exec time 5.211172 (1916522)
+Bloofi Delete COMPLETE population 10000 run 0  exec time 2.326557 (10)
+Bloofi Delete COMPLETE population 10000 run 1  exec time 2.326753 (10)
+Bloofi Delete COMPLETE population 10000 run 2  exec time 2.290265 (10)
+Bloofi Delete COMPLETE population 10000 run 3  exec time 2.292982 (10)
+Bloofi Delete COMPLETE population 10000 run 4  exec time 2.308578 (10)
+Bloofi Delete HIGHCARD population 10000 run 0  exec time 5.099140 (0)
+Bloofi Delete HIGHCARD population 10000 run 1  exec time 4.871290 (0)
+Bloofi Delete HIGHCARD population 10000 run 2  exec time 4.844051 (0)
+Bloofi Delete HIGHCARD population 10000 run 3  exec time 4.922278 (0)
+Bloofi Delete HIGHCARD population 10000 run 4  exec time 5.072497 (0)
+Bloofi Delete LOWCARD population 10000 run 0  exec time 7.001316 (0)
+Bloofi Delete LOWCARD population 10000 run 1  exec time 6.961243 (0)
+Bloofi Delete LOWCARD population 10000 run 2  exec time 7.192977 (0)
+Bloofi Delete LOWCARD population 10000 run 3  exec time 7.091439 (0)
+Bloofi Delete LOWCARD population 10000 run 4  exec time 7.255238 (0)
+Bloofi population 100000 run 0 load time 1.0218681950000001
+Bloofi population 100000 run 1 load time 1.0405433400000001
+Bloofi population 100000 run 2 load time 1.064200756
+Bloofi population 100000 run 3 load time 1.019310988
+Bloofi population 100000 run 4 load time 1.019759805
+Bloofi Query COMPLETE population 100000 run 0  exec time 24.968290 (26349)
+Bloofi Query COMPLETE population 100000 run 1  exec time 24.829120 (26349)
+Bloofi Query COMPLETE population 100000 run 2  exec time 25.034582 (26349)
+Bloofi Query COMPLETE population 100000 run 3  exec time 24.867502 (26349)
+Bloofi Query COMPLETE population 100000 run 4  exec time 24.901068 (26349)
+Bloofi Query HIGHCARD population 100000 run 0  exec time 49.517750 (1920312)
+Bloofi Query HIGHCARD population 100000 run 1  exec time 49.662317 (1920312)
+Bloofi Query HIGHCARD population 100000 run 2  exec time 49.484890 (1920312)
+Bloofi Query HIGHCARD population 100000 run 3  exec time 49.715284 (1920312)
+Bloofi Query HIGHCARD population 100000 run 4  exec time 49.623577 (1920312)
+Bloofi Query LOWCARD population 100000 run 0  exec time 57.812702 (14989587)
+Bloofi Query LOWCARD population 100000 run 1  exec time 57.622408 (14989587)
+Bloofi Query LOWCARD population 100000 run 2  exec time 58.040391 (14989587)
+Bloofi Query LOWCARD population 100000 run 3  exec time 57.730932 (14989587)
+Bloofi Query LOWCARD population 100000 run 4  exec time 57.782380 (14989587)
+Bloofi Delete COMPLETE population 100000 run 0  exec time 24.400324 (41)
+Bloofi Delete COMPLETE population 100000 run 1  exec time 24.453963 (41)
+Bloofi Delete COMPLETE population 100000 run 2  exec time 24.562442 (41)
+Bloofi Delete COMPLETE population 100000 run 3  exec time 24.356177 (41)
+Bloofi Delete COMPLETE population 100000 run 4  exec time 24.451338 (41)
+Bloofi Delete HIGHCARD population 100000 run 0  exec time 51.722081 (2)
+Bloofi Delete HIGHCARD population 100000 run 1  exec time 51.272166 (2)
+Bloofi Delete HIGHCARD population 100000 run 2  exec time 51.470704 (2)
+Bloofi Delete HIGHCARD population 100000 run 3  exec time 51.513928 (2)
+Bloofi Delete HIGHCARD population 100000 run 4  exec time 51.574145 (2)
+Bloofi Delete LOWCARD population 100000 run 0  exec time 74.215686 (2)
+Bloofi Delete LOWCARD population 100000 run 1  exec time 74.238371 (2)
+Bloofi Delete LOWCARD population 100000 run 2  exec time 74.228588 (2)
+Bloofi Delete LOWCARD population 100000 run 3  exec time 73.669163 (2)
+Bloofi Delete LOWCARD population 100000 run 4  exec time 74.431211 (2)
+Bloofi population 1000000 run 0 load time 13.4627022
+Bloofi population 1000000 run 1 load time 13.535732519000002
+Bloofi population 1000000 run 2 load time 13.558670755000001
+Bloofi population 1000000 run 3 load time 13.797342667
+Bloofi population 1000000 run 4 load time 13.625482351
+Bloofi Query COMPLETE population 1000000 run 0  exec time 236.917188 (1316235)
+Bloofi Query COMPLETE population 1000000 run 1  exec time 235.664537 (1316235)
+Bloofi Query COMPLETE population 1000000 run 2  exec time 235.697646 (1316235)
+Bloofi Query COMPLETE population 1000000 run 3  exec time 235.572025 (1316235)
+Bloofi Query COMPLETE population 1000000 run 4  exec time 237.347281 (1316235)
+Bloofi Query HIGHCARD population 1000000 run 0  exec time 465.909761 (14313576)
+Bloofi Query HIGHCARD population 1000000 run 1  exec time 465.338865 (14313576)
+Bloofi Query HIGHCARD population 1000000 run 2  exec time 466.120709 (14313576)
+Bloofi Query HIGHCARD population 1000000 run 3  exec time 468.689213 (14313576)
+Bloofi Query HIGHCARD population 1000000 run 4  exec time 466.048288 (14313576)
+Bloofi Query LOWCARD population 1000000 run 0  exec time 506.281829 (204745637)
+Bloofi Query LOWCARD population 1000000 run 1  exec time 509.333450 (204745637)
+Bloofi Query LOWCARD population 1000000 run 2  exec time 504.744831 (204745637)
+Bloofi Query LOWCARD population 1000000 run 3  exec time 504.284291 (204745637)
+Bloofi Query LOWCARD population 1000000 run 4  exec time 504.641944 (204745637)
+Bloofi Delete COMPLETE population 1000000 run 0  exec time 156.326075 (520)
+Bloofi Delete COMPLETE population 1000000 run 1  exec time 155.989327 (520)
+Bloofi Delete COMPLETE population 1000000 run 2  exec time 156.609488 (520)
+Bloofi Delete COMPLETE population 1000000 run 3  exec time 155.875098 (520)
+Bloofi Delete COMPLETE population 1000000 run 4  exec time 156.073446 (520)
+Bloofi Delete HIGHCARD population 1000000 run 0  exec time 461.094471 (13)
+Bloofi Delete HIGHCARD population 1000000 run 1  exec time 461.394609 (13)
+Bloofi Delete HIGHCARD population 1000000 run 2  exec time 461.207872 (13)
+Bloofi Delete HIGHCARD population 1000000 run 3  exec time 460.521257 (13)
+Bloofi Delete HIGHCARD population 1000000 run 4  exec time 461.198117 (13)
+Bloofi Delete LOWCARD population 1000000 run 0  exec time 707.690080 (13)
+Bloofi Delete LOWCARD population 1000000 run 1  exec time 706.336255 (13)
+Bloofi Delete LOWCARD population 1000000 run 2  exec time 704.908494 (13)
+Bloofi Delete LOWCARD population 1000000 run 3  exec time 706.353127 (13)
+Bloofi Delete LOWCARD population 1000000 run 4  exec time 705.032778 (13)
+Running FlatBloofi
+FlatBloofi population 100 run 0 load time 0.001762235
+FlatBloofi population 100 run 1 load time 0.001073989
+FlatBloofi population 100 run 2 load time 0.002197169
+FlatBloofi population 100 run 3 load time 9.998700000000001E-4
+FlatBloofi population 100 run 4 load time 1.4754700000000002E-4
+FlatBloofi Query COMPLETE population 100 run 0  exec time 0.012814 (3)
+FlatBloofi Query COMPLETE population 100 run 1  exec time 0.002807 (3)
+FlatBloofi Query COMPLETE population 100 run 2  exec time 0.002815 (3)
+FlatBloofi Query COMPLETE population 100 run 3  exec time 0.002642 (3)
+FlatBloofi Query COMPLETE population 100 run 4  exec time 0.002784 (3)
+FlatBloofi Query HIGHCARD population 100 run 0  exec time 0.007651 (2477)
+FlatBloofi Query HIGHCARD population 100 run 1  exec time 0.006795 (2477)
+FlatBloofi Query HIGHCARD population 100 run 2  exec time 0.006692 (2477)
+FlatBloofi Query HIGHCARD population 100 run 3  exec time 0.006784 (2477)
+FlatBloofi Query HIGHCARD population 100 run 4  exec time 0.006797 (2477)
+FlatBloofi Query LOWCARD population 100 run 0  exec time 0.005132 (5500)
+FlatBloofi Query LOWCARD population 100 run 1  exec time 0.004887 (5500)
+FlatBloofi Query LOWCARD population 100 run 2  exec time 0.004719 (5500)
+FlatBloofi Query LOWCARD population 100 run 3  exec time 0.004929 (5500)
+FlatBloofi Query LOWCARD population 100 run 4  exec time 0.005021 (5500)
+FlatBloofi Delete COMPLETE population 100 run 0  exec time 0.002594 (1)
+FlatBloofi Delete COMPLETE population 100 run 1  exec time 0.001694 (1)
+FlatBloofi Delete COMPLETE population 100 run 2  exec time 0.000539 (1)
+FlatBloofi Delete COMPLETE population 100 run 3  exec time 0.000466 (1)
+FlatBloofi Delete COMPLETE population 100 run 4  exec time 0.000421 (1)
+FlatBloofi Delete HIGHCARD population 100 run 0  exec time 0.000504 (0)
+FlatBloofi Delete HIGHCARD population 100 run 1  exec time 0.000421 (0)
+FlatBloofi Delete HIGHCARD population 100 run 2  exec time 0.000363 (0)
+FlatBloofi Delete HIGHCARD population 100 run 3  exec time 0.000373 (0)
+FlatBloofi Delete HIGHCARD population 100 run 4  exec time 0.000340 (0)
+FlatBloofi Delete LOWCARD population 100 run 0  exec time 0.000461 (0)
+FlatBloofi Delete LOWCARD population 100 run 1  exec time 0.000388 (0)
+FlatBloofi Delete LOWCARD population 100 run 2  exec time 0.000411 (0)
+FlatBloofi Delete LOWCARD population 100 run 3  exec time 0.000333 (0)
+FlatBloofi Delete LOWCARD population 100 run 4  exec time 0.000338 (0)
+FlatBloofi population 1000 run 0 load time 0.002057719
+FlatBloofi population 1000 run 1 load time 0.0019584520000000003
+FlatBloofi population 1000 run 2 load time 0.002055564
+FlatBloofi population 1000 run 3 load time 0.0019749480000000002
+FlatBloofi population 1000 run 4 load time 0.0018921790000000001
+FlatBloofi Query COMPLETE population 1000 run 0  exec time 0.020701 (48)
+FlatBloofi Query COMPLETE population 1000 run 1  exec time 0.004258 (48)
+FlatBloofi Query COMPLETE population 1000 run 2  exec time 0.003545 (48)
+FlatBloofi Query COMPLETE population 1000 run 3  exec time 0.003551 (48)
+FlatBloofi Query COMPLETE population 1000 run 4  exec time 0.003557 (48)
+FlatBloofi Query HIGHCARD population 1000 run 0  exec time 0.014581 (23569)
+FlatBloofi Query HIGHCARD population 1000 run 1  exec time 0.014141 (23569)
+FlatBloofi Query HIGHCARD population 1000 run 2  exec time 0.014188 (23569)
+FlatBloofi Query HIGHCARD population 1000 run 3  exec time 0.014144 (23569)
+FlatBloofi Query HIGHCARD population 1000 run 4  exec time 0.014345 (23569)
+FlatBloofi Query LOWCARD population 1000 run 0  exec time 0.027487 (50483)
+FlatBloofi Query LOWCARD population 1000 run 1  exec time 0.027085 (50483)
+FlatBloofi Query LOWCARD population 1000 run 2  exec time 0.027063 (50483)
+FlatBloofi Query LOWCARD population 1000 run 3  exec time 0.027648 (50483)
+FlatBloofi Query LOWCARD population 1000 run 4  exec time 0.026899 (50483)
+FlatBloofi Delete COMPLETE population 1000 run 0  exec time 0.001576 (2)
+FlatBloofi Delete COMPLETE population 1000 run 1  exec time 0.001542 (2)
+FlatBloofi Delete COMPLETE population 1000 run 2  exec time 0.001510 (2)
+FlatBloofi Delete COMPLETE population 1000 run 3  exec time 0.001575 (2)
+FlatBloofi Delete COMPLETE population 1000 run 4  exec time 0.001479 (2)
+FlatBloofi Delete HIGHCARD population 1000 run 0  exec time 0.001304 (0)
+FlatBloofi Delete HIGHCARD population 1000 run 1  exec time 0.001387 (0)
+FlatBloofi Delete HIGHCARD population 1000 run 2  exec time 0.001368 (0)
+FlatBloofi Delete HIGHCARD population 1000 run 3  exec time 0.001291 (0)
+FlatBloofi Delete HIGHCARD population 1000 run 4  exec time 0.001232 (0)
+FlatBloofi Delete LOWCARD population 1000 run 0  exec time 0.001208 (0)
+FlatBloofi Delete LOWCARD population 1000 run 1  exec time 0.001220 (0)
+FlatBloofi Delete LOWCARD population 1000 run 2  exec time 0.001054 (0)
+FlatBloofi Delete LOWCARD population 1000 run 3  exec time 0.001211 (0)
+FlatBloofi Delete LOWCARD population 1000 run 4  exec time 0.001206 (0)
+FlatBloofi population 10000 run 0 load time 0.023292604
+FlatBloofi population 10000 run 1 load time 0.023220867000000003
+FlatBloofi population 10000 run 2 load time 0.023614781
+FlatBloofi population 10000 run 3 load time 0.023224545000000003
+FlatBloofi population 10000 run 4 load time 0.025036067000000002
+FlatBloofi Query COMPLETE population 10000 run 0  exec time 0.034323 (4186)
+FlatBloofi Query COMPLETE population 10000 run 1  exec time 0.034930 (4186)
+FlatBloofi Query COMPLETE population 10000 run 2  exec time 0.035383 (4186)
+FlatBloofi Query COMPLETE population 10000 run 3  exec time 0.034204 (4186)
+FlatBloofi Query COMPLETE population 10000 run 4  exec time 0.023593 (4186)
+FlatBloofi Query HIGHCARD population 10000 run 0  exec time 0.098367 (247757)
+FlatBloofi Query HIGHCARD population 10000 run 1  exec time 0.098630 (247757)
+FlatBloofi Query HIGHCARD population 10000 run 2  exec time 0.100967 (247757)
+FlatBloofi Query HIGHCARD population 10000 run 3  exec time 0.098225 (247757)
+FlatBloofi Query HIGHCARD population 10000 run 4  exec time 0.098319 (247757)
+FlatBloofi Query LOWCARD population 10000 run 0  exec time 0.622375 (1916522)
+FlatBloofi Query LOWCARD population 10000 run 1  exec time 0.626146 (1916522)
+FlatBloofi Query LOWCARD population 10000 run 2  exec time 0.626362 (1916522)
+FlatBloofi Query LOWCARD population 10000 run 3  exec time 0.625923 (1916522)
+FlatBloofi Query LOWCARD population 10000 run 4  exec time 0.625166 (1916522)
+FlatBloofi Delete COMPLETE population 10000 run 0  exec time 0.014012 (10)
+FlatBloofi Delete COMPLETE population 10000 run 1  exec time 0.013773 (10)
+FlatBloofi Delete COMPLETE population 10000 run 2  exec time 0.013062 (10)
+FlatBloofi Delete COMPLETE population 10000 run 3  exec time 0.012979 (10)
+FlatBloofi Delete COMPLETE population 10000 run 4  exec time 0.013029 (10)
+FlatBloofi Delete HIGHCARD population 10000 run 0  exec time 0.008224 (0)
+FlatBloofi Delete HIGHCARD population 10000 run 1  exec time 0.008772 (0)
+FlatBloofi Delete HIGHCARD population 10000 run 2  exec time 0.008546 (0)
+FlatBloofi Delete HIGHCARD population 10000 run 3  exec time 0.008819 (0)
+FlatBloofi Delete HIGHCARD population 10000 run 4  exec time 0.008713 (0)
+FlatBloofi Delete LOWCARD population 10000 run 0  exec time 0.008614 (0)
+FlatBloofi Delete LOWCARD population 10000 run 1  exec time 0.008258 (0)
+FlatBloofi Delete LOWCARD population 10000 run 2  exec time 0.009236 (0)
+FlatBloofi Delete LOWCARD population 10000 run 3  exec time 0.009645 (0)
+FlatBloofi Delete LOWCARD population 10000 run 4  exec time 0.008577 (0)
+FlatBloofi population 100000 run 0 load time 0.21994828000000002
+FlatBloofi population 100000 run 1 load time 0.220146471
+FlatBloofi population 100000 run 2 load time 0.196810711
+FlatBloofi population 100000 run 3 load time 0.129283327
+FlatBloofi population 100000 run 4 load time 0.127714986
+FlatBloofi Query COMPLETE population 100000 run 0  exec time 0.236141 (26349)
+FlatBloofi Query COMPLETE population 100000 run 1  exec time 0.239418 (26349)
+FlatBloofi Query COMPLETE population 100000 run 2  exec time 0.224748 (26349)
+FlatBloofi Query COMPLETE population 100000 run 3  exec time 0.272506 (26349)
+FlatBloofi Query COMPLETE population 100000 run 4  exec time 0.266535 (26349)
+FlatBloofi Query HIGHCARD population 100000 run 0  exec time 0.803460 (1920312)
+FlatBloofi Query HIGHCARD population 100000 run 1  exec time 0.807774 (1920312)
+FlatBloofi Query HIGHCARD population 100000 run 2  exec time 0.809744 (1920312)
+FlatBloofi Query HIGHCARD population 100000 run 3  exec time 0.806233 (1920312)
+FlatBloofi Query HIGHCARD population 100000 run 4  exec time 0.805336 (1920312)
+FlatBloofi Query LOWCARD population 100000 run 0  exec time 5.201177 (14989587)
+FlatBloofi Query LOWCARD population 100000 run 1  exec time 5.505852 (14989587)
+FlatBloofi Query LOWCARD population 100000 run 2  exec time 5.182694 (14989587)
+FlatBloofi Query LOWCARD population 100000 run 3  exec time 5.161790 (14989587)
+FlatBloofi Query LOWCARD population 100000 run 4  exec time 5.168691 (14989587)
+FlatBloofi Delete COMPLETE population 100000 run 0  exec time 0.057904 (41)
+FlatBloofi Delete COMPLETE population 100000 run 1  exec time 0.032816 (41)
+FlatBloofi Delete COMPLETE population 100000 run 2  exec time 0.032651 (41)
+FlatBloofi Delete COMPLETE population 100000 run 3  exec time 0.032826 (41)
+FlatBloofi Delete COMPLETE population 100000 run 4  exec time 0.033706 (41)
+FlatBloofi Delete HIGHCARD population 100000 run 0  exec time 0.024433 (2)
+FlatBloofi Delete HIGHCARD population 100000 run 1  exec time 0.024445 (2)
+FlatBloofi Delete HIGHCARD population 100000 run 2  exec time 0.024420 (2)
+FlatBloofi Delete HIGHCARD population 100000 run 3  exec time 0.024590 (2)
+FlatBloofi Delete HIGHCARD population 100000 run 4  exec time 0.024600 (2)
+FlatBloofi Delete LOWCARD population 100000 run 0  exec time 0.187475 (2)
+FlatBloofi Delete LOWCARD population 100000 run 1  exec time 0.031539 (2)
+FlatBloofi Delete LOWCARD population 100000 run 2  exec time 0.031422 (2)
+FlatBloofi Delete LOWCARD population 100000 run 3  exec time 0.025402 (2)
+FlatBloofi Delete LOWCARD population 100000 run 4  exec time 0.024036 (2)
+FlatBloofi population 1000000 run 0 load time 8.168227093
+FlatBloofi population 1000000 run 1 load time 8.127651945
+FlatBloofi population 1000000 run 2 load time 8.279351329
+FlatBloofi population 1000000 run 3 load time 8.153820356
+FlatBloofi population 1000000 run 4 load time 8.265674451
+FlatBloofi Query COMPLETE population 1000000 run 0  exec time 5.291949 (1316235)
+FlatBloofi Query COMPLETE population 1000000 run 1  exec time 3.422077 (1316235)
+FlatBloofi Query COMPLETE population 1000000 run 2  exec time 3.619953 (1316235)
+FlatBloofi Query COMPLETE population 1000000 run 3  exec time 4.290385 (1316235)
+FlatBloofi Query COMPLETE population 1000000 run 4  exec time 3.905105 (1316235)
+FlatBloofi Query HIGHCARD population 1000000 run 0  exec time 8.551971 (14313576)
+FlatBloofi Query HIGHCARD population 1000000 run 1  exec time 8.389145 (14313576)
+FlatBloofi Query HIGHCARD population 1000000 run 2  exec time 8.765865 (14313576)
+FlatBloofi Query HIGHCARD population 1000000 run 3  exec time 8.416673 (14313576)
+FlatBloofi Query HIGHCARD population 1000000 run 4  exec time 8.727391 (14313576)
+FlatBloofi Query LOWCARD population 1000000 run 0  exec time 114.210185 (204745637)
+FlatBloofi Query LOWCARD population 1000000 run 1  exec time 114.728162 (204745637)
+FlatBloofi Query LOWCARD population 1000000 run 2  exec time 114.534806 (204745637)
+FlatBloofi Query LOWCARD population 1000000 run 3  exec time 114.867754 (204745637)
+FlatBloofi Query LOWCARD population 1000000 run 4  exec time 114.638543 (204745637)
+FlatBloofi Delete COMPLETE population 1000000 run 0  exec time 0.665348 (520)
+FlatBloofi Delete COMPLETE population 1000000 run 1  exec time 0.526096 (520)
+FlatBloofi Delete COMPLETE population 1000000 run 2  exec time 0.578326 (520)
+FlatBloofi Delete COMPLETE population 1000000 run 3  exec time 0.546039 (520)
+FlatBloofi Delete COMPLETE population 1000000 run 4  exec time 0.544467 (520)
+FlatBloofi Delete HIGHCARD population 1000000 run 0  exec time 0.412058 (13)
+FlatBloofi Delete HIGHCARD population 1000000 run 1  exec time 0.392437 (13)
+FlatBloofi Delete HIGHCARD population 1000000 run 2  exec time 0.385465 (13)
+FlatBloofi Delete HIGHCARD population 1000000 run 3  exec time 0.395342 (13)
+FlatBloofi Delete HIGHCARD population 1000000 run 4  exec time 0.405822 (13)
+FlatBloofi Delete LOWCARD population 1000000 run 0  exec time 0.433017 (13)
+FlatBloofi Delete LOWCARD population 1000000 run 1  exec time 0.439828 (13)
+FlatBloofi Delete LOWCARD population 1000000 run 2  exec time 0.527199 (13)
+FlatBloofi Delete LOWCARD population 1000000 run 3  exec time 0.398124 (13)
+FlatBloofi Delete LOWCARD population 1000000 run 4  exec time 0.404213 (13)
+Running Hamming
+Hamming population 100 run 0 load time 0.008934758000000001
+Hamming population 100 run 1 load time 0.002422961
+Hamming population 100 run 2 load time 0.0012035840000000002
+Hamming population 100 run 3 load time 0.0010585990000000001
+Hamming population 100 run 4 load time 0.001122553
+Hamming Query COMPLETE population 100 run 0  exec time 0.067317 (3)
+Hamming Query COMPLETE population 100 run 1  exec time 0.040427 (3)
+Hamming Query COMPLETE population 100 run 2  exec time 0.051305 (3)
+Hamming Query COMPLETE population 100 run 3  exec time 0.051481 (3)
+Hamming Query COMPLETE population 100 run 4  exec time 0.051404 (3)
+Hamming Query HIGHCARD population 100 run 0  exec time 0.250672 (2477)
+Hamming Query HIGHCARD population 100 run 1  exec time 0.223998 (2477)
+Hamming Query HIGHCARD population 100 run 2  exec time 0.194154 (2477)
+Hamming Query HIGHCARD population 100 run 3  exec time 0.109768 (2477)
+Hamming Query HIGHCARD population 100 run 4  exec time 0.107584 (2477)
+Hamming Query LOWCARD population 100 run 0  exec time 0.116939 (5500)
+Hamming Query LOWCARD population 100 run 1  exec time 0.084907 (5500)
+Hamming Query LOWCARD population 100 run 2  exec time 0.087654 (5500)
+Hamming Query LOWCARD population 100 run 3  exec time 0.083844 (5500)
+Hamming Query LOWCARD population 100 run 4  exec time 0.084208 (5500)
+Hamming Delete COMPLETE population 100 run 0  exec time 0.003860 (1)
+Hamming Delete COMPLETE population 100 run 1  exec time 0.001362 (1)
+Hamming Delete COMPLETE population 100 run 2  exec time 0.001860 (1)
+Hamming Delete COMPLETE population 100 run 3  exec time 0.001300 (1)
+Hamming Delete COMPLETE population 100 run 4  exec time 0.001183 (1)
+Hamming Delete HIGHCARD population 100 run 0  exec time 0.000764 (0)
+Hamming Delete HIGHCARD population 100 run 1  exec time 0.000570 (0)
+Hamming Delete HIGHCARD population 100 run 2  exec time 0.000586 (0)
+Hamming Delete HIGHCARD population 100 run 3  exec time 0.000614 (0)
+Hamming Delete HIGHCARD population 100 run 4  exec time 0.000576 (0)
+Hamming Delete LOWCARD population 100 run 0  exec time 0.000817 (0)
+Hamming Delete LOWCARD population 100 run 1  exec time 0.000567 (0)
+Hamming Delete LOWCARD population 100 run 2  exec time 0.000568 (0)
+Hamming Delete LOWCARD population 100 run 3  exec time 0.000532 (0)
+Hamming Delete LOWCARD population 100 run 4  exec time 0.000547 (0)
+Hamming population 1000 run 0 load time 0.00474819
+Hamming population 1000 run 1 load time 0.002604346
+Hamming population 1000 run 2 load time 0.002616389
+Hamming population 1000 run 3 load time 0.0026632080000000002
+Hamming population 1000 run 4 load time 0.002570578
+Hamming Query COMPLETE population 1000 run 0  exec time 0.181030 (48)
+Hamming Query COMPLETE population 1000 run 1  exec time 0.141954 (48)
+Hamming Query COMPLETE population 1000 run 2  exec time 0.131793 (48)
+Hamming Query COMPLETE population 1000 run 3  exec time 0.179757 (48)
+Hamming Query COMPLETE population 1000 run 4  exec time 0.184369 (48)
+Hamming Query HIGHCARD population 1000 run 0  exec time 0.955148 (23569)
+Hamming Query HIGHCARD population 1000 run 1  exec time 0.950415 (23569)
+Hamming Query HIGHCARD population 1000 run 2  exec time 0.951420 (23569)
+Hamming Query HIGHCARD population 1000 run 3  exec time 0.956275 (23569)
+Hamming Query HIGHCARD population 1000 run 4  exec time 0.957141 (23569)
+Hamming Query LOWCARD population 1000 run 0  exec time 0.707071 (50483)
+Hamming Query LOWCARD population 1000 run 1  exec time 0.706821 (50483)
+Hamming Query LOWCARD population 1000 run 2  exec time 0.708713 (50483)
+Hamming Query LOWCARD population 1000 run 3  exec time 0.708427 (50483)
+Hamming Query LOWCARD population 1000 run 4  exec time 0.707193 (50483)
+Hamming Delete COMPLETE population 1000 run 0  exec time 0.001885 (2)
+Hamming Delete COMPLETE population 1000 run 1  exec time 0.001722 (2)
+Hamming Delete COMPLETE population 1000 run 2  exec time 0.001745 (2)
+Hamming Delete COMPLETE population 1000 run 3  exec time 0.001788 (2)
+Hamming Delete COMPLETE population 1000 run 4  exec time 0.001761 (2)
+Hamming Delete HIGHCARD population 1000 run 0  exec time 0.001242 (0)
+Hamming Delete HIGHCARD population 1000 run 1  exec time 0.001143 (0)
+Hamming Delete HIGHCARD population 1000 run 2  exec time 0.001083 (0)
+Hamming Delete HIGHCARD population 1000 run 3  exec time 0.001161 (0)
+Hamming Delete HIGHCARD population 1000 run 4  exec time 0.001162 (0)
+Hamming Delete LOWCARD population 1000 run 0  exec time 0.001247 (0)
+Hamming Delete LOWCARD population 1000 run 1  exec time 0.001163 (0)
+Hamming Delete LOWCARD population 1000 run 2  exec time 0.001198 (0)
+Hamming Delete LOWCARD population 1000 run 3  exec time 0.001169 (0)
+Hamming Delete LOWCARD population 1000 run 4  exec time 0.003680 (0)
+Hamming population 10000 run 0 load time 0.032389722
+Hamming population 10000 run 1 load time 0.031612563
+Hamming population 10000 run 2 load time 0.031645472
+Hamming population 10000 run 3 load time 0.031433444000000005
+Hamming population 10000 run 4 load time 0.030699946000000002
+Hamming Query COMPLETE population 10000 run 0  exec time 3.242900 (4186)
+Hamming Query COMPLETE population 10000 run 1  exec time 2.811214 (4186)
+Hamming Query COMPLETE population 10000 run 2  exec time 2.822171 (4186)
+Hamming Query COMPLETE population 10000 run 3  exec time 2.816751 (4186)
+Hamming Query COMPLETE population 10000 run 4  exec time 2.817468 (4186)
+Hamming Query HIGHCARD population 10000 run 0  exec time 10.453794 (247757)
+Hamming Query HIGHCARD population 10000 run 1  exec time 10.268473 (247757)
+Hamming Query HIGHCARD population 10000 run 2  exec time 10.432127 (247757)
+Hamming Query HIGHCARD population 10000 run 3  exec time 10.294101 (247757)
+Hamming Query HIGHCARD population 10000 run 4  exec time 10.564657 (247757)
+Hamming Query LOWCARD population 10000 run 0  exec time 8.560969 (1916522)
+Hamming Query LOWCARD population 10000 run 1  exec time 8.792268 (1916522)
+Hamming Query LOWCARD population 10000 run 2  exec time 8.509244 (1916522)
+Hamming Query LOWCARD population 10000 run 3  exec time 8.466656 (1916522)
+Hamming Query LOWCARD population 10000 run 4  exec time 8.634267 (1916522)
+Hamming Delete COMPLETE population 10000 run 0  exec time 0.001662 (10)
+Hamming Delete COMPLETE population 10000 run 1  exec time 0.002201 (10)
+Hamming Delete COMPLETE population 10000 run 2  exec time 0.001602 (10)
+Hamming Delete COMPLETE population 10000 run 3  exec time 0.001560 (10)
+Hamming Delete COMPLETE population 10000 run 4  exec time 0.001557 (10)
+Hamming Delete HIGHCARD population 10000 run 0  exec time 0.000899 (0)
+Hamming Delete HIGHCARD population 10000 run 1  exec time 0.000841 (0)
+Hamming Delete HIGHCARD population 10000 run 2  exec time 0.000849 (0)
+Hamming Delete HIGHCARD population 10000 run 3  exec time 0.000852 (0)
+Hamming Delete HIGHCARD population 10000 run 4  exec time 0.000839 (0)
+Hamming Delete LOWCARD population 10000 run 0  exec time 0.000848 (0)
+Hamming Delete LOWCARD population 10000 run 1  exec time 0.000833 (0)
+Hamming Delete LOWCARD population 10000 run 2  exec time 0.000845 (0)
+Hamming Delete LOWCARD population 10000 run 3  exec time 0.000808 (0)
+Hamming Delete LOWCARD population 10000 run 4  exec time 0.000810 (0)
+Hamming population 100000 run 0 load time 0.21923292200000002
+Hamming population 100000 run 1 load time 0.21863318
+Hamming population 100000 run 2 load time 0.21498741200000002
+Hamming population 100000 run 3 load time 0.212043736
+Hamming population 100000 run 4 load time 0.21241088400000002
+Hamming Query COMPLETE population 100000 run 0  exec time 22.926992 (26349)
+Hamming Query COMPLETE population 100000 run 1  exec time 22.581109 (26349)
+Hamming Query COMPLETE population 100000 run 2  exec time 22.611164 (26349)
+Hamming Query COMPLETE population 100000 run 3  exec time 22.742520 (26349)
+Hamming Query COMPLETE population 100000 run 4  exec time 22.451978 (26349)
+Hamming Query HIGHCARD population 100000 run 0  exec time 86.821501 (1920312)
+Hamming Query HIGHCARD population 100000 run 1  exec time 87.089716 (1920312)
+Hamming Query HIGHCARD population 100000 run 2  exec time 87.099091 (1920312)
+Hamming Query HIGHCARD population 100000 run 3  exec time 86.798509 (1920312)
+Hamming Query HIGHCARD population 100000 run 4  exec time 87.055632 (1920312)
+Hamming Query LOWCARD population 100000 run 0  exec time 67.875548 (14989587)
+Hamming Query LOWCARD population 100000 run 1  exec time 67.640672 (14989587)
+Hamming Query LOWCARD population 100000 run 2  exec time 67.865923 (14989587)
+Hamming Query LOWCARD population 100000 run 3  exec time 67.751775 (14989587)
+Hamming Query LOWCARD population 100000 run 4  exec time 67.677779 (14989587)
+Hamming Delete COMPLETE population 100000 run 0  exec time 0.002255 (41)
+Hamming Delete COMPLETE population 100000 run 1  exec time 0.002226 (41)
+Hamming Delete COMPLETE population 100000 run 2  exec time 0.002230 (41)
+Hamming Delete COMPLETE population 100000 run 3  exec time 0.001889 (41)
+Hamming Delete COMPLETE population 100000 run 4  exec time 0.002536 (41)
+Hamming Delete HIGHCARD population 100000 run 0  exec time 0.001044 (2)
+Hamming Delete HIGHCARD population 100000 run 1  exec time 0.001012 (2)
+Hamming Delete HIGHCARD population 100000 run 2  exec time 0.001036 (2)
+Hamming Delete HIGHCARD population 100000 run 3  exec time 0.001068 (2)
+Hamming Delete HIGHCARD population 100000 run 4  exec time 0.001012 (2)
+Hamming Delete LOWCARD population 100000 run 0  exec time 0.000999 (2)
+Hamming Delete LOWCARD population 100000 run 1  exec time 0.000820 (2)
+Hamming Delete LOWCARD population 100000 run 2  exec time 0.000812 (2)
+Hamming Delete LOWCARD population 100000 run 3  exec time 0.000844 (2)
+Hamming Delete LOWCARD population 100000 run 4  exec time 0.001445 (2)
+Hamming population 1000000 run 0 load time 2.797191268
+Hamming population 1000000 run 1 load time 2.727583629
+Hamming population 1000000 run 2 load time 3.3445240060000003
+Hamming population 1000000 run 3 load time 2.916992955
+Hamming population 1000000 run 4 load time 2.915634309
+Hamming Query COMPLETE population 1000000 run 0  exec time 262.445879 (1316235)
+Hamming Query COMPLETE population 1000000 run 1  exec time 261.757146 (1316235)
+Hamming Query COMPLETE population 1000000 run 2  exec time 262.388608 (1316235)
+Hamming Query COMPLETE population 1000000 run 3  exec time 261.771089 (1316235)
+Hamming Query COMPLETE population 1000000 run 4  exec time 261.212263 (1316235)
+Hamming Query HIGHCARD population 1000000 run 0  exec time 823.857842 (14313576)
+Hamming Query HIGHCARD population 1000000 run 1  exec time 824.585746 (14313576)
+Hamming Query HIGHCARD population 1000000 run 2  exec time 822.856856 (14313576)
+Hamming Query HIGHCARD population 1000000 run 3  exec time 821.523717 (14313576)
+Hamming Query HIGHCARD population 1000000 run 4  exec time 819.230687 (14313576)
+Hamming Query LOWCARD population 1000000 run 0  exec time 680.983367 (204745637)
+Hamming Query LOWCARD population 1000000 run 1  exec time 678.975223 (204745637)
+Hamming Query LOWCARD population 1000000 run 2  exec time 679.390755 (204745637)
+Hamming Query LOWCARD population 1000000 run 3  exec time 682.792062 (204745637)
+Hamming Query LOWCARD population 1000000 run 4  exec time 681.407400 (204745637)
+Hamming Delete COMPLETE population 1000000 run 0  exec time 0.003642 (520)
+Hamming Delete COMPLETE population 1000000 run 1  exec time 0.003849 (520)
+Hamming Delete COMPLETE population 1000000 run 2  exec time 0.003481 (520)
+Hamming Delete COMPLETE population 1000000 run 3  exec time 0.003278 (520)
+Hamming Delete COMPLETE population 1000000 run 4  exec time 0.005599 (520)
+Hamming Delete HIGHCARD population 1000000 run 0  exec time 0.001160 (13)
+Hamming Delete HIGHCARD population 1000000 run 1  exec time 0.001171 (13)
+Hamming Delete HIGHCARD population 1000000 run 2  exec time 0.001180 (13)
+Hamming Delete HIGHCARD population 1000000 run 3  exec time 0.001189 (13)
+Hamming Delete HIGHCARD population 1000000 run 4  exec time 0.001112 (13)
+Hamming Delete LOWCARD population 1000000 run 0  exec time 0.000973 (13)
+Hamming Delete LOWCARD population 1000000 run 1  exec time 0.000990 (13)
+Hamming Delete LOWCARD population 1000000 run 2  exec time 0.000962 (13)
+Hamming Delete LOWCARD population 1000000 run 3  exec time 0.000964 (13)
+Hamming Delete LOWCARD population 1000000 run 4  exec time 0.001001 (13)
+=== verification ===
+Query COMPLETE 1000000 - OK
+Query HIGHCARD 1000000 - OK
+Query LOWCARD 1000000 - OK
+Delete COMPLETE 1000000 - OK
+Delete HIGHCARD 1000000 - OK
+Delete LOWCARD 1000000 - OK
+===  data ===
+'Index Name', 'Run', 'Phase', 'Population', 'Load Elapsed', 'COMPLETE Elapsed', 'COMPLETE Count', 'HIGHCARD Elapsed', 'HIGHCARD Count', 'LOWCARD Elapsed', 'LOWCARD Count'
+'BF-Trie',0,'Query',1000000,2267901517,1.3667847690000001,1316235,22.696235079,14313576,130.023890681,204745637
+'BF-Trie',0,'Delete',1000000,2267901517,0.0016233830000000002,520,2.33381E-4,13,1.26873E-4,13
+'Bloofi',0,'Query',1000000,13462702200,236.91718834300002,1316235,465.90976067900004,14313576,506.28182906,204745637
+'Bloofi',0,'Delete',1000000,13462702200,156.326075185,520,461.09447098400005,13,707.690080348,13
+'FlatBloofi',0,'Query',1000000,8168227093,5.2919489120000005,1316235,8.551970551,14313576,114.21018470300001,204745637
+'FlatBloofi',0,'Delete',1000000,8168227093,0.665348127,520,0.412058458,13,0.43301740800000005,13
+'Hamming',0,'Query',1000000,2797191268,262.445878688,1316235,823.8578424140001,14313576,680.9833665150001,204745637
+'Hamming',0,'Delete',1000000,2797191268,0.0036415540000000004,520,0.001159899,13,9.73077E-4,13
+=== summary data ===
+'Index Name', 'Phase', 'Population', 'Avg Load Elapsed', 'Avg COMPLETE Elapsed', 'Avg HIGHCARD Elapsed', 'Avg LOWCARD Elapsed'
+'BF-Trie','Query', 1000000,2.2679015170000003,1.3667847690000001,22.696235079,130.023890681
+'BF-Trie','Delete', 1000000,2.2679015170000003,0.0016233830000000002,2.33381E-4,1.26873E-4
+'Bloofi','Query', 1000000,13.4627022,236.91718834300002,465.90976067900004,506.28182906
+'Bloofi','Delete', 1000000,13.4627022,156.326075185,461.09447098400005,707.690080348
+'FlatBloofi','Query', 1000000,8.168227093,5.2919489120000005,8.551970551,114.21018470300001
+'FlatBloofi','Delete', 1000000,8.168227093,0.665348127,0.412058458,0.43301740800000005
+'Hamming','Query', 1000000,2.797191268,262.445878688,823.8578424140001,680.9833665150001
+'Hamming','Delete', 1000000,2.797191268,0.0036415540000000004,0.001159899,9.73077E-4
+=== run complete ===

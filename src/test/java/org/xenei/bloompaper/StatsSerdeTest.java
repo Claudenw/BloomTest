@@ -8,8 +8,8 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,13 +45,13 @@ public class StatsSerdeTest {
         expected.registerResult(Phase.Query, Type.COMPLETE, 70000, 700);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+        try (DataOutputStream oos = new DataOutputStream(baos)) {
             serde.writeStats(oos, expected);
         }
 
         Stats actual = null;
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-        try (ObjectInputStream ois = new ObjectInputStream(bais)) {
+        try (DataInputStream ois = new DataInputStream(bais)) {
             actual = serde.readStats(ois);
         }
         assertNotNull(actual);

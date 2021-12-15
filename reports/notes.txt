@@ -1,0 +1,1 @@
+AWS t3.medium-v2

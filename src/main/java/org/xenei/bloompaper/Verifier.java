@@ -1,5 +1,6 @@
 package org.xenei.bloompaper;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -25,16 +26,24 @@ public class Verifier {
         int population;
         Stats.Phase phase;
         Stats.Type type;
+        File dir;
 
-        MapGen(int population, Stats.Phase phase, Stats.Type type) {
+        MapGen(File dir, int population, Stats.Phase phase, Stats.Type type) {
             this.population = population;
             this.phase = phase;
             this.type = type;
+            this.dir = dir;
         }
 
         @Override
         public void accept(Stats s) {
             if (s.getPopulation() == population) {
+                Stats.Serde serde = new Stats.Serde();
+                try {
+                    serde.readFilterMaps(dir, s.getName(), s);
+                } catch (IOException e) {
+                    throw new RuntimeException( e );
+                }
                 long idx = s.getCount(phase, type);
                 List<Stats> lst = report.get(idx);
                 if (lst == null) {
@@ -62,14 +71,14 @@ public class Verifier {
             for (Stats.Type type : Stats.Type.values()) {
 
                 for (int population : Test.POPULATIONS) {
-                    MapGen mapGen = new MapGen(population, phase, type);
+                    MapGen mapGen = new MapGen(table.getDir(), population, phase, type);
                     table.forEachStat(mapGen);
 
                     Map<Long, List<Stats>> report = mapGen.getReport();
 
                     if (!report.isEmpty()) {
                         if (report.size() == 1) {
-                            display(String.format("%s %s %s - OK", phase, type, population));
+                            display(String.format("%s %s %s - OK",  phase, type, population));
                         } else {
                             result = false;
                             err(String.format("%s %s %s - ERROR", phase, type, population));
@@ -91,6 +100,8 @@ public class Verifier {
 
                             display("");
                         }
+                    } else {
+                        display( String.format( "No data for %s %s %s", phase, type, population));
                     }
                 }
             }

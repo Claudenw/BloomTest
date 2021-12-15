@@ -95,7 +95,7 @@ public class Summary {
 
         };
 
-        aTable.forEachSimpleStat(loader);
+        aTable.forEachStat(loader);
     }
 
     public List<Element> getTable() {
@@ -104,7 +104,12 @@ public class Summary {
 
     public static void writeData(PrintStream ps, Table table) throws IOException {
         ps.println(Stats.getHeader());
-        table.forEachPhase((s, p) -> ps.println(s.reportStats(p)));
+        table.forEachPhase((s, p) -> { try {
+            s.loadFilterMaps(table.getDir());
+        } catch (IOException e) {
+            ps.println( "Unable to load filter maps: "+e.getMessage() );
+        }
+        ps.println(s.reportStats(p));});
     }
 
     public void writeSummary(PrintStream ps) {
@@ -120,10 +125,11 @@ public class Summary {
     public static Options getOptions() {
         Options options = new Options();
         options.addOption("h", "help", false, "This help");
-        options.addOption("c", "csv", true, "The name of a csv file to read");
-        options.addOption("d", "data", true, "The name of data directory to read");
-        options.addOption("f", "full", false, "Include full statistics report");
-        options.addOption("o", "output", true, "Output file.  If not specified results will not be preserved");
+        options.addOption("c", "csv", true, "The name of a csv file to read (optional, may be repeated)");
+        options.addOption("d", "data", true, "The name of directory containing .dat files (optional, may be repeated)");
+        options.addOption("f", "full", false, "Include full statistics report (data.csv)");
+        options.addOption("o", "output", true, "Output directory in which to write 'data.csv' and 'summary.csv' files.  If not specified results will not be preserved");
+        options.addOption("v", "verify", false, "Run data verification");
         return options;
     }
 
@@ -155,6 +161,9 @@ public class Summary {
                 try (BufferedReader br = new BufferedReader(new FileReader(f))) {
                     Table table = Stats.parse(br);
                     doOutput(table, cmd.getOptionValue("o"), cmd.hasOption("f"));
+                    if (cmd.hasOption("v")) {
+                        doVerify( table, cmd.getOptionValue("o"));
+                    }
                 } catch (IOException e) {
                     System.err.println(String.format("Error reading %s: %s", fn, e.getMessage()));
                 }
@@ -167,25 +176,46 @@ public class Summary {
                 Table table = new Table(d);
                 table.scanForFiles();
                 doOutput(table, cmd.getOptionValue("o"), cmd.hasOption("f"));
+                if (cmd.hasOption("v")) {
+                    try {
+                        doVerify( table, cmd.getOptionValue("o"));
+                    } catch (IOException e) {
+                        System.err.println(String.format("Error executing verify: %s", e.getMessage()));
+                    }
+                }
             }
 
         }
+
+
     }
 
-    public static void doOutput(Table table, String fileName, boolean full) throws IOException {
+    private static void doVerify(Table table, String directoryName) throws IOException {
+        Verifier verifier = new Verifier( System.out );
+        verifier.verify(table);
+    }
+
+    public static void doOutput(Table table, String directoryName, boolean full) throws IOException {
+
+        File outfile = null;
+        if (directoryName != null) {
+            outfile = new File(directoryName);
+        }
 
         if (full) {
             System.out.println("===  data ===");
             Summary.writeData(System.out, table);
+            if (outfile != null) {
+                Summary.writeData(new PrintStream(new FileOutputStream( new File( outfile, "data.csv"))),table);
+            }
         }
         Summary summary = new Summary(table);
 
         System.out.println("=== summary data ===");
         summary.writeSummary(System.out);
 
-        if (fileName != null) {
-            File outFile = new File(fileName);
-            summary.writeSummary(new PrintStream(new FileOutputStream(outFile)));
+        if (outfile != null) {
+            summary.writeSummary(new PrintStream(new FileOutputStream(new File( outfile, "summary.csv"))));
         }
 
     }

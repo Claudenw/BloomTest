@@ -10,7 +10,6 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.IndexProducer;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
-import org.apache.commons.collections4.bloomfilter.SparseBloomFilter;
 import org.xenei.bloompaper.index.BitUtils;
 
 /**
