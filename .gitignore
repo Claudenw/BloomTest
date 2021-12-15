@@ -6,3 +6,4 @@
 **/*.swp
 **/.~lock*
 reports/*.dat
+work/**

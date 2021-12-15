@@ -44,17 +44,21 @@ public class Table {
 
     public void reset() {
         scanForFiles();
-        tableNames.forEach( (n) -> {new File( dir, n+".dat" ).delete();new File( dir, n+".fmf" ).delete(); }  );
+        tableNames.forEach((n) -> {
+            new File(dir, n + ".dat").delete();
+            new File(dir, n + ".fmf").delete();
+        });
         tableNames.clear();
     }
 
     public void add(String tableName, List<Stats> tbl) throws FileNotFoundException, IOException {
         tableNames.add(tableName);
         Stats.Serde serde = new Stats.Serde();
-        try (DataOutputStream out = new DataOutputStream(new FileOutputStream(statsFile(tableName), true))) {
+        try (DataOutputStream out = new DataOutputStream(new FileOutputStream(statsFile(tableName), true));
+                DataOutputStream filters = new DataOutputStream(new FileOutputStream(filterMapFile(tableName), true))) {
             for (Stats stat : tbl) {
                 serde.writeStats(out, stat);
-                serde.writeFilterMaps( dir, tableName, stat);
+                serde.writeFilterMaps(filters, stat);
             }
         }
     }
@@ -63,11 +67,19 @@ public class Table {
         return new File(dir, String.format("%s.dat", tableName));
     }
 
+    public static File filterMapFile(File dir, String tableName) {
+        return new File(dir, String.format("%s.fmf", tableName));
+    }
+
+    private File filterMapFile(String tableName) {
+        return filterMapFile(dir, tableName);
+    }
+
     public void forEachStat(Consumer<Stats> consumer) throws IOException {
         Stats.Serde serde = new Stats.Serde();
         for (String tableName : tableNames) {
             try (DataInputStream in = new DataInputStream(new FileInputStream(statsFile(tableName)))) {
-                while(in.available() > 0) {
+                while (in.available() > 0) {
                     consumer.accept(serde.readStats(in));
                 }
             }

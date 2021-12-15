@@ -3,7 +3,6 @@ package org.xenei.bloompaper;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -95,13 +94,15 @@ public class Stats {
 
     public void loadFilterMaps(File dir) throws IOException {
         // check if populated
-        for (int i=0;i<Type.values().length;i++) {
+        for (int i = 0; i < Type.values().length; i++) {
             if (foundFilters[i] != null) {
                 return;
             }
         }
         Serde serde = new Serde();
-        serde.readFilterMaps( dir, getName(), this);
+        try (DataInputStream filters = new DataInputStream(new FileInputStream(Table.filterMapFile(dir, getName())))) {
+            serde.readFilterMaps(filters, this);
+        }
     }
 
     public static Table parse(BufferedReader reader) throws IOException {
@@ -216,29 +217,22 @@ public class Stats {
             }
         }
 
-        private File filterMapFile(File dir, String tableName) {
-            return new File(dir, String.format("%s.fmf", tableName));
-        }
-
-        public void writeFilterMaps(File dir, String tableName, Stats stats) throws IOException {
+        public void writeFilterMaps(DataOutputStream out, Stats stats) throws IOException {
 
             Map<FrozenBloomFilter, Set<FrozenBloomFilter>> map;
-            try (DataOutputStream out = new DataOutputStream(
-                    new FileOutputStream(filterMapFile(dir, tableName), true))) {
-                out.writeInt(Type.values().length);
-                for (Type t : Type.values()) {
-                    map = stats.getFound(t);
-                    if (map == null || map.isEmpty()) {
-                        out.writeInt(0);
-                    } else {
+            out.writeInt(Type.values().length);
+            for (Type t : Type.values()) {
+                map = stats.getFound(t);
+                if (map == null || map.isEmpty()) {
+                    out.writeInt(0);
+                } else {
 
-                        out.writeInt(map.size());
-                        for (Map.Entry<FrozenBloomFilter, Set<FrozenBloomFilter>> entry : map.entrySet()) {
-                            writeBloomFilter(out, entry.getKey());
-                            out.writeInt(entry.getValue().size());
-                            for (BloomFilter bf : entry.getValue()) {
-                                writeBloomFilter(out, bf);
-                            }
+                    out.writeInt(map.size());
+                    for (Map.Entry<FrozenBloomFilter, Set<FrozenBloomFilter>> entry : map.entrySet()) {
+                        writeBloomFilter(out, entry.getKey());
+                        out.writeInt(entry.getValue().size());
+                        for (BloomFilter bf : entry.getValue()) {
+                            writeBloomFilter(out, bf);
                         }
                     }
                 }
@@ -277,30 +271,27 @@ public class Stats {
             return arry;
         }
 
-        public void readFilterMaps(File dir, String tableName, Stats stats) throws IOException {
+        public void readFilterMaps(DataInputStream in, Stats stats) throws IOException {
+            int len = in.readInt();
+            @SuppressWarnings("unchecked")
+            Map<FrozenBloomFilter, Set<FrozenBloomFilter>>[] result = new HashMap[len];
 
-            try (DataInputStream in = new DataInputStream(new FileInputStream(filterMapFile(dir, tableName)))) {
-                int len = in.readInt();
-                @SuppressWarnings("unchecked")
-                Map<FrozenBloomFilter, Set<FrozenBloomFilter>>[] result = new HashMap[len];
-
-                for (int t = 0; t < len; t++) {
-                    int count = in.readInt();
-                    if (count != 0) {
-                        result[t] = new HashMap<FrozenBloomFilter, Set<FrozenBloomFilter>>();
-                        for (int f = 0; f < count; f++) {
-                            FrozenBloomFilter key = readBloomFilter(in);
-                            Set<FrozenBloomFilter> value = new HashSet<FrozenBloomFilter>();
-                            int sLen = in.readInt();
-                            for (int i = 0; i < sLen; i++) {
-                                value.add(readBloomFilter(in));
-                            }
-                            result[t].put(key, value);
+            for (int t = 0; t < len; t++) {
+                int count = in.readInt();
+                if (count != 0) {
+                    result[t] = new HashMap<FrozenBloomFilter, Set<FrozenBloomFilter>>();
+                    for (int f = 0; f < count; f++) {
+                        FrozenBloomFilter key = readBloomFilter(in);
+                        Set<FrozenBloomFilter> value = new HashSet<FrozenBloomFilter>();
+                        int sLen = in.readInt();
+                        for (int i = 0; i < sLen; i++) {
+                            value.add(readBloomFilter(in));
                         }
+                        result[t].put(key, value);
                     }
                 }
-                stats.foundFilters = result;
             }
+            stats.foundFilters = result;
         }
 
         private FrozenBloomFilter readBloomFilter(DataInputStream in) throws IOException {

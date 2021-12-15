@@ -45,14 +45,18 @@ public class StatsSerdeTest {
         expected.registerResult(Phase.Query, Type.COMPLETE, 70000, 700);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try (DataOutputStream oos = new DataOutputStream(baos)) {
+        ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+        try (DataOutputStream oos = new DataOutputStream(baos); DataOutputStream oos2 = new DataOutputStream(baos2)) {
             serde.writeStats(oos, expected);
+            serde.writeFilterMaps(oos2, expected);
         }
 
         Stats actual = null;
-        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-        try (DataInputStream ois = new DataInputStream(bais)) {
+
+        try (DataInputStream ois = new DataInputStream(new ByteArrayInputStream(baos.toByteArray()));
+                DataInputStream filterStream = new DataInputStream(new ByteArrayInputStream(baos2.toByteArray()))) {
             actual = serde.readStats(ois);
+            serde.readFilterMaps(filterStream, actual);
         }
         assertNotNull(actual);
 
@@ -69,6 +73,7 @@ public class StatsSerdeTest {
         assertEquals(0.0, expected.getElapsed(Phase.Query, Type.HIGHCARD), Stats.TIME_SCALE);
         assertEquals(0, actual.getCount(Phase.Query, Type.HIGHCARD));
         assertEquals(0, actual.getCount(Phase.Delete, Type.HIGHCARD));
+
         Map<FrozenBloomFilter, Set<FrozenBloomFilter>> m = actual.getFound(Type.COMPLETE);
         assertNotNull(m.get(target));
         Set<FrozenBloomFilter> s = m.get(target);

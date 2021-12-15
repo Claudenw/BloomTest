@@ -104,12 +104,14 @@ public class Summary {
 
     public static void writeData(PrintStream ps, Table table) throws IOException {
         ps.println(Stats.getHeader());
-        table.forEachPhase((s, p) -> { try {
-            s.loadFilterMaps(table.getDir());
-        } catch (IOException e) {
-            ps.println( "Unable to load filter maps: "+e.getMessage() );
-        }
-        ps.println(s.reportStats(p));});
+        table.forEachPhase((s, p) -> {
+            try {
+                s.loadFilterMaps(table.getDir());
+            } catch (IOException e) {
+                ps.println("Unable to load filter maps: " + e.getMessage());
+            }
+            ps.println(s.reportStats(p));
+        });
     }
 
     public void writeSummary(PrintStream ps) {
@@ -128,7 +130,8 @@ public class Summary {
         options.addOption("c", "csv", true, "The name of a csv file to read (optional, may be repeated)");
         options.addOption("d", "data", true, "The name of directory containing .dat files (optional, may be repeated)");
         options.addOption("f", "full", false, "Include full statistics report (data.csv)");
-        options.addOption("o", "output", true, "Output directory in which to write 'data.csv' and 'summary.csv' files.  If not specified results will not be preserved");
+        options.addOption("o", "output", true,
+                "Output directory in which to write 'data.csv' and 'summary.csv' files.  If not specified results will not be preserved");
         options.addOption("v", "verify", false, "Run data verification");
         return options;
     }
@@ -162,7 +165,7 @@ public class Summary {
                     Table table = Stats.parse(br);
                     doOutput(table, cmd.getOptionValue("o"), cmd.hasOption("f"));
                     if (cmd.hasOption("v")) {
-                        doVerify( table, cmd.getOptionValue("o"));
+                        doVerify(table, cmd.getOptionValue("o"));
                     }
                 } catch (IOException e) {
                     System.err.println(String.format("Error reading %s: %s", fn, e.getMessage()));
@@ -178,7 +181,7 @@ public class Summary {
                 doOutput(table, cmd.getOptionValue("o"), cmd.hasOption("f"));
                 if (cmd.hasOption("v")) {
                     try {
-                        doVerify( table, cmd.getOptionValue("o"));
+                        doVerify(table, cmd.getOptionValue("o"));
                     } catch (IOException e) {
                         System.err.println(String.format("Error executing verify: %s", e.getMessage()));
                     }
@@ -187,11 +190,10 @@ public class Summary {
 
         }
 
-
     }
 
     private static void doVerify(Table table, String directoryName) throws IOException {
-        Verifier verifier = new Verifier( System.out );
+        Verifier verifier = new Verifier(System.out);
         verifier.verify(table);
     }
 
@@ -206,7 +208,7 @@ public class Summary {
             System.out.println("===  data ===");
             Summary.writeData(System.out, table);
             if (outfile != null) {
-                Summary.writeData(new PrintStream(new FileOutputStream( new File( outfile, "data.csv"))),table);
+                Summary.writeData(new PrintStream(new FileOutputStream(new File(outfile, "data.csv"))), table);
             }
         }
         Summary summary = new Summary(table);
@@ -215,7 +217,7 @@ public class Summary {
         summary.writeSummary(System.out);
 
         if (outfile != null) {
-            summary.writeSummary(new PrintStream(new FileOutputStream(new File( outfile, "summary.csv"))));
+            summary.writeSummary(new PrintStream(new FileOutputStream(new File(outfile, "summary.csv"))));
         }
 
     }

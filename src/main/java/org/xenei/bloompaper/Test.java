@@ -71,7 +71,8 @@ public class Test {
         options.addOption("i", "iterations", true, "The number of iterations defualt=" + RUN_COUNT);
         options.addOption("s", "size", true,
                 "The population size.  May occure more than once.  defualt=100, 1000, 10000, 100000, and 1000000.  Default = all");
-        options.addOption("v", "short-verify", false, "Skip verification of collected bloom filters. Does not preserve bloom filters in .dat file");
+        options.addOption("v", "short-verify", false,
+                "Skip verification of collected bloom filters. Does not preserve bloom filters in .dat file");
         return options;
     }
 
@@ -147,7 +148,7 @@ public class Test {
             }
         }
 
-        boolean collectFilters = ! cmd.hasOption("v");
+        boolean collectFilters = !cmd.hasOption("v");
 
         final List<String> tests = new ArrayList<String>();
         final Table table = new Table(dir);
@@ -279,8 +280,9 @@ public class Test {
     }
 
     private static List<Stats> runTest(final Shape shape, final Constructor<? extends BloomIndex> constructor,
-            final List<GeoName> sample, final BloomFilter[] filters, List<Stats> stats, boolean collectFilters) throws IOException,
-    InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            final List<GeoName> sample, final BloomFilter[] filters, List<Stats> stats, boolean collectFilters)
+                    throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException,
+                    InvocationTargetException {
 
         BloomIndex bi = doLoad(constructor, filters, shape, stats);
 

@@ -38,11 +38,10 @@ public class Verifier {
         @Override
         public void accept(Stats s) {
             if (s.getPopulation() == population) {
-                Stats.Serde serde = new Stats.Serde();
                 try {
-                    serde.readFilterMaps(dir, s.getName(), s);
+                    s.loadFilterMaps(dir);
                 } catch (IOException e) {
-                    throw new RuntimeException( e );
+                    throw new RuntimeException(e);
                 }
                 long idx = s.getCount(phase, type);
                 List<Stats> lst = report.get(idx);
@@ -78,7 +77,7 @@ public class Verifier {
 
                     if (!report.isEmpty()) {
                         if (report.size() == 1) {
-                            display(String.format("%s %s %s - OK",  phase, type, population));
+                            display(String.format("%s %s %s - OK", phase, type, population));
                         } else {
                             result = false;
                             err(String.format("%s %s %s - ERROR", phase, type, population));
@@ -101,7 +100,7 @@ public class Verifier {
                             display("");
                         }
                     } else {
-                        display( String.format( "No data for %s %s %s", phase, type, population));
+                        display(String.format("No data for %s %s %s", phase, type, population));
                     }
                 }
             }

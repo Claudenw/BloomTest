@@ -67,7 +67,7 @@ public class Density {
         Shape shape = Shape.Factory.fromNP(numberOfItems, probability);
         Status status = new Status(shape);
         BloomFilter[] filters = new BloomFilter[SAMPLE_SIZE];
-        try (GeoNameIterator geoIter = new GeoNameIterator(Density.class.getResource("/allCountries.txt"),shape)) {
+        try (GeoNameIterator geoIter = new GeoNameIterator(Density.class.getResource("/allCountries.txt"), shape)) {
 
             System.out.println("Reading test data");
             for (int density = 0; density < MAX_DENSITY; density++) {
