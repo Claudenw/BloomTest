@@ -2,9 +2,9 @@ package org.xenei.bloompaper.index;
 
 import java.util.function.BiPredicate;
 import java.util.function.LongConsumer;
+import java.util.function.LongPredicate;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.exceptions.NoMatchException;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -152,7 +152,7 @@ public final class BitUtils {
         return (longRec < bits.length) ? (bits[longRec] & getLongBit(bitIdx)) != 0 : false;
     }
 
-    public static class BufferCompare implements LongConsumer {
+    public static class BufferCompare implements LongPredicate {
         public static BiPredicate<Long, Long> exact = (x, y) -> x.equals(y);
         public static BiPredicate<Long, Long> bloom = (x, y) -> ((x.longValue() & y.longValue()) == y.longValue());
 
@@ -166,20 +166,13 @@ public final class BitUtils {
         }
 
         @Override
-        public void accept(long value) {
-            if (i >= bitMap.length || !func.test(bitMap[i++], value)) {
-                throw new NoMatchException();
-            }
+        public boolean test(long value) {
+            return i < bitMap.length && func.test(bitMap[i++], value);
         }
 
         public boolean matches(BloomFilter other) {
             i = 0;
-            try {
-                other.forEachBitMap(this);
-                return i == bitMap.length;
-            } catch (NoMatchException e) {
-                return false;
-            }
+            return other.forEachBitMap(this) ? i == bitMap.length : false;
         }
     }
 }

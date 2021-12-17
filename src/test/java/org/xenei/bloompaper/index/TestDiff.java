@@ -29,11 +29,11 @@ public class TestDiff {
         System.out.println("FcT=" + filter.contains(target));
 
         System.out.println("Target: " + tNode);
-        target.forEachIndex((x) -> System.out.print(String.format("%s ", x)));
+        target.forEachIndex((x) -> {System.out.print(String.format("%s ", x)); return true;});
         System.out.println();
 
         System.out.println("Filter: " + fNode);
-        filter.forEachIndex((x) -> System.out.print(String.format("%s ", x)));
+        filter.forEachIndex((x) -> {System.out.print(String.format("%s ", x)); return true;});
         System.out.println();
     }
 }

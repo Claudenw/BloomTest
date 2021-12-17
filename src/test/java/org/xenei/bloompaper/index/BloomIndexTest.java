@@ -160,7 +160,7 @@ public class BloomIndexTest {
                 System.out.println(String.format("%s: %s ", name, i));
                 for (BloomFilter bf : collection) {
                     System.out.print(String.format("%10s", " "));
-                    bf.forEachBitMap((word) -> System.out.print(String.format("%016X", word)));
+                    bf.forEachBitMap((word) -> {System.out.print(String.format("%016X", word));return true;});
                     System.out.println();
                 }
             }

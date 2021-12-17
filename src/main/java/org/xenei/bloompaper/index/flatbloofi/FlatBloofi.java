@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
+import java.util.function.IntPredicate;
 
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
@@ -74,12 +75,15 @@ public final class FlatBloofi {
             final long mask = BitUtils.getLongBit(idx);
 
             @Override
-            public void forEachIndex(IntConsumer consumer) {
+            public boolean forEachIndex(IntPredicate consumer) {
                 for (int k = 0; k < mybuffer.length; k++) {
                     if ((mask & mybuffer[k]) > 0) {
-                        consumer.accept(k);
+                        if (!consumer.test(k)) {
+                            return false;
+                        }
                     }
                 }
+                return true;
             }
         };
         BitMapProducer bitMapProducer = BitMapProducer.fromIndexProducer(indexProducer, shape);

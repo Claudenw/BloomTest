@@ -1,7 +1,9 @@
 package org.xenei.bloompaper.index;
 
 import java.util.function.IntConsumer;
+import java.util.function.IntPredicate;
 import java.util.function.LongConsumer;
+import java.util.function.LongPredicate;
 
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
@@ -87,7 +89,7 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(String.format("FrozenBloomFilter %s, [ ", getShape()));
-        forEachBitMap(l -> sb.append(String.format("0x%08x, ", l)));
+        forEachBitMap(l -> {sb.append(String.format("0x%08x, ", l));return true;});
         sb.deleteCharAt(sb.lastIndexOf(","));
         sb.append("]");
         return sb.toString();
@@ -115,13 +117,13 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     }
 
     @Override
-    public void forEachIndex(IntConsumer consumer) {
-        wrapped.forEachIndex(consumer);
+    public boolean forEachIndex(IntPredicate consumer) {
+        return wrapped.forEachIndex(consumer);
     }
 
     @Override
-    public void forEachBitMap(LongConsumer consumer) {
-        wrapped.forEachBitMap(consumer);
+    public boolean forEachBitMap(LongPredicate consumer) {
+        return wrapped.forEachBitMap(consumer);
     }
 
     @Override

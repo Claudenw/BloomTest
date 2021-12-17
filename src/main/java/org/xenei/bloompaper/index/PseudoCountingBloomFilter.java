@@ -2,7 +2,9 @@ package org.xenei.bloompaper.index;
 
 import java.util.Objects;
 import java.util.function.IntConsumer;
+import java.util.function.IntPredicate;
 import java.util.function.LongConsumer;
+import java.util.function.LongPredicate;
 
 import org.apache.commons.collections4.bloomfilter.ArrayCountingBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BitCountProducer;
@@ -63,11 +65,10 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
     }
 
     @Override
-    public void forEachCount(BitCountConsumer action) {
+    public boolean forEachCount(BitCountConsumer action) {
         BitCountProducer producer = (delegate instanceof CountingBloomFilter) ? ((CountingBloomFilter) delegate)
                 : BitCountProducer.from(delegate);
-        producer.forEachCount(action);
-        ;
+        return producer.forEachCount(action);
     }
 
     @Override
@@ -91,14 +92,14 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
     }
 
     @Override
-    public void forEachIndex(IntConsumer consumer) {
-        delegate.forEachIndex(consumer);
+    public boolean forEachIndex(IntPredicate consumer) {
+        return delegate.forEachIndex(consumer);
 
     }
 
     @Override
-    public void forEachBitMap(LongConsumer consumer) {
-        delegate.forEachBitMap(consumer);
+    public boolean forEachBitMap(LongPredicate consumer) {
+        return delegate.forEachBitMap(consumer);
     }
 
     @Override
