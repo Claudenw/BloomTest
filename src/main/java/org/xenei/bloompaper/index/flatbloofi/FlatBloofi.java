@@ -86,7 +86,7 @@ public final class FlatBloofi {
                 return true;
             }
         };
-        BitMapProducer bitMapProducer = BitMapProducer.fromIndexProducer(indexProducer, shape);
+        BitMapProducer bitMapProducer = BitMapProducer.fromIndexProducer(indexProducer, shape.getNumberOfBits());
         return new SimpleBloomFilter(shape, bitMapProducer);
     }
 
