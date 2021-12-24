@@ -28,7 +28,8 @@ import org.xenei.bloompaper.geoname.GeoName;
 import org.xenei.bloompaper.geoname.GeoNameHasher;
 import org.xenei.bloompaper.geoname.GeoNameIterator;
 import org.xenei.bloompaper.index.BloomIndex;
-import org.xenei.bloompaper.index.BloomIndexBFTrie;
+import org.xenei.bloompaper.index.BloomIndexBFTrie4;
+import org.xenei.bloompaper.index.BloomIndexBFTrie8;
 import org.xenei.bloompaper.index.BloomIndexBloofi;
 import org.xenei.bloompaper.index.BloomIndexFlatBloofi;
 import org.xenei.bloompaper.index.BloomIndexHamming;
@@ -50,7 +51,8 @@ public class Test {
         constructors.put("Hamming", BloomIndexHamming.class.getConstructor(int.class, Shape.class));
         constructors.put("Bloofi", BloomIndexBloofi.class.getConstructor(int.class, Shape.class));
         constructors.put("FlatBloofi", BloomIndexFlatBloofi.class.getConstructor(int.class, Shape.class));
-        constructors.put("BF-Trie", BloomIndexBFTrie.class.getConstructor(int.class, Shape.class));
+        constructors.put("BF-Trie4", BloomIndexBFTrie4.class.getConstructor(int.class, Shape.class));
+        constructors.put("BF-Trie8", BloomIndexBFTrie8.class.getConstructor(int.class, Shape.class));
         constructors.put("Array", BloomIndexArray.class.getConstructor(int.class, Shape.class));
         constructors.put("List", BloomIndexList.class.getConstructor(int.class, Shape.class));
     }

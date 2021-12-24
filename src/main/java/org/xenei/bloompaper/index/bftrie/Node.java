@@ -9,7 +9,7 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
  *
  */
 public interface Node {
-    public void add(BFTrie4 btree, BloomFilter filter, long[] buffer);
+    public void add(BFTrie trie, BloomFilter filter, long[] buffer);
 
     /**
      * Return true if the node was removed.
@@ -22,6 +22,6 @@ public interface Node {
 
     public boolean isEmpty();
 
-    public void search(Consumer<BloomFilter> results, long[] buffer);
+    public void search(BFTrie trie, Consumer<BloomFilter> results, long[] buffer);
 
 }

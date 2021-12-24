@@ -6,21 +6,38 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.BitUtils;
 
-public class BFTrie4 implements BFTrie {
-    public static final int[][] nibbleTable = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF },
-        { 1, 3, 5, 7, 9, 0xB, 0xD, 0xF }, { 2, 3, 6, 7, 0xA, 0xB, 0xE, 0xF }, { 3, 7, 0xB, 0xF },
-        { 4, 5, 6, 7, 0xC, 0xD, 0xE, 0xF }, { 5, 7, 0xD, 0xF }, { 6, 7, 0xE, 0xF }, { 7, 0xF },
-        { 8, 9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF }, { 9, 0xB, 0xD, 0xF }, { 0xA, 0xB, 0xE, 0xF }, { 0xB, 0xF },
-        { 0xC, 0xD, 0xE, 0xF }, { 0xD, 0xF }, { 0xE, 0xF }, { 0xF }, };
+public class BFTrie8 implements BFTrie {
+    public static int[][] byteTable;
+
+    static {
+        for (int i=0;i<256;i++)
+        {
+
+            int[] accum = new int[256];
+            int counter=0;
+            for (int j=0;j<256;j++)
+            {
+                if ((i & j) == i) {
+                    accum[counter++] = j;
+                }
+            }
+            byteTable[i] = accum;
+        }
+    }
 
     private InnerNode root;
     private int count;
 
-    public BFTrie4(Shape shape) {
+
+    public BFTrie8(Shape shape) {
         root = new InnerNode(0, shape, this);
         count = 0;
     }
 
+    @Override
+    public int getWidth() {
+        return Byte.SIZE;
+    }
     @Override
     public int count() {
         return count;
@@ -48,12 +65,7 @@ public class BFTrie4 implements BFTrie {
         // estimate result size as % of key space.
         // int f = shape.getNumberOfBits() - filter.cardinality();
         // int initSize = count * f / shape.getNumberOfBits();
-        root.search(this, consumer, BloomFilter.asBitMapArray(filter));
-    }
-
-    @Override
-    public int getWidth() {
-        return 4;
+        root.search(this, consumer, BloomFilter.asBitMapArray(filter) );
     }
 
     /**
@@ -64,23 +76,22 @@ public class BFTrie4 implements BFTrie {
      */
     @Override
     public int getIndex(long[] buffer, int level) {
-        int startBit = level * 4;
 
-        int idx = BitUtils.getLongIndex(startBit);
+
+        int idx = BitUtils.getLongIndex(level);
         // buffer may be short if upper values are zero
         if (idx >= buffer.length) {
-            return (byte) 0;
+            return 0;
         }
 
-        int shift = startBit % Long.SIZE;
-        long mask = (0xFL << shift);
+        int shift = level % Long.SIZE;
+        long mask = (0xFFL << shift);
         long value = buffer[idx] & mask;
-        return (byte) ((value >> shift) & 0x0F);
+        return (int) ((value >> shift) & 0xFF);
     }
 
     @Override
     public int[] lookup(long[] buffer, int level) {
-        return nibbleTable[ getIndex( buffer, level)];
+        return byteTable[ getIndex( buffer, level)];
     }
-
 }

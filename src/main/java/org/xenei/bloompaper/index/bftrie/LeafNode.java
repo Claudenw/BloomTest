@@ -21,7 +21,7 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public void add(BFTrie4 btree, BloomFilter filter, long[] buffer) {
+    public void add(BFTrie trie, BloomFilter filter, long[] buffer) {
         lst.add(filter);
     }
 
@@ -42,7 +42,7 @@ public class LeafNode implements Node {
     }
 
     @Override
-    public void search(Consumer<BloomFilter> result, long[] buffer) {
+    public void search(BFTrie trie, Consumer<BloomFilter> result, long[] buffer) {
         if (checkEntries) {
             BitMapProducer bmp = BitMapProducer.fromLongArray(buffer);
             lst.stream().filter(b -> b.contains(bmp)).forEach(result);

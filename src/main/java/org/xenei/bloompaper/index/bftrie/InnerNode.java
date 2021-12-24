@@ -8,21 +8,21 @@ import org.xenei.bloompaper.index.BitUtils;
 
 public class InnerNode implements Node {
     public static final int WIDTH = 4;
-    public static final int BUCKETS = 16; // 2^WIDTH
+    //public static final int BUCKETS = 16; // 2^WIDTH
     private final Node[] nodes;
     private final int level;
     private final int maxDepth;
     private final Shape shape;
 
-    public InnerNode(int level, Shape shape) {
-        this(level, shape, shape.getNumberOfBits() / WIDTH);
+    public InnerNode(int level, Shape shape, BFTrie trie) {
+        this(level, shape, shape.getNumberOfBits() / trie.getWidth(), trie );
     }
 
-    public InnerNode(int level, Shape bloomFilterConfig, int maxDepth) {
+    public InnerNode(int level, Shape bloomFilterConfig, int maxDepth, BFTrie trie) {
         this.shape = bloomFilterConfig;
         this.level = level;
         this.maxDepth = maxDepth;
-        nodes = new Node[BUCKETS];
+        nodes = new Node[ (1<<trie.getWidth())];
     }
 
     public boolean isBaseNode() {
@@ -55,16 +55,16 @@ public class InnerNode implements Node {
     }
 
     @Override
-    public void add(BFTrie4 btree, BloomFilter filter, long[] buffer) {
-        byte nibble = getNibble(buffer, level);
+    public void add(BFTrie trie, BloomFilter filter, long[] buffer) {
+        int nibble = trie.getIndex(buffer, level);
         if (nodes[nibble] == null) {
             if ((level + 1) == maxDepth) {
-                nodes[nibble] = new LeafNode(maxDepth == (shape.getNumberOfBits() / WIDTH));
+                nodes[nibble] = new LeafNode(maxDepth == (shape.getNumberOfBits() / trie.getWidth()));
             } else {
-                nodes[nibble] = new InnerNode(level + 1, shape, maxDepth);
+                nodes[nibble] = new InnerNode(level + 1, shape, maxDepth, trie);
             }
         }
-        nodes[nibble].add(btree, filter, buffer);
+        nodes[nibble].add(trie, filter, buffer);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class InnerNode implements Node {
 
     @Override
     public boolean isEmpty() {
-        for (int i = 0; i < BUCKETS; i++) {
+        for (int i = 0; i < nodes.length; i++) {
             if (nodes[i] != null) {
                 return false;
             }
@@ -101,11 +101,11 @@ public class InnerNode implements Node {
     }
 
     @Override
-    public void search(Consumer<BloomFilter> consumer, long[] buffer) {
-        int[] nodeIdxs = BFTrie4.nibbleTable[getNibble(buffer, level)];
+    public void search(BFTrie trie, Consumer<BloomFilter> consumer, long[] buffer ) {
+        int[] nodeIdxs = trie.lookup(buffer, level);
         for (int i : nodeIdxs) {
             if (nodes[i] != null) {
-                nodes[i].search(consumer, buffer);
+                nodes[i].search(trie,consumer, buffer);
             }
         }
     }

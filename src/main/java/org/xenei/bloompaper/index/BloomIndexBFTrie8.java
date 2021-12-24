@@ -10,7 +10,7 @@ import org.xenei.bloompaper.index.bftrie.BFTrie4;
  * Implementation of BTree Nibble search.
  *
  */
-public class BloomIndexBFTrie extends BloomIndex {
+public class BloomIndexBFTrie8 extends BloomIndex {
     /**
      * The implementation of bftrie.
      */
@@ -21,7 +21,7 @@ public class BloomIndexBFTrie extends BloomIndex {
      * @param population the expected population.
      * @param shape the Shape of the Bloom filters.
      */
-    public BloomIndexBFTrie(int population, Shape shape) {
+    public BloomIndexBFTrie8(int population, Shape shape) {
         super(population, shape);
         this.bftrie = new BFTrie4(shape);
     }
@@ -34,7 +34,7 @@ public class BloomIndexBFTrie extends BloomIndex {
 
     @Override
     public String getName() {
-        return "BF-Trie";
+        return "BF-Trie8";
     }
 
     @Override
