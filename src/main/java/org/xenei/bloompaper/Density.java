@@ -17,7 +17,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
-import org.xenei.bloompaper.geoname.GeoNameHasher;
+import org.xenei.bloompaper.geoname.GeoNameReferenceHasher;
 import org.xenei.bloompaper.geoname.GeoNameIterator;
 
 public class Density {
@@ -67,13 +67,14 @@ public class Density {
         Shape shape = Shape.Factory.fromNP(numberOfItems, probability);
         Status status = new Status(shape);
         BloomFilter[] filters = new BloomFilter[SAMPLE_SIZE];
-        try (GeoNameIterator geoIter = new GeoNameIterator(Density.class.getResource("/allCountries.txt"), shape)) {
+        try (GeoNameIterator geoIter = new GeoNameIterator(Density.class.getResource("/allCountries.txt"))) {
 
             System.out.println("Reading test data");
             for (int density = 0; density < MAX_DENSITY; density++) {
                 System.out.println("Saturation " + (density + 1));
                 for (int i = 0; i < SAMPLE_SIZE; i++) {
-                    final BloomFilter bf = new SimpleBloomFilter(shape, GeoNameHasher.createHasher(geoIter.next()));
+                    final BloomFilter bf = new SimpleBloomFilter(shape,
+                            GeoNameReferenceHasher.createHasher(geoIter.next()));
                     if (density > 0) {
                         filters[i].mergeInPlace(bf);
                     } else {

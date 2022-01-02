@@ -10,13 +10,11 @@ public class BFTrie8 implements BFTrie {
     public static int[][] byteTable;
 
     static {
-        for (int i=0;i<256;i++)
-        {
+        for (int i = 0; i < 256; i++) {
 
             int[] accum = new int[256];
-            int counter=0;
-            for (int j=0;j<256;j++)
-            {
+            int counter = 0;
+            for (int j = 0; j < 256; j++) {
                 if ((i & j) == i) {
                     accum[counter++] = j;
                 }
@@ -28,7 +26,6 @@ public class BFTrie8 implements BFTrie {
     private InnerNode root;
     private int count;
 
-
     public BFTrie8(Shape shape) {
         root = new InnerNode(0, shape, this);
         count = 0;
@@ -38,6 +35,7 @@ public class BFTrie8 implements BFTrie {
     public int getWidth() {
         return Byte.SIZE;
     }
+
     @Override
     public int count() {
         return count;
@@ -65,7 +63,7 @@ public class BFTrie8 implements BFTrie {
         // estimate result size as % of key space.
         // int f = shape.getNumberOfBits() - filter.cardinality();
         // int initSize = count * f / shape.getNumberOfBits();
-        root.search(this, consumer, BloomFilter.asBitMapArray(filter) );
+        root.search(this, consumer, BloomFilter.asBitMapArray(filter));
     }
 
     /**
@@ -76,7 +74,6 @@ public class BFTrie8 implements BFTrie {
      */
     @Override
     public int getIndex(long[] buffer, int level) {
-
 
         int idx = BitUtils.getLongIndex(level);
         // buffer may be short if upper values are zero
@@ -92,6 +89,6 @@ public class BFTrie8 implements BFTrie {
 
     @Override
     public int[] lookup(long[] buffer, int level) {
-        return byteTable[ getIndex( buffer, level)];
+        return byteTable[getIndex(buffer, level)];
     }
 }

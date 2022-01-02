@@ -37,6 +37,7 @@ public class Stats {
     }
 
     public static final double TIME_SCALE = 0.000000001;
+    private final String usageType;
     private final String indexName;
     private final int population;
     private final int run;
@@ -77,7 +78,8 @@ public class Stats {
         return result == null ? Collections.emptyMap() : result;
     }
 
-    public Stats(String indexName, int population, int run) {
+    public Stats(String usageType, String indexName, int population, int run) {
+        this.usageType = usageType;
         this.indexName = indexName;
         this.population = population;
         this.run = run;
@@ -85,7 +87,7 @@ public class Stats {
 
     public String reportStats(Phase phase) {
         StringBuilder sb = new StringBuilder(
-                String.format("'%s',%s,'%s',%s,%s", indexName, run, phase, population, load));
+                String.format("'%s','%s', %s,'%s',%s,%s", indexName, usageType, run, phase, population, load));
         for (Type type : Type.values()) {
             sb.append(String.format(",%s,%s", getElapsed(phase, type), getCount(phase, type)));
         }
@@ -120,15 +122,15 @@ public class Stats {
             List<CSVRecord> lst = parser.getRecords();
             CSVRecord rec = lst.get(0);
 
-            Stats stat = new Stats(rec.get(0), Integer.parseInt(rec.get(3)), Integer.parseInt(rec.get(1)));
-            stat.load = Integer.parseInt(rec.get(4));
+            Stats stat = new Stats(rec.get(1), rec.get(0), Integer.parseInt(rec.get(4)), Integer.parseInt(rec.get(2)));
+            stat.load = Integer.parseInt(rec.get(5));
             for (Phase phase : Phase.values()) {
-                if (phase != Phase.valueOf(rec.get(2))) {
+                if (phase != Phase.valueOf(rec.get(3))) {
                     throw new IOException(
-                            String.format("Wrong phase for %s.  Expected: %s Found: %s", stat, phase, rec.get(2)));
+                            String.format("Wrong phase for %s.  Expected: %s Found: %s", stat, phase, rec.get(3)));
                 }
                 for (Type type : Type.values()) {
-                    int idx = 5 + (type.ordinal() * 2);
+                    int idx = 6 + (type.ordinal() * 2);
 
                     stat.registerResult(phase, type, Long.parseLong(rec.get(idx)), Long.parseLong(rec.get(idx + 1)));
                 }
@@ -182,7 +184,7 @@ public class Stats {
     }
 
     public String displayString(final Phase phase, Type type) {
-        return String.format("%s %s %s population %s run %s  exec time %f (%s)", indexName, phase, type, population,
+        return String.format("%s %s %s %s population %s run %s  exec time %f (%s)", indexName, usageType, phase, type, population,
                 run, getElapsed(phase, type), getCount(phase, type));
 
     }
@@ -194,6 +196,7 @@ public class Stats {
     public static class Serde {
 
         public void writeStats(DataOutputStream out, Stats stats) throws IOException {
+            out.writeUTF(stats.usageType);
             out.writeUTF(stats.indexName);
             out.writeInt(stats.population);
             out.writeInt(stats.run);
@@ -246,7 +249,7 @@ public class Stats {
         }
 
         public Stats readStats(DataInputStream in) throws IOException {
-            Stats result = new Stats(in.readUTF(), in.readInt(), in.readInt());
+            Stats result = new Stats(in.readUTF(), in.readUTF(), in.readInt(), in.readInt());
             result.load = in.readLong();
             result.time = readLongMatrix(in);
             result.count = readLongMatrix(in);

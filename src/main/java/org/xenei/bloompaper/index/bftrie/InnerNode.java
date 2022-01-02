@@ -7,22 +7,18 @@ import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.BitUtils;
 
 public class InnerNode implements Node {
-    public static final int WIDTH = 4;
-    //public static final int BUCKETS = 16; // 2^WIDTH
     private final Node[] nodes;
     private final int level;
     private final int maxDepth;
     private final Shape shape;
+    private final BFTrie trie;
 
     public InnerNode(int level, Shape shape, BFTrie trie) {
-        this(level, shape, shape.getNumberOfBits() / trie.getWidth(), trie );
-    }
-
-    public InnerNode(int level, Shape bloomFilterConfig, int maxDepth, BFTrie trie) {
-        this.shape = bloomFilterConfig;
         this.level = level;
-        this.maxDepth = maxDepth;
-        nodes = new Node[ (1<<trie.getWidth())];
+        this.shape = shape;
+        this.trie = trie;
+        this.maxDepth = shape.getNumberOfBits() / trie.getWidth();
+        nodes = new Node[(1 << trie.getWidth())];
     }
 
     public boolean isBaseNode() {
@@ -39,8 +35,8 @@ public class InnerNode implements Node {
      * @param level the level of the BFTrie we are at.
      * @return the NibbleInfo for that level
      */
-    static public byte getNibble(long[] buffer, int level) {
-        int startBit = level * 4;
+    public byte getChunk(long[] buffer, int level) {
+        int startBit = level * trie.getWidth();
 
         int idx = BitUtils.getLongIndex(startBit);
         // buffer may be short if upper values are zero
@@ -56,20 +52,20 @@ public class InnerNode implements Node {
 
     @Override
     public void add(BFTrie trie, BloomFilter filter, long[] buffer) {
-        int nibble = trie.getIndex(buffer, level);
-        if (nodes[nibble] == null) {
+        int chunk = trie.getIndex(buffer, level);
+        if (nodes[chunk] == null) {
             if ((level + 1) == maxDepth) {
-                nodes[nibble] = new LeafNode(maxDepth == (shape.getNumberOfBits() / trie.getWidth()));
+                nodes[chunk] = new LeafNode(maxDepth == (shape.getNumberOfBits() / trie.getWidth()));
             } else {
-                nodes[nibble] = new InnerNode(level + 1, shape, maxDepth, trie);
+                nodes[chunk] = new InnerNode(level + 1, shape, trie);
             }
         }
-        nodes[nibble].add(trie, filter, buffer);
+        nodes[chunk].add(trie, filter, buffer);
     }
 
     @Override
     public boolean find(long[] buffer) {
-        byte nibble = getNibble(buffer, level);
+        byte nibble = getChunk(buffer, level);
         if (nodes[nibble] != null) {
             return nodes[nibble].find(buffer);
         }
@@ -78,7 +74,7 @@ public class InnerNode implements Node {
 
     @Override
     public boolean remove(long[] buffer) {
-        byte nibble = getNibble(buffer, level);
+        byte nibble = getChunk(buffer, level);
         if (nodes[nibble] != null) {
             if (nodes[nibble].remove(buffer)) {
                 if (nodes[nibble].isEmpty()) {
@@ -101,11 +97,11 @@ public class InnerNode implements Node {
     }
 
     @Override
-    public void search(BFTrie trie, Consumer<BloomFilter> consumer, long[] buffer ) {
+    public void search(BFTrie trie, Consumer<BloomFilter> consumer, long[] buffer) {
         int[] nodeIdxs = trie.lookup(buffer, level);
         for (int i : nodeIdxs) {
             if (nodes[i] != null) {
-                nodes[i].search(trie,consumer, buffer);
+                nodes[i].search(trie, consumer, buffer);
             }
         }
     }

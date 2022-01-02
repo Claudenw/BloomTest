@@ -1,9 +1,7 @@
 package org.xenei.bloompaper.index;
 
 import java.util.Objects;
-import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
-import java.util.function.LongConsumer;
 import java.util.function.LongPredicate;
 
 import org.apache.commons.collections4.bloomfilter.ArrayCountingBloomFilter;

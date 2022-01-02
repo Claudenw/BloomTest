@@ -1,7 +1,10 @@
 package org.xenei.bloompaper.index.bftrie;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import org.apache.commons.collections4.bloomfilter.Shape;
 import org.junit.Test;
 import org.xenei.bloompaper.index.BitUtils;
 
@@ -48,10 +51,16 @@ public class InnerNodeTest {
 
         long value = zero | one | two | three | four | five | six | seven | eight | nine | a | b | c | d | e | f;
 
+        BFTrie trie = mock(BFTrie.class);
+        when( trie.getWidth()).thenReturn(4);
+
+        Shape shape = new Shape( 302, 17 );
+        InnerNode innerNode = new InnerNode(0, shape, trie);
+
         for (int i = 0; i < 16; i++) {
-            assertEquals("Wrong value from first long ", i, InnerNode.getNibble(new long[] { value, value }, i));
+            assertEquals("Wrong value from first long ", i, innerNode.getChunk(new long[] { value, value }, i));
             assertEquals("Wrong value from second long", i,
-                    InnerNode.getNibble(new long[] { value, value }, i + (Long.SIZE / 4)));
+                    innerNode.getChunk(new long[] { value, value }, i + (Long.SIZE / 4)));
         }
     }
 }

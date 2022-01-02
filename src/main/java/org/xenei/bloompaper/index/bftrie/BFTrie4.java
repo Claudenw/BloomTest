@@ -80,7 +80,7 @@ public class BFTrie4 implements BFTrie {
 
     @Override
     public int[] lookup(long[] buffer, int level) {
-        return nibbleTable[ getIndex( buffer, level)];
+        return nibbleTable[getIndex(buffer, level)];
     }
 
 }

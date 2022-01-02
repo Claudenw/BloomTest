@@ -21,11 +21,11 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
-
 import org.apache.commons.lang3.time.StopWatch;
 
 import org.xenei.bloompaper.geoname.GeoName;
-import org.xenei.bloompaper.geoname.GeoNameHasher;
+import org.xenei.bloompaper.geoname.GeoNameGatekeeperHasher;
+import org.xenei.bloompaper.geoname.GeoNameReferenceHasher;
 import org.xenei.bloompaper.geoname.GeoNameIterator;
 import org.xenei.bloompaper.index.BloomIndex;
 import org.xenei.bloompaper.index.BloomIndexBFTrie4;
@@ -66,9 +66,8 @@ public class Test {
         Options options = new Options();
         options.addRequiredOption("r", "run", true, sb.toString());
         options.addOption("h", "help", false, "This help");
-        options.addOption("n", "number", true, "The number of items in the filter (defaults to 3)");
-        options.addOption("p", "probability", true,
-                "The probability of collisions (defaults to 1/100000).  May be specified as x/y or double format");
+        options.addOption("g", "gatekeeper", false,
+                "Assume Gatekeeper usage pattern.  If not specified Reference pattern will be assuemd.");
         options.addOption("o", "output", true, "Output directory.  If not specified results will not be preserved");
         options.addOption("i", "iterations", true, "The number of iterations defualt=" + RUN_COUNT);
         options.addOption("s", "size", true,
@@ -82,8 +81,6 @@ public class Test {
         init();
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
-        int n = 3;
-        double p = 1.0 / 100000;
         try {
             cmd = parser.parse(getOptions(), args);
         } catch (Exception e) {
@@ -124,21 +121,7 @@ public class Test {
             }
         }
 
-        Shape shape;
-        if (cmd.hasOption("n")) {
-            n = Integer.valueOf(cmd.getOptionValue("n"));
-        }
-
-        if (cmd.hasOption("p")) {
-            String pStr = cmd.getOptionValue("p");
-            String[] parts = pStr.split("/");
-            if (parts.length == 1) {
-                p = Double.parseDouble(parts[0]);
-            } else {
-                p = Double.parseDouble(parts[0]) / Double.parseDouble(parts[1]);
-            }
-        }
-        shape = Shape.Factory.fromNP(n, p);
+        UsagePattern usagePattern = cmd.hasOption("g") ? new GateKeeper() : new Reference();
 
         File dir = null;
         if (cmd.hasOption("o")) {
@@ -155,7 +138,6 @@ public class Test {
         final List<String> tests = new ArrayList<String>();
         final Table table = new Table(dir);
         table.reset();
-        final BloomFilter[] filters = new BloomFilter[1000000]; // (1e6)
         final URL inputFile = Test.class.getResource("/allCountries.txt");
         final List<GeoName> sample = new ArrayList<GeoName>(1000); // (1e3)
 
@@ -178,14 +160,13 @@ public class Test {
         }
         Collections.sort(tests);
 
-        System.out.println("Reading test data");
-        try (GeoNameIterator geoIter = new GeoNameIterator(inputFile, shape)) {
+        System.out.println("Loading sample data");
+        try (GeoNameIterator geoIter = new GeoNameIterator(inputFile)) {
             for (int i = 0; i < 1000000; i++) {
                 final GeoName gn = geoIter.next();
                 if ((i % 1000) == 0) {
                     sample.add(gn);
                 }
-                filters[i] = new SimpleBloomFilter(shape, GeoNameHasher.createHasher(geoIter.next()));
             }
         }
         // run the tests
@@ -196,9 +177,11 @@ public class Test {
             for (final int population : POPULATIONS) {
                 final List<Stats> stats = new ArrayList<Stats>();
                 for (int run = 0; run < RUN_COUNT; run++) {
-                    stats.add(new Stats(testName, population, run));
+                    stats.add(new Stats(usagePattern.getName(), testName, population, run));
                 }
-                table.add(testName, runTest(shape, constructor, sample, filters, stats, collectFilters));
+                BloomFilter[] filters = usagePattern.configure(population, new GeoNameIterator(inputFile));
+                table.add(testName, runTest(usagePattern.getShape(population), constructor, sample, filters, stats,
+                        collectFilters, usagePattern));
             }
         }
 
@@ -262,34 +245,15 @@ public class Test {
         }
     }
 
-    private static BloomFilter[] createSample(Shape shape, Stats.Type type, List<GeoName> sample) {
-        final int sampleSize = sample.size();
-        BloomFilter[] bfSample = new BloomFilter[sampleSize];
-        for (int i = 0; i < sample.size(); i++) {
-            switch (type) {
-            case COMPLETE:
-                bfSample[i] = new SimpleBloomFilter(shape, GeoNameHasher.createHasher(sample.get(i)));
-                break;
-            case HIGHCARD:
-                bfSample[i] = new SimpleBloomFilter(shape, GeoNameHasher.hasherFor(sample.get(i).name));
-                break;
-            case LOWCARD:
-                bfSample[i] = new SimpleBloomFilter(shape, GeoNameHasher.hasherFor(sample.get(i).feature_code));
-                break;
-            }
-        }
-        return bfSample;
-    }
-
     private static List<Stats> runTest(final Shape shape, final Constructor<? extends BloomIndex> constructor,
-            final List<GeoName> sample, final BloomFilter[] filters, List<Stats> stats, boolean collectFilters)
+            final List<GeoName> sample, final BloomFilter[] filters, List<Stats> stats, boolean collectFilters, UsagePattern pattern)
                     throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException,
                     InvocationTargetException {
 
         BloomIndex bi = doLoad(constructor, filters, shape, stats);
 
         for (Stats.Type type : Stats.Type.values()) {
-            BloomFilter[] bfSample = createSample(shape, type, sample);
+            BloomFilter[] bfSample = pattern.createSample(shape, type, sample);
             doCount(type, bi, bfSample, stats, collectFilters);
         }
 
@@ -297,7 +261,7 @@ public class Test {
         bi = null;
 
         for (Stats.Type type : Stats.Type.values()) {
-            BloomFilter[] bfSample = createSample(shape, type, sample);
+            BloomFilter[] bfSample = pattern.createSample(shape, type, sample);
             doDelete(type, constructor, filters, bfSample, stats, shape);
         }
 
@@ -350,5 +314,109 @@ public class Test {
             System.out.println(stat.displayString(Stats.Phase.Query, type));
         }
 
+    }
+
+    interface UsagePattern {
+        public String getName();
+
+        public BloomFilter[] configure(int population, GeoNameIterator iter);
+
+        Shape getShape(int population);
+
+        BloomFilter[] createSample(Shape shape, Stats.Type type, List<GeoName> sample);
+    }
+
+    static class Reference implements UsagePattern {
+
+        final BloomFilter[] filters = new BloomFilter[1000000]; // (1e6)
+        final Shape shape = Shape.Factory.fromNP(3, 1.0 / 100000);
+
+        @Override
+        public String getName() {
+            return "Reference";
+        }
+        @Override
+        public BloomFilter[] configure(int population, GeoNameIterator iter) {
+            if (filters[0] == null) {
+                readFilters(iter);
+            }
+            return filters;
+        }
+
+        private void readFilters(GeoNameIterator iter) {
+            System.out.print("Creating filters...");
+            for (int i = 0; i < 1000000; i++) {
+                filters[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.createHasher(iter.next()));
+                if ((i % 1000) == 0) {
+                    System.out.print(".");
+                }
+            }
+            System.out.println(" done ");
+
+        }
+
+        @Override
+        public Shape getShape(int population) {
+            return shape;
+        }
+
+        @Override
+        public BloomFilter[] createSample(Shape shape, Stats.Type type, List<GeoName> sample) {
+            final int sampleSize = sample.size();
+            BloomFilter[] bfSample = new BloomFilter[sampleSize];
+            for (int i = 0; i < sample.size(); i++) {
+                switch (type) {
+                case COMPLETE:
+                    bfSample[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.createHasher(sample.get(i)));
+                    break;
+                case HIGHCARD:
+                    bfSample[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.hasherFor(sample.get(i).name));
+                    break;
+                case LOWCARD:
+                    bfSample[i] = new SimpleBloomFilter(shape,
+                            GeoNameReferenceHasher.hasherFor(sample.get(i).feature_code));
+                    break;
+                }
+            }
+            return bfSample;
+        }
+    }
+
+    static class GateKeeper implements UsagePattern {
+
+        @Override
+        public String getName() {
+            return "GateKeeper";
+        }
+
+        @Override
+        public BloomFilter[] configure(int population, GeoNameIterator iter) {
+            BloomFilter[] filters = new BloomFilter[population];
+            Shape shape = getShape(population);
+            System.out.println( "Shape "+shape );
+            for (int i = 0; i < population; i++) {
+                filters[i] = new SimpleBloomFilter(shape, GeoNameGatekeeperHasher.createHasher(iter.next()));
+
+            }
+            return filters;
+        }
+
+        @Override
+        public Shape getShape(int population) {
+            return Shape.Factory.fromNP(population, 1.0 / 100000);
+        }
+
+        @Override
+        public BloomFilter[] createSample(Shape shape, Stats.Type type, List<GeoName> sample) {
+            if (type == Stats.Type.COMPLETE) {
+                final int sampleSize = sample.size();
+                BloomFilter[] bfSample = new BloomFilter[sampleSize];
+                for (int i = 0; i < sample.size(); i++) {
+                    bfSample[i] = new SimpleBloomFilter(shape, GeoNameGatekeeperHasher.createHasher(sample.get(i)));
+                }
+                return bfSample;
+            }
+            return new BloomFilter[0];
+        }
     }
 }

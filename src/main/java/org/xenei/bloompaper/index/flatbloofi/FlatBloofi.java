@@ -3,7 +3,6 @@ package org.xenei.bloompaper.index.flatbloofi;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.function.Consumer;
-import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;

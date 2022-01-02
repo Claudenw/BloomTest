@@ -1,7 +1,6 @@
 package org.xenei.bloompaper.index;
 
 import java.util.function.BiPredicate;
-import java.util.function.LongConsumer;
 import java.util.function.LongPredicate;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;

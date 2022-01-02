@@ -62,7 +62,10 @@ public class Node implements Comparable<Node> {
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        wrapped.forEachBitMap((word) -> { sb.append(String.format("%016X", word));return true;});
+        wrapped.forEachBitMap((word) -> {
+            sb.append(String.format("%016X", word));
+            return true;
+        });
 
         return String.format("%s n=%s h=%s l=%s, 0x%s", BitUtils.format(wrapped.getBitMap()), count, getHamming(),
                 getLog(), sb);

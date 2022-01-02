@@ -18,5 +18,5 @@ public interface BFTrie {
 
     public int getIndex(long[] buffer, int level);
 
-    public int[] lookup( long[] buffer, int level);
+    public int[] lookup(long[] buffer, int level);
 }
