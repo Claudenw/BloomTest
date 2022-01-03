@@ -66,7 +66,7 @@ public class Summary {
     }
 
     public static String getHeader() {
-        StringBuilder sb = new StringBuilder("'Index Name', 'Phase', 'Population', 'Avg Load Elapsed'");
+        StringBuilder sb = new StringBuilder("'Index Name', 'Usage', 'Phase', 'Population', 'Avg Load Elapsed'");
         for (Type type : Type.values()) {
             sb.append(String.format(", 'Avg %1$s Elapsed'", type));
         }
