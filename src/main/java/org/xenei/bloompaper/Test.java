@@ -319,11 +319,7 @@ public class Test {
     }
 
     interface UsagePattern {
-        public static BloomFilter makeFilter( Shape shape, Hasher hasher) {
-            int bits = shape.getNumberOfHashFunctions() * hasher.size();
-            double d = bits * 1.0 / shape.getNumberOfBits();
-            return (d>2.0) ? new SimpleBloomFilter(shape, hasher) : new SparseBloomFilter( shape, hasher );
-        }
+
 
         public String getName();
 
@@ -354,7 +350,7 @@ public class Test {
         private void readFilters(GeoNameIterator iter) {
             System.out.print("Creating filters...");
             for (int i = 0; i < 1000000; i++) {
-                filters[i] = UsagePattern.makeFilter(shape, GeoNameReferenceHasher.createHasher(iter.next()));
+                filters[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.createHasher(iter.next()));
                 if ((i % 1000) == 0) {
                     System.out.print(".");
                 }
@@ -375,13 +371,13 @@ public class Test {
             for (int i = 0; i < sample.size(); i++) {
                 switch (type) {
                 case COMPLETE:
-                    bfSample[i] = UsagePattern.makeFilter(shape, GeoNameReferenceHasher.createHasher(sample.get(i)));
+                    bfSample[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.createHasher(sample.get(i)));
                     break;
                 case HIGHCARD:
-                    bfSample[i] = UsagePattern.makeFilter(shape, GeoNameReferenceHasher.hasherFor(sample.get(i).name));
+                    bfSample[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.hasherFor(sample.get(i).name));
                     break;
                 case LOWCARD:
-                    bfSample[i] = UsagePattern.makeFilter(shape,
+                    bfSample[i] = new SimpleBloomFilter(shape,
                             GeoNameReferenceHasher.hasherFor(sample.get(i).feature_code));
                     break;
                 }
@@ -397,13 +393,19 @@ public class Test {
             return "GateKeeper";
         }
 
+        private BloomFilter makeFilter( Shape shape, Hasher hasher) {
+            int bits = shape.getNumberOfHashFunctions() * hasher.size();
+            double d = bits * 1.0 / shape.getNumberOfBits();
+            return (d>2.0) ? new SimpleBloomFilter(shape, hasher) : new SparseBloomFilter( shape, hasher );
+        }
+
         @Override
         public BloomFilter[] configure(int population, GeoNameIterator iter) {
             BloomFilter[] filters = new BloomFilter[population];
             Shape shape = getShape(population);
             System.out.println( "Shape "+shape );
             for (int i = 0; i < population; i++) {
-                filters[i] = UsagePattern.makeFilter(shape, GeoNameGatekeeperHasher.createHasher(iter.next()));
+                filters[i] = makeFilter(shape, GeoNameGatekeeperHasher.createHasher(iter.next()));
             }
             return filters;
         }
@@ -419,7 +421,7 @@ public class Test {
                 final int sampleSize = sample.size();
                 BloomFilter[] bfSample = new BloomFilter[sampleSize];
                 for (int i = 0; i < sample.size(); i++) {
-                    bfSample[i] = UsagePattern.makeFilter(shape, GeoNameGatekeeperHasher.createHasher(sample.get(i)));
+                    bfSample[i] = makeFilter(shape, GeoNameGatekeeperHasher.createHasher(sample.get(i)));
                 }
                 return bfSample;
             }
