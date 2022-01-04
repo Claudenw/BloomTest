@@ -9,8 +9,7 @@ import org.xenei.bloompaper.index.bloofi.LeafNode;
 import org.xenei.bloompaper.index.bloofi.Node;
 
 /**
- * Implementation of BT
- * ree Nibble search.
+ * Implementation of Bloofi.
  *
  */
 public class BloomIndexBloofi extends BloomIndex {

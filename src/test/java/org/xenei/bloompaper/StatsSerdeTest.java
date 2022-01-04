@@ -33,7 +33,7 @@ public class StatsSerdeTest {
 
     @Test
     public void testRoundTrip() throws IOException {
-        Stats expected = new Stats("usage","testing", 1000, 5);
+        Stats expected = new Stats("usage", "testing", 1000, 5);
         BloomFilter target = FrozenBloomFilter.makeInstance(new TestingBloomFilter(shape));
         List<BloomFilter> found = new ArrayList<BloomFilter>();
         found.add(FrozenBloomFilter.makeInstance(new TestingBloomFilter(shape)));

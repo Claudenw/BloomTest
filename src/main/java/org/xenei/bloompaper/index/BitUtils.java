@@ -140,12 +140,6 @@ public final class BitUtils {
         return sb.toString();
     }
 
-    // public static boolean chkBreak( BloomFilter filter, long... values )
-    // {
-    // long[] bits = BloomFilter.asBitMapArray(filter);
-    // return Arrays.compare( bits, values) == 0;
-    // }
-
     public static boolean isSet(long[] bits, int bitIdx) {
         int longRec = getLongIndex(bitIdx);
         return (longRec < bits.length) ? (bits[longRec] & getLongBit(bitIdx)) != 0 : false;

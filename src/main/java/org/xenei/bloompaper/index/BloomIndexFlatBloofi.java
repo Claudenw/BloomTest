@@ -7,7 +7,7 @@ import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.flatbloofi.FlatBloofi;
 
 /**
- * Implementation of BTree Nibble search.
+ * Implementation of FlatBloofi.
  *
  */
 public class BloomIndexFlatBloofi extends BloomIndex {

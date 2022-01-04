@@ -7,7 +7,7 @@ import org.apache.commons.collections4.bloomfilter.Shape;
 import org.xenei.bloompaper.index.bftrie.BFTrie4;
 
 /**
- * Implementation of BTree Nibble search.
+ * Implementation of BTree Bytes sized search.
  *
  */
 public class BloomIndexBFTrie8 extends BloomIndex {

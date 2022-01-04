@@ -6,12 +6,10 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 
 /**
- * base class for a Bloom Index.
+ * base class for a Bloom Index.  All BloomIndexes run by Test must implement this class.
  */
 public abstract class BloomIndex {
 
-    public static Consumer<BloomFilter> NULL_CONSUMER = (b) -> {
-    };
     /**
      * The shape of the filters being stored
      */
@@ -71,6 +69,11 @@ public abstract class BloomIndex {
         doSearch(consumer, filter);
     }
 
+    /**
+     * Executes the search for the filter an places all matching filters in the consumer.
+     * @param consumer the Consumer to accept the matching filters.
+     * @param filter the filter to search for.
+     */
     abstract protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter);
 
     /**
@@ -85,6 +88,10 @@ public abstract class BloomIndex {
      */
     abstract public int count();
 
+    /**
+     * Counts the number of filters returned by a search or count operation.
+     *
+     */
     public static class Incrementer implements Consumer<BloomFilter> {
         public int count = 0;
 

@@ -19,6 +19,8 @@ import org.xenei.bloompaper.Stats.Type;
 
 /**
  * A summary of statistics.
+ * This class can read multiple .dat and .fmf files to create complete data.csv and
+ * summary.csv files.
  *
  */
 public class Summary {
@@ -27,12 +29,31 @@ public class Summary {
      * A summary element
      */
     public class Element {
+        /**
+         *  The number of stats that have been added to this element.
+         */
         int n;
+        /**
+         * The index name that generated the stats
+         */
         private final String indexName;
+        /**
+         * the population for the stats.
+         */
         int population;
+        /**
+         * The load time in seconds.
+         */
         double load;
+        /**
+         * The total for the phase and type combinations.
+         */
         double[][] totals = new double[Stats.Phase.values().length][Stats.Type.values().length];
 
+        /**
+         * Create an element from a Stats object.
+         * @param stat the Stats to start with.
+         */
         public Element(Stats stat) {
             this.indexName = stat.getName();
             this.population = stat.getPopulation();
@@ -40,16 +61,34 @@ public class Summary {
             add(stat);
         }
 
+        /**
+         * Gets the total for the specified phase and type.
+         * @param phase the phase to get the total for.
+         * @param type the Bloom filter type to get the total for.
+         * @return the total for the specified phase and type.
+         */
         public double total(Stats.Phase phase, Stats.Type type) {
             return totals[phase.ordinal()][type.ordinal()];
         }
 
+        /**
+         * Report the totals for the specified phase.
+         * @param phase the Phase to report.
+         * @return a CSV formatted string of the totals.
+         */
         public String getReport(Stats.Phase phase) {
             return String.format("'%s','%s', %s,%s,%s,%s,%s", indexName, phase, population, load / n,
                     total(phase, Stats.Type.COMPLETE) / n, total(phase, Stats.Type.HIGHCARD) / n,
                     total(phase, Stats.Type.LOWCARD) / n);
         }
 
+        /**
+         * Add a stats object to this summary.
+         * If the stats has the same index name and population as this summary it is added,
+         * otherwise it is ignored.
+         * @param stat the stats object to add.
+         * @return true if the stats was added, false otherwise.
+         */
         public boolean add(Stats stat) {
             if (stat.getName().equals(indexName) && stat.getPopulation() == population) {
                 load += stat.getLoad();
@@ -65,6 +104,10 @@ public class Summary {
         }
     }
 
+    /**
+     * Get the header for the CSV report.
+     * @return the header string for the CSV report.
+     */
     public static String getHeader() {
         StringBuilder sb = new StringBuilder("'Index Name', 'Usage', 'Phase', 'Population', 'Avg Load Elapsed'");
         for (Type type : Type.values()) {
@@ -73,8 +116,16 @@ public class Summary {
         return sb.toString();
     }
 
+    /**
+     * The list of Elements that make up this summary.
+     */
     private List<Element> table = new ArrayList<Element>();
 
+    /**
+     * The Summary of a table.
+     * @param aTable the table to summarize.
+     * @throws IOException on IO error.
+     */
     public Summary(Table aTable) throws IOException {
 
         Consumer<Stats> loader = new Consumer<Stats>() {
@@ -98,10 +149,20 @@ public class Summary {
         aTable.forEachStat(loader);
     }
 
+    /**
+     * Gets the list of elements for this summary.
+     * @return the list of elements for this summary.
+     */
     public List<Element> getTable() {
         return table;
     }
 
+    /**
+     * Writes produces a summary report for the specified table.
+     * @param ps the print stream to write the report to.
+     * @param table the table to process.
+     * @throws IOException on IO Error.
+     */
     public static void writeData(PrintStream ps, Table table) throws IOException {
         ps.println(Stats.getHeader());
         table.forEachPhase((s, p) -> {
@@ -114,6 +175,10 @@ public class Summary {
         });
     }
 
+    /**
+     * Write the summary report.
+     * @param ps the print stream to write the report to.
+     */
     public void writeSummary(PrintStream ps) {
         ps.println(Summary.getHeader());
         for (final Summary.Element e : getTable()) {
@@ -124,6 +189,10 @@ public class Summary {
 
     }
 
+    /**
+     * Gets the options for the main code.
+     * @return the Options object
+     */
     public static Options getOptions() {
         Options options = new Options();
         options.addOption("h", "help", false, "This help");
@@ -162,7 +231,7 @@ public class Summary {
             for (String fn : cmd.getOptionValues("c")) {
                 File f = new File(fn);
                 try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-                    Table table = Stats.parse(br);
+                    Table table = Table.parse(br);
                     doOutput(table, cmd.getOptionValue("o"), cmd.hasOption("f"));
                     if (cmd.hasOption("v")) {
                         doVerify(table, cmd.getOptionValue("o"));
@@ -192,11 +261,24 @@ public class Summary {
 
     }
 
-    private static void doVerify(Table table, String directoryName) throws IOException {
-        Verifier verifier = new Verifier(System.out);
+    /**
+     * Verifies the table data.
+     * Output goes to System.out
+     * @param table the table to verify.
+     * @throws IOException on IO Error
+     */
+    private static void doVerify(Table table, String directory) throws IOException {
+        Verifier verifier = new Verifier(new PrintStream(new File(directory)));
         verifier.verify(table);
     }
 
+    /**
+     * Output a table summary in CSV format to the directory.
+     * @param table the table to summarize
+     * @param directoryName the directory in which to write the summary
+     * @param full if the full data should also be written.
+     * @throws IOException on IO Error.
+     */
     public static void doOutput(Table table, String directoryName, boolean full) throws IOException {
 
         File outfile = null;

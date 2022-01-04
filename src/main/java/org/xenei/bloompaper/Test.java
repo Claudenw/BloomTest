@@ -17,14 +17,14 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
-
+import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.collections4.bloomfilter.SparseBloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 import org.apache.commons.lang3.time.StopWatch;
-
+import org.xenei.bloompaper.Stats.Type;
 import org.xenei.bloompaper.geoname.GeoName;
 import org.xenei.bloompaper.geoname.GeoNameGatekeeperHasher;
 import org.xenei.bloompaper.geoname.GeoNameReferenceHasher;
@@ -38,17 +38,33 @@ import org.xenei.bloompaper.index.BloomIndexHamming;
 import org.xenei.bloompaper.index.BloomIndexList;
 import org.xenei.bloompaper.index.BloomIndexArray;
 
+/**
+ * Class that executes the tests.
+ *
+ */
 public class Test {
 
+    /**
+     * List map of constructor name to constructor for the test.
+     */
     public static Map<String, Constructor<? extends BloomIndex>> constructors = new HashMap<String, Constructor<? extends BloomIndex>>();
 
-    // 9,772,346 max lines
+    /**
+     * The number of times to run each test.
+     */
     private static int RUN_COUNT = 5;
 
+    /**
+     * The populations to use for the tests.  Will execute the test on each population RUN_COUNT times.
+     */
     static int[] POPULATIONS = { 100, 1000, 10000, 100000, 1000000 };
 
-    public static Object lastCreated;
-
+    /**
+     * Initializes the constructors map.
+     *
+     * @throws NoSuchMethodException if the constructor for a specified class can not be found.
+     * @throws SecurityException if constructor is not accessible.
+     */
     public static void init() throws NoSuchMethodException, SecurityException {
         constructors.put("Hamming", BloomIndexHamming.class.getConstructor(int.class, Shape.class));
         constructors.put("Bloofi", BloomIndexBloofi.class.getConstructor(int.class, Shape.class));
@@ -59,6 +75,10 @@ public class Test {
         constructors.put("List", BloomIndexList.class.getConstructor(int.class, Shape.class));
     }
 
+    /**
+     * Gets the options for the command line.
+     * @return the Options object.
+     */
     public static Options getOptions() {
         StringBuffer sb = new StringBuffer("List of tests to run.  Valid test names are: ALL, ");
         List<String> tests = new ArrayList<String>(constructors.keySet());
@@ -79,6 +99,11 @@ public class Test {
         return options;
     }
 
+    /**
+     * Main entry.
+     * @param args the arguments for the applicaiton.
+     * @throws Exception on error
+     */
     public static void main(final String[] args) throws Exception {
         init();
         CommandLineParser parser = new DefaultParser();
@@ -220,9 +245,21 @@ public class Test {
         System.out.println("=== run complete ===");
     }
 
+    /**
+     * Executes the delete tests.
+     * @param type The type of Bloom filter we are deleting.
+     * @param constructor the Constructor for the test.
+     * @param filters the list of all filters.
+     * @param bfSample the list of sample to delete.
+     * @param stats the list of statistics for this test.
+     * @param shape the Shape of the filters for the tests.
+     * @throws InstantiationException on instantiation error in test constructor.
+     * @throws IllegalAccessException on access error in test constructor.
+     * @throws InvocationTargetException on invocation error in test constructor.
+     */
     private static void doDelete(Stats.Type type, final Constructor<? extends BloomIndex> constructor,
             final BloomFilter[] filters, final BloomFilter[] bfSample, final List<Stats> stats, Shape shape)
-                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                    throws InstantiationException, IllegalAccessException, InvocationTargetException {
         BloomIndex bi;
         StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
@@ -247,14 +284,27 @@ public class Test {
         }
     }
 
+    /**
+     * Executes the query tests.
+     * @param shape The shape of the Bloom filters.
+     * @param constructor the constructor to build the test with.
+     * @param sample the sample Bloom filters to search for
+     * @param filters the List of all bloom filters in the test.
+     * @param stats the stats to add the test results to.
+     * @param collectFilters if {@code true} then matching filters are preserved for verification.
+     * @param pattern the useage pattern we are testing.
+     * @return the List of Stats.  Same as @{code stats} param.
+     * @throws InstantiationException on instantiation error in test constructor.
+     * @throws IllegalAccessException on access error in test constructor.
+     * @throws InvocationTargetException on invocation error in test constructor.
+     */
     private static List<Stats> runTest(final Shape shape, final Constructor<? extends BloomIndex> constructor,
-            final List<GeoName> sample, final BloomFilter[] filters, List<Stats> stats, boolean collectFilters, UsagePattern pattern)
-                    throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException,
-                    InvocationTargetException {
+            final List<GeoName> sample, final BloomFilter[] filters, List<Stats> stats, boolean collectFilters,
+            UsagePattern pattern) throws InstantiationException, IllegalAccessException, InvocationTargetException {
 
         BloomIndex bi = doLoad(constructor, filters, shape, stats);
 
-        for (Stats.Type type : Stats.Type.values()) {
+        for (Stats.Type type : pattern.getSupportedTypes()) {
             BloomFilter[] bfSample = pattern.createSample(shape, type, sample);
             doCount(type, bi, bfSample, stats, collectFilters);
         }
@@ -262,7 +312,7 @@ public class Test {
         // release the memory
         bi = null;
 
-        for (Stats.Type type : Stats.Type.values()) {
+        for (Stats.Type type : pattern.getSupportedTypes()) {
             BloomFilter[] bfSample = pattern.createSample(shape, type, sample);
             doDelete(type, constructor, filters, bfSample, stats, shape);
         }
@@ -270,6 +320,18 @@ public class Test {
         return stats;
     }
 
+    /**
+     * Executes the load timing tests and produces a populated BloomIndex object.
+     * @param constructor The constructor for the test.
+     * @param filters the list of filters to load.
+     * @param shape the shape of the filters.
+     * @param stats the Stats to populate.
+     * @return the loaded bloom index.
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     */
     private static BloomIndex doLoad(final Constructor<? extends BloomIndex> constructor, final BloomFilter[] filters,
             final Shape shape, final List<Stats> stats)
                     throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
@@ -293,7 +355,15 @@ public class Test {
         return bi;
     }
 
-    private static void doCount(final Stats.Type type, final BloomIndex bi, final BloomFilter[] bfSample,
+    /**
+     * Executes the counting
+     * @param type The type of Bloom filter being counted
+     * @param bloomIndex the Bloom index to count.
+     * @param bfSample the Bloom filter sample to test with.
+     * @param stats the stats to update.
+     * @param collectFilters if {@code true} the matching bloom filters will be preserved for verification testing.
+     */
+    private static void doCount(final Stats.Type type, final BloomIndex bloomIndex, final BloomFilter[] bfSample,
             final List<Stats> stats, boolean collectFilters) {
         final int sampleSize = bfSample.length;
         StopWatch stopwatch = new StopWatch();
@@ -305,7 +375,7 @@ public class Test {
                 Collection<BloomFilter> filterCapture = new ArrayList<BloomFilter>();
                 stopwatch.reset();
                 stopwatch.start();
-                found += bi.count(filterCapture::add, bfSample[i]);
+                found += bloomIndex.count(filterCapture::add, bfSample[i]);
                 stopwatch.stop();
                 elapsed += stopwatch.getNanoTime();
                 if (collectFilters) {
@@ -315,30 +385,75 @@ public class Test {
             stat.registerResult(Stats.Phase.Query, type, elapsed, found);
             System.out.println(stat.displayString(Stats.Phase.Query, type));
         }
-
     }
 
+    /**
+     * The interface that defines the Usage Pattern functions.  These function modify how the tests are
+     * populated and run.
+     *
+     */
     interface UsagePattern {
+        /**
+         * Returns an array of supported types for this usage pattern.
+         * @return the list of supported types.
+         */
+        public Stats.Type[] getSupportedTypes();
 
-
+        /**
+         * Gets the name of the test.
+         * @return the names of the test,
+         */
         public String getName();
 
+        /**
+         * Generates a list of Bloom filters for the specified population.
+         * @param population the population to generate.
+         * @param iter the iterator to generated the population from.
+         * @return an array of Bloom filters at least {@code population} items long.
+         */
         public BloomFilter[] configure(int population, GeoNameIterator iter);
 
+        /**
+         * The shape of Bloom filters for the specified population.
+         * @param population the population to get the filters for.
+         * @return the Shape of the filter.
+         */
         Shape getShape(int population);
 
+        /**
+         * Creates a set of samples Bloom filters from the sample Geonames.
+         * @param shape the Shape of the sample items.
+         * @param type the type of filter to generate
+         * @param sample the sample of GetName objects to generate the Bloom filters from.
+         * @return an array of Bloom filters for the provided GeoNames.
+         */
         BloomFilter[] createSample(Shape shape, Stats.Type type, List<GeoName> sample);
     }
 
+    /**
+     * A class that implements the Referance usage data.
+     *
+     */
     static class Reference implements UsagePattern {
-
+        /**
+         * The filters, these do not chagne between runs.
+         */
         final BloomFilter[] filters = new BloomFilter[1000000]; // (1e6)
+        /**
+         * The shape for this type of filter.
+         */
         final Shape shape = Shape.Factory.fromNP(3, 1.0 / 100000);
+
+        @Override
+        public Type[] getSupportedTypes() {
+            return Type.values();
+        }
 
         @Override
         public String getName() {
             return "Reference";
         }
+
         @Override
         public BloomFilter[] configure(int population, GeoNameIterator iter) {
             if (filters[0] == null) {
@@ -347,6 +462,10 @@ public class Test {
             return filters;
         }
 
+        /**
+         * Reads the filters from the iterator.
+         * @param iter the iterator to read from.
+         */
         private void readFilters(GeoNameIterator iter) {
             System.out.print("Creating filters...");
             for (int i = 0; i < 1000000; i++) {
@@ -386,6 +505,10 @@ public class Test {
         }
     }
 
+    /**
+     * Class that implements the Gatekeeper usage pattern.
+     *
+     */
     static class GateKeeper implements UsagePattern {
 
         @Override
@@ -393,17 +516,29 @@ public class Test {
             return "GateKeeper";
         }
 
-        private BloomFilter makeFilter( Shape shape, Hasher hasher) {
+        /**
+         * Makes either Simple or Sparse Bloom filters based on the estimated number of bits in the
+         * Bloom filter relative to the number of longs necessry to make a bitmap version.
+         * @param shape the shape of the Bloom filter.
+         * @param hasher the hasher for the filter.
+         * @return A Bloom filter of the proper shape built with the hasher.
+         */
+        private BloomFilter makeFilter(Shape shape, Hasher hasher) {
             int bits = shape.getNumberOfHashFunctions() * hasher.size();
-            double d = bits * 1.0 / shape.getNumberOfBits();
-            return (d>2.0) ? new SimpleBloomFilter(shape, hasher) : new SparseBloomFilter( shape, hasher );
+            double d = bits * 1.0 / BitMap.numberOfBitMaps(shape.getNumberOfBits());
+            return (d > 2.0) ? new SimpleBloomFilter(shape, hasher) : new SparseBloomFilter(shape, hasher);
+        }
+
+        @Override
+        public Type[] getSupportedTypes() {
+            return new Type[] { Type.COMPLETE };
         }
 
         @Override
         public BloomFilter[] configure(int population, GeoNameIterator iter) {
             BloomFilter[] filters = new BloomFilter[population];
             Shape shape = getShape(population);
-            System.out.println( "Shape "+shape );
+            System.out.println("Shape " + shape);
             for (int i = 0; i < population; i++) {
                 filters[i] = makeFilter(shape, GeoNameGatekeeperHasher.createHasher(iter.next()));
             }
@@ -425,7 +560,7 @@ public class Test {
                 }
                 return bfSample;
             }
-            return new BloomFilter[0];
+            throw new IllegalArgumentException(String.format("Type %s not supported", type));
         }
     }
 }

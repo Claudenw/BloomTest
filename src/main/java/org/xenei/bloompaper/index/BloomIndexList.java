@@ -9,7 +9,7 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 
 /**
- * Plain ol' linear search.
+ * Plain ol' linear search using a List.
  *
  */
 public class BloomIndexList extends BloomIndex {

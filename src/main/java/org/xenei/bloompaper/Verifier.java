@@ -13,21 +13,60 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import org.xenei.bloompaper.index.FrozenBloomFilter;
 
+/**
+ * Verifies the data from the indexes are correct.
+ *
+ */
 public class Verifier {
 
-    private PrintStream o;
+    /**
+     * The stream to write the results to.
+     */
+    private PrintStream out;
 
-    public Verifier(PrintStream o) {
-        this.o = o;
+    /**
+     * Constructor.
+     * @param out the output stream to write the results to.
+     */
+    public Verifier(PrintStream out) {
+        this.out = out;
     }
 
+    /**
+     * Generates a list of stats for each total returned.  There should only be one
+     * total for each population, phase, and type.
+     * for specific population, phase and type.
+     *
+     */
     private class MapGen implements Consumer<Stats> {
+        /**
+         * the report of values.
+         */
         Map<Long, List<Stats>> report = new TreeMap<Long, List<Stats>>();
+        /**
+         * The population that the report is generated for.
+         */
         int population;
+        /**
+         * The phase the report is generated for.
+         */
         Stats.Phase phase;
+        /**
+         * The type the phase is generated for.
+         */
         Stats.Type type;
+        /**
+         * The directory where the data files are stored.
+         */
         File dir;
 
+        /**
+         * Constructor.
+         * @param dir the directory where the data files are stored.
+         * @param population the population to process
+         * @param phase the phase to process
+         * @param type the type to process.
+         */
         MapGen(File dir, int population, Stats.Phase phase, Stats.Type type) {
             this.population = population;
             this.phase = phase;
@@ -108,6 +147,14 @@ public class Verifier {
         return result;
     }
 
+    /**
+     * Compare Bloom filters returned by the stats for the specific phase and type.
+     * Writes output to System.out.
+     * @param phase the phase to compare
+     * @param type the type to compare.
+     * @param statsX the first stats object.
+     * @param statsY the second stats object.
+     */
     private void compare(Stats.Phase phase, Stats.Type type, Stats statsX, Stats statsY) {
         Map<FrozenBloomFilter, Set<FrozenBloomFilter>> result = new HashMap<FrozenBloomFilter, Set<FrozenBloomFilter>>();
         result.putAll(statsX.getFound(type));
@@ -138,17 +185,25 @@ public class Verifier {
         }
     }
 
+    /**
+     * Prints an error string on output as well as on System.out
+     * @param s the string to print
+     */
     private void err(String s) {
         System.out.println(s);
-        if (o != null) {
-            o.println(s);
+        if (out != null) {
+            out.println(s);
         }
     }
 
+    /**
+     * Prints a string on output as well as on System.out
+     * @param s the string to print
+     */
     private void display(String s) {
         System.out.println(s);
-        if (o != null) {
-            o.println(s);
+        if (out != null) {
+            out.println(s);
         }
     }
 }

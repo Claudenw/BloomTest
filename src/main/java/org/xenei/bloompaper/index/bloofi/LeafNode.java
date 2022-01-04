@@ -3,7 +3,6 @@ package org.xenei.bloompaper.index.bloofi;
 import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.xenei.bloompaper.Test;
 import org.xenei.bloompaper.index.BitUtils;
 import org.xenei.bloompaper.index.BitUtils.BufferCompare;
 
@@ -34,7 +33,6 @@ public class LeafNode implements Node {
         this.id = Node.Counter.nextId();
         this.count = 1;
         this.parent = parent;
-        Test.lastCreated = this;
         updateFilters(candidate);
     }
 

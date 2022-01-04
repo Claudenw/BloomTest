@@ -11,8 +11,7 @@ import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 
 /**
- * A Bloom filter that is created from a list of long values that
- * represent the encoded bits.
+ * A Bloom filter is 'frozen' so no modifications can be made on it.
  * <p>
  * This filter is immutable, any attempt
  * to change it throws an UnsupportedOperationException.
@@ -20,8 +19,6 @@ import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
  * This filter implements hashCode() and equals() and is suitable for
  * use in Hash based collections.
  * </p>
- * @see UpdatableBloomFilter#getBits()
- * @author claude
  *
  */
 public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFilter> {
@@ -44,19 +41,28 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     }
 
     /**
-     * Create a new Frozen bloom filter from a shape and a set of longs.
-     * @param shape the Shape of the filter.
-     * @param bits the enabled bits encoded as an array of longs.
+     * Creates a new Frozen bloom filter from another filter.
+     * @param bf The other bloom filter.
      */
+
     private FrozenBloomFilter(BloomFilter bf) {
         wrapped = bf;
         cardinality = bf.cardinality();
     }
 
+    /**
+     * Create a new Frozen bloom filter from a shape and a BitMapProducer.
+     * @param shape the Shape of the filter.
+     * @param producer the BitMapProducer to create the bitmaps.
+     */
     public FrozenBloomFilter(Shape shape, BitMapProducer producer) {
         this(new SimpleBloomFilter(shape, producer));
     }
 
+    /**
+     * Get the Bitmap as an array of long.
+     * @return the BitMaps
+     */
     public long[] getBitMap() {
         if (bitMap == null) {
             bitMap = BloomFilter.asBitMapArray(wrapped);

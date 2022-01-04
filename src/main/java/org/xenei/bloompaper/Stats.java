@@ -1,17 +1,14 @@
 package org.xenei.bloompaper;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,45 +16,100 @@ import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 /**
  * A record of the data from a single run.
  */
 public class Stats {
+    /**
+     * The type of Bloom filter used in the test.
+     */
     public enum Type {
         COMPLETE, HIGHCARD, LOWCARD
     }
 
+    /**
+     * The phase of the test.
+     */
     public enum Phase {
         Query, Delete
     }
 
+    /**
+     * used to convert timing to seconds.
+     */
     public static final double TIME_SCALE = 0.000000001;
+    /**
+     * The usage type for this stat.
+     */
     private final String usageType;
+    /**
+     * The index being tested.
+     */
     private final String indexName;
+    /**
+     * The population for this run.
+     */
     private final int population;
+    /**
+     * the run number.
+     */
     private final int run;
 
+    /**
+     * How long it took to load the data.
+     */
     private long load;
 
+    /**
+     * A list of found filters.  Used for verification.
+     */
     @SuppressWarnings("unchecked")
     private Map<FrozenBloomFilter, Set<FrozenBloomFilter>>[] foundFilters = new HashMap[Type.values().length];
 
+    /**
+     * An array of timings for phase and type
+     */
     private long[][] time = new long[Phase.values().length][Type.values().length];
+
+    /**
+     * An array of counts for phase and type.
+     */
     private long[][] count = new long[Phase.values().length][Type.values().length];
 
+    /**
+     * Generate the CSV header for this stat
+     * @return the CSV header for this stat.
+     */
     public static String getHeader() {
-        StringBuilder sb = new StringBuilder("'Index Name', 'Run', 'Phase', 'Population', 'Load Elapsed'");
+        StringBuilder sb = new StringBuilder("'Index Name', 'Usage', 'Run', 'Phase', 'Population', 'Load Elapsed'");
         for (Type type : Type.values()) {
             sb.append(String.format(", '%1$s Elapsed', '%1$s Count'", type));
         }
         return sb.toString();
     }
 
+    /**
+     * Constructor.
+     * @param usageType the usage type for this set of statistics.
+     * @param indexName the index name that generated the statistics.
+     * @param population the population for this set of statistics.
+     * @param run the run number for this set of statistics.
+     */
+    public Stats(String usageType, String indexName, int population, int run) {
+        this.usageType = usageType;
+        this.indexName = indexName;
+        this.population = population;
+        this.run = run;
+    }
+
+    /**
+     * Adds the found filters for the specified filter under the specified type of execution.
+     * @param type the type of execution.
+     * @param filter the filter used for matching.
+     * @param filters the filters found during the matching operation.
+     */
     public void addFoundFilters(Type type, BloomFilter filter, Collection<BloomFilter> filters) {
         if (filters != null) {
             if (foundFilters[type.ordinal()] == null) {
@@ -69,22 +121,29 @@ public class Stats {
         }
     }
 
+    /**
+     * Sets the load time.
+     * @param load the load time.
+     */
     public void setLoad(long load) {
         this.load = load;
     }
 
+    /**
+     * Gets all the found filters for the specified operation.
+     * @param type the operation type.
+     * @return the map of found filters by target filter.
+     */
     public Map<FrozenBloomFilter, Set<FrozenBloomFilter>> getFound(Type type) {
         Map<FrozenBloomFilter, Set<FrozenBloomFilter>> result = foundFilters[type.ordinal()];
         return result == null ? Collections.emptyMap() : result;
     }
 
-    public Stats(String usageType, String indexName, int population, int run) {
-        this.usageType = usageType;
-        this.indexName = indexName;
-        this.population = population;
-        this.run = run;
-    }
-
+    /**
+     * Report the statistics for the specified phase.
+     * @param phase the phase to report for.
+     * @return the reporting string CSV.
+     */
     public String reportStats(Phase phase) {
         StringBuilder sb = new StringBuilder(
                 String.format("'%s','%s', %s,'%s',%s,%s", indexName, usageType, run, phase, population, load));
@@ -94,6 +153,12 @@ public class Stats {
         return sb.toString();
     }
 
+    /**
+     * Load the filter maps from a directory.
+     * Filter maps are large structures.  This method loads them from disk.
+     * @param dir the directory to load from.
+     * @throws IOException
+     */
     public void loadFilterMaps(File dir) throws IOException {
         // check if populated
         for (int i = 0; i < Type.values().length; i++) {
@@ -107,94 +172,102 @@ public class Stats {
         }
     }
 
-    public static Table parse(BufferedReader reader) throws IOException {
-        CSVFormat format = CSVFormat.DEFAULT.withQuote('\'');
-
-        String line = reader.readLine();
-        if (!Stats.getHeader().equals(line)) {
-            String s = String.format("Wrong header.  Wrong version? Expected:\n%s\nRead:\n%s", Stats.getHeader(), line);
-            throw new IOException(s);
-        }
-
-        Map<String, List<Stats>> table = new HashMap<String, List<Stats>>();
-        while ((line = reader.readLine()) != null) {
-            CSVParser parser = CSVParser.parse(line, format);
-            List<CSVRecord> lst = parser.getRecords();
-            CSVRecord rec = lst.get(0);
-
-            Stats stat = new Stats(rec.get(1), rec.get(0), Integer.parseInt(rec.get(4)), Integer.parseInt(rec.get(2)));
-            stat.load = Integer.parseInt(rec.get(5));
-            for (Phase phase : Phase.values()) {
-                if (phase != Phase.valueOf(rec.get(3))) {
-                    throw new IOException(
-                            String.format("Wrong phase for %s.  Expected: %s Found: %s", stat, phase, rec.get(3)));
-                }
-                for (Type type : Type.values()) {
-                    int idx = 6 + (type.ordinal() * 2);
-
-                    stat.registerResult(phase, type, Long.parseLong(rec.get(idx)), Long.parseLong(rec.get(idx + 1)));
-                }
-                if (phase.ordinal() + 1 < Phase.values().length) {
-                    parser = CSVParser.parse(reader.readLine(), format);
-                    lst = parser.getRecords();
-                    rec = lst.get(0);
-                }
-            }
-            List<Stats> resultList = table.get(stat.getName());
-            if (resultList == null) {
-                resultList = new ArrayList<Stats>();
-                table.put(stat.getName(), resultList);
-            }
-            resultList.add(stat);
-        }
-        Table result = new Table();
-        for (Map.Entry<String, List<Stats>> e : table.entrySet()) {
-            result.add(e.getKey(), e.getValue());
-        }
-        return result;
-    }
-
+    /**
+     * Gets the name of the index that generated these stats.
+     * @return the name of the index that generated these stats.
+     */
     public String getName() {
         return indexName;
     }
 
+    /**
+     * Gets the number of the run that generated these stats.
+     * @return the number of the run that generated these stats.
+     */
     public int getRun() {
         return run;
     }
 
+    /**
+     * Gets the count for the specific phase and type.
+     * @param phase the phase to get the count for.
+     * @param type the Bloom filter type.
+     * @return the count for the specified phase and type.
+     */
     public long getCount(Phase phase, Type type) {
         return count[phase.ordinal()][type.ordinal()];
     }
 
+    /**
+     * Gets the elapsed time in seconds for the specific phase and type.
+     * @param phase the phase to get the count for.
+     * @param type the Bloom filter type.
+     * @return the elapsed time in seconds for the specified phase and type.
+     */
     public double getElapsed(Phase phase, Type type) {
         return time[phase.ordinal()][type.ordinal()] * TIME_SCALE;
     }
 
+    /**
+     * Gets the load time in seconds for stats.
+     * @return the load time in seconds for stats.
+     */
     public double getLoad() {
         return load * TIME_SCALE;
     }
 
+    /**
+     * Gets the populations for the stats
+     * @return the population for the stats.
+     */
     public int getPopulation() {
         return population;
     }
 
+    /**
+     * Register results for the stats
+     * @param phase the phase being tested.
+     * @param type the type of filter being used.
+     * @param elapsed the elapsed time in milliseconds.
+     * @param count the count of items detected in the test.
+     */
     public void registerResult(final Phase phase, final Type type, final long elapsed, final long count) {
         this.time[phase.ordinal()][type.ordinal()] = elapsed;
         this.count[phase.ordinal()][type.ordinal()] = count;
     }
 
+    /**
+     * Gets a Display string of the summary results.
+     * @param phase the phase to display
+     * @param type the type of filter to display.
+     * @return the human readable summary.
+     */
     public String displayString(final Phase phase, Type type) {
-        return String.format("%s %s %s %s population %s run %s  exec time %f (%s)", indexName, usageType, phase, type, population,
-                run, getElapsed(phase, type), getCount(phase, type));
-
+        return String.format("%s %s %s %s population %s run %s  exec time %f (%s)", indexName, usageType, phase, type,
+                population, run, getElapsed(phase, type), getCount(phase, type));
     }
 
+    /**
+     * Gets a human readable summary of the load time.
+     * @return
+     */
     public String loadDisplayString() {
         return String.format("%s population %s run %s load time %s", indexName, population, run, getLoad());
     }
 
+    /**
+     * Class to perform binary serialization/deserialization of the Stats object.
+     * This is stored in the .dat files as well as the .fmf files.
+     */
     public static class Serde {
 
+        /**
+         * Write the stats to the output stream.
+         * This is the .dat file contents.
+         * @param out the output stream to write to.
+         * @param stats the statistics to write.
+         * @throws IOException on IO Error
+         */
         public void writeStats(DataOutputStream out, Stats stats) throws IOException {
             out.writeUTF(stats.usageType);
             out.writeUTF(stats.indexName);
@@ -206,6 +279,12 @@ public class Stats {
 
         }
 
+        /**
+         * Write a matrix of long values to the output stream.
+         * @param out the output stream
+         * @param matrix the matrix of values to write.
+         * @throws IOException on IO Error.
+         */
         private void writeLongMatrix(DataOutputStream out, long[][] matrix) throws IOException {
             out.writeInt(Phase.values().length);
             for (int p = 0; p < Phase.values().length; p++) {
@@ -213,6 +292,12 @@ public class Stats {
             }
         }
 
+        /**
+         * Write a long array to the output stream
+         * @param out the outputs stream
+         * @param arry the array of longs to write.
+         * @throws IOException on IO error.
+         */
         private void writeLongArray(DataOutputStream out, long[] arry) throws IOException {
             out.writeInt(arry.length);
             for (long l : arry) {
@@ -220,8 +305,14 @@ public class Stats {
             }
         }
 
+        /**
+         * Write the filter maps to the outpust stream.
+         * this is the .fmf file format.
+         * @param out the output stream
+         * @param stats the statis object.
+         * @throws IOException on IO error.
+         */
         public void writeFilterMaps(DataOutputStream out, Stats stats) throws IOException {
-
             Map<FrozenBloomFilter, Set<FrozenBloomFilter>> map;
             out.writeInt(Type.values().length);
             for (Type t : Type.values()) {
@@ -229,7 +320,6 @@ public class Stats {
                 if (map == null || map.isEmpty()) {
                     out.writeInt(0);
                 } else {
-
                     out.writeInt(map.size());
                     for (Map.Entry<FrozenBloomFilter, Set<FrozenBloomFilter>> entry : map.entrySet()) {
                         writeBloomFilter(out, entry.getKey());
@@ -242,12 +332,25 @@ public class Stats {
             }
         }
 
+        /**
+         * Write a Bloom filter to output stream
+         * @param out output stream.
+         * @param bf the Bloom filter to write
+         * @throws IOException on IO Error.
+         */
         private void writeBloomFilter(DataOutputStream out, BloomFilter bf) throws IOException {
             out.writeInt(bf.getShape().getNumberOfHashFunctions());
             out.writeInt(bf.getShape().getNumberOfBits());
             writeLongArray(out, BloomFilter.asBitMapArray(bf));
         }
 
+        /**R
+         * Read the stats object from an input stream.
+         * this is the .dat format.
+         * @param in the input stream to read.
+         * @return the deserialzied stats object.
+         * @throws IOException
+         */
         public Stats readStats(DataInputStream in) throws IOException {
             Stats result = new Stats(in.readUTF(), in.readUTF(), in.readInt(), in.readInt());
             result.load = in.readLong();
@@ -256,6 +359,12 @@ public class Stats {
             return result;
         }
 
+        /**
+         * Reads a long matrix from the input stream.
+         * @param in the Input stream
+         * @return the long matrix.
+         * @throws IOException on IO error.
+         */
         private long[][] readLongMatrix(DataInputStream in) throws IOException {
             int p = in.readInt();
             long[][] matrix = new long[p][];
@@ -265,6 +374,12 @@ public class Stats {
             return matrix;
         }
 
+        /**
+         * Reads a long array from the input stream.
+         * @param in input stream to read.
+         * @return the long array.
+         * @throws IOException on IO error.
+         */
         private long[] readLongArray(DataInputStream in) throws IOException {
             int len = in.readInt();
             long[] arry = new long[len];
@@ -274,6 +389,13 @@ public class Stats {
             return arry;
         }
 
+        /**
+         * Reads filter maps from the input stream.
+         * this is the .fmf format.
+         * @param in the input stream to read.
+         * @param stats the stats for the filter maps.
+         * @throws IOException on IO error.
+         */
         public void readFilterMaps(DataInputStream in, Stats stats) throws IOException {
             int len = in.readInt();
             @SuppressWarnings("unchecked")
@@ -297,6 +419,12 @@ public class Stats {
             stats.foundFilters = result;
         }
 
+        /**
+         * Read bloom filters from input stream.
+         * @param in the input stream to read.
+         * @return a FrozenBloomFilter.
+         * @throws IOException on IO error.
+         */
         private FrozenBloomFilter readBloomFilter(DataInputStream in) throws IOException {
             Shape shape = new Shape(in.readInt(), in.readInt());
             long[] bitMaps = readLongArray(in);
