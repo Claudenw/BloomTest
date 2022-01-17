@@ -1,6 +1,8 @@
 package org.xenei.bloompaper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
@@ -36,6 +38,7 @@ import org.xenei.bloompaper.index.BloomIndexBloofi;
 import org.xenei.bloompaper.index.BloomIndexFlatBloofi;
 import org.xenei.bloompaper.index.BloomIndexHamming;
 import org.xenei.bloompaper.index.BloomIndexList;
+import org.xenei.bloompaper.index.naturalbloofi.NaturalBloofi;
 import org.xenei.bloompaper.index.BloomIndexArray;
 
 /**
@@ -73,6 +76,7 @@ public class Test {
         constructors.put("BF-Trie8", BloomIndexBFTrie8.class.getConstructor(int.class, Shape.class));
         constructors.put("Array", BloomIndexArray.class.getConstructor(int.class, Shape.class));
         constructors.put("List", BloomIndexList.class.getConstructor(int.class, Shape.class));
+        constructors.put("NaturalBloofi", NaturalBloofi.class.getConstructor(int.class, Shape.class));
     }
 
     /**
@@ -273,8 +277,9 @@ public class Test {
             /* run */
             stopwatch.reset();
             stopwatch.start();
-            for (BloomFilter bf : bfSample) {
-                bi.delete(bf);
+            for (int i = 0;i<bfSample.length;i++) {
+//                System.out.format( "Deleting %s %s", i, printFilter( bfSample[i] ));
+                bi.delete(bfSample[i]);
             }
             stopwatch.stop();
 
@@ -284,6 +289,14 @@ public class Test {
         }
     }
 
+    static String printFilter( BloomFilter bf ) {
+        StringBuilder sb = new StringBuilder();
+        long[] ary = BloomFilter.asBitMapArray(bf);
+        for (long l : ary) {
+            sb.append( Long.toHexString(l)).append( " ");
+        }
+        return sb.toString();
+    }
     /**
      * Executes the query tests.
      * @param shape The shape of the Bloom filters.
@@ -304,6 +317,9 @@ public class Test {
 
         BloomIndex bi = doLoad(constructor, filters, shape, stats);
 
+        if (bi instanceof NaturalBloofi) {
+            ((NaturalBloofi)bi).report( System.out );
+        }
         for (Stats.Type type : pattern.getSupportedTypes()) {
             BloomFilter[] bfSample = pattern.createSample(shape, type, sample);
             doCount(type, bi, bfSample, stats, collectFilters);
@@ -334,7 +350,7 @@ public class Test {
      */
     private static BloomIndex doLoad(final Constructor<? extends BloomIndex> constructor, final BloomFilter[] filters,
             final Shape shape, final List<Stats> stats)
-                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException  {
         BloomIndex bi = null;
         StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
@@ -547,7 +563,7 @@ public class Test {
 
         @Override
         public Shape getShape(int population) {
-            return Shape.Factory.fromNP(population, 1.0 / 100000);
+            return Shape.Factory.fromNP(population, .1);
         }
 
         @Override
