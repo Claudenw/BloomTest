@@ -1,6 +1,8 @@
 package org.xenei.bloompaper.index.naturalbloofi;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
@@ -11,28 +13,66 @@ import org.xenei.bloompaper.index.BloomIndex;
 
 public class NaturalBloofi extends BloomIndex {
 
-    private Node root;
+    private List<Bucket> root;
     private int id;
     private int count;
 
     public NaturalBloofi(int population, Shape shape) {
         super(population, shape);
-        root = new Node(null, null, -1);
+        int limit = (population/10000)+1;
+        root = new ArrayList<Bucket>(limit);
+
+        for (int i=0;i<limit;i++) {
+            int bucketNumber = (i+1)*-10000;
+            root.add( new Bucket( bucketNumber ) );
+        }
         id = 0;
         count = 0;
     }
 
     @Override
     public void add(BloomFilter filter) {
-        new Node(root, filter, id++);
+        BloomFilter filterFilter = Bucket.forFilter(filter);
+        int dist = Integer.MAX_VALUE;
+        int bucket=-1;
+        Bucket candidate = null;
+        for (int i=0;i<root.size();i++) {
+            candidate = root.get(i);
+            if (candidate.hasSpace()) {
+                int candidateDist = candidate.distance(filterFilter);
+                if (dist > candidateDist) {
+                    dist = candidateDist;
+                    bucket = i;
+                }
+            }
+        }
+
+        if (bucket == -1) {
+            // no space
+            bucket = root.size();
+            int bucketNumber = (bucket+1)*-10000;
+            candidate = new Bucket( bucketNumber );
+            root.add( candidate );
+        } else {
+            candidate = root.get(bucket);
+        }
+        candidate.add( filter, id++, filterFilter );
         count++;
     }
 
     @Override
     public void delete(BloomFilter filter) {
-        Deleter deleter = new Deleter(n -> count--, filter);
-        root.testChildren(deleter.target, deleter);
-        deleter.cleanup();
+        BloomFilter filterFilter = Bucket.forFilter(filter);
+        Bucket candidate = null;
+        for (int i=0;i<root.size();i++) {
+            candidate = root.get(i);
+            if (candidate.contains( filterFilter )) {
+                if (candidate.delete( filter, filterFilter )) {
+                    count--;
+                    return;
+                }
+            }
+        }
     }
 
     private void mapper(Shape shape, Node n, Consumer<BloomFilter> consumer) {
@@ -46,7 +86,14 @@ public class NaturalBloofi extends BloomIndex {
     @Override
     protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
         Searcher searcher = new Searcher(n -> mapper(filter.getShape(), n, consumer), filter);
-        root.searchChildren(searcher.target, searcher);
+        BloomFilter filterFilter = Bucket.forFilter(filter);
+        Bucket candidate = null;
+        for (int i=0;i<root.size();i++) {
+            candidate = root.get(i);
+            if (candidate.contains( filterFilter )) {
+                candidate.searchChildren(searcher.target, searcher);
+            }
+        }
     }
 
     @Override
@@ -58,7 +105,7 @@ public class NaturalBloofi extends BloomIndex {
     public int count() {
         return count;
     }
-
+/*
     public void graph(PrintStream out) {
         Consumer<Node> grapher = new Consumer<Node>() {
 
@@ -104,4 +151,5 @@ public class NaturalBloofi extends BloomIndex {
         };
         root.forChildren(rowMaker);
     }
+    */
 }

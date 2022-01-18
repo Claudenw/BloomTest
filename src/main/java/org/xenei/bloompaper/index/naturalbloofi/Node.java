@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 
-public class Node {
+public class Node extends NodeContainer implements Comparable<Node> {
 
     public static class BFComp implements LongPredicate {
         /**
@@ -74,26 +74,15 @@ public class Node {
         }
     };
 
-    private static final Comparator<Node> COMPARATOR = new Comparator<Node>() {
-
-        @Override
-        public int compare(Node o1, Node o2) {
-            int result = Double.compare(o1.log, o2.log);
-
-            return result != 0 ? result : BM_COMPARATOR.compare(o1.bitMap, o2.bitMap);
-        }
-    };
-
-    private Node parent;
-    private SortedSet<Node> children;
     final long[] bitMap;
     private List<Integer> ids;
     private final int hashValue;
     private final double log;
 
-    public Node(Node parent, BloomFilter bloomFilter, int id) {
+    public Node(NodeContainer parent, BloomFilter bloomFilter, int id) {
+        super( parent, null );
         this.bitMap = bloomFilter == null ? new long[0] : BloomFilter.asBitMapArray(bloomFilter);
-        this.children = null;
+
         this.ids = new ArrayList<>(1);
         this.ids.add(id);
         this.log = bloomFilter == null ? (double) Integer.MAX_VALUE
@@ -104,21 +93,9 @@ public class Node {
         }
     }
 
+    @Override
     public int getId() {
         return ids.isEmpty() ? -1 : ids.get(0);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        if (parent != null) {
-            sb.append(parent).append(" -> ");
-        }
-        sb.append(getId());
-        if (hasChildren()) {
-            sb.append(" *");
-        }
-        return sb.toString();
     }
 
     @Override
@@ -127,7 +104,7 @@ public class Node {
             return true;
         }
         if (obj instanceof Node) {
-            return COMPARATOR.compare(this, (Node) obj) == 0;
+            return compareTo( (Node) obj) == 0;
         }
         return false;
     }
@@ -137,24 +114,12 @@ public class Node {
         return hashValue;
     }
 
-    public Node getParent() {
-        return parent;
-    }
-
-    public void setParent(Node parent) {
-        this.parent = parent;
-    }
-
     public List<Integer> getIds() {
         return ids;
     }
 
     public double getLog() {
         return log;
-    }
-
-    public boolean hasChildren() {
-        return children != null && !children.isEmpty();
     }
 
     /**
@@ -241,66 +206,14 @@ public class Node {
         return true;
     }
 
-    private void addChild(Node node) {
-        if (children == null) {
-            synchronized (this) {
-                if (children == null) {
-                    children = new TreeSet<Node>(COMPARATOR);
-                }
-            }
-        }
-        List<Node> nodeChildren = new ArrayList<Node>();
-        for (Node n : children) {
-            if (node.contains(n)) {
-                if (node.equals(n)) {
-                    n.ids.addAll(node.ids);
-                    return;
-                }
-                nodeChildren.add(n);
-            }
-            if (n.contains(node)) {
-                n.addChild(node);
-                return;
-            }
-        }
-        if (!nodeChildren.isEmpty()) {
-            nodeChildren.forEach(node::addChild);
-            children.removeAll(nodeChildren);
-        }
-        node.parent = this;
-        children.add(node);
-    }
-
-    void removeChild(Node child) {
-        children.remove(child);
-        child.forChildren(this::addChild);
-    }
-
-    public void searchChildren(Node head, Consumer<Node> consumer) {
-        if (hasChildren()) {
-            children.tailSet(head).forEach(consumer);
-        }
-    }
-
-    public void forChildren(Consumer<Node> consumer) {
-        if (hasChildren()) {
-            children.forEach(consumer);
-        }
-    }
-
-    public boolean testChildren(Node head, Predicate<Node> consumer) {
-        if (hasChildren()) {
-            for (Node child : children.tailSet(head)) {
-                if (!consumer.test(child)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     public void walkTree(Consumer<Node> consumer) {
         consumer.accept(this);
         forChildren((Consumer<Node>) (n -> n.walkTree(consumer)));
+    }
+
+    @Override
+    public int compareTo(Node other) {
+        int result = Double.compare(this.log, other.log);
+        return result != 0 ? result : BM_COMPARATOR.compare(this.bitMap, other.bitMap);
     }
 }

@@ -39,6 +39,7 @@ import org.xenei.bloompaper.index.BloomIndexFlatBloofi;
 import org.xenei.bloompaper.index.BloomIndexHamming;
 import org.xenei.bloompaper.index.BloomIndexList;
 import org.xenei.bloompaper.index.naturalbloofi.NaturalBloofi;
+import org.xenei.bloompaper.index.shardedlist.ShardedList;
 import org.xenei.bloompaper.index.BloomIndexArray;
 
 /**
@@ -77,6 +78,7 @@ public class Test {
         constructors.put("Array", BloomIndexArray.class.getConstructor(int.class, Shape.class));
         constructors.put("List", BloomIndexList.class.getConstructor(int.class, Shape.class));
         constructors.put("NaturalBloofi", NaturalBloofi.class.getConstructor(int.class, Shape.class));
+        constructors.put("ShardedList", ShardedList.class.getConstructor(int.class, Shape.class));
     }
 
     /**
@@ -551,7 +553,7 @@ public class Test {
 
         @Override
         public Shape getShape(int population) {
-            return Shape.Factory.fromNP(population, .1);
+            return Shape.Factory.fromNP(population, 0.1);
         }
 
         @Override
