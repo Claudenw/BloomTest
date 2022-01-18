@@ -5,16 +5,15 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.LongPredicate;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
-import org.apache.commons.collections4.bloomfilter.SetOperations;
 
 public class Node {
-
 
     public static class BFComp implements LongPredicate {
         /**
@@ -53,7 +52,7 @@ public class Node {
         }
 
         public int getResult() {
-            return (idx < bitMaps.length)?-1:result;
+            return (idx < bitMaps.length) ? -1 : result;
         }
 
         public void reset() {
@@ -65,9 +64,9 @@ public class Node {
 
         @Override
         public int compare(long[] o1, long[] o2) {
-            int result =  Integer.compare( o1.length, o2.length);
-            int i=o1.length-1;
-            while (i>=0 && result==0) {
+            int result = Integer.compare(o1.length, o2.length);
+            int i = o1.length - 1;
+            while (i >= 0 && result == 0) {
                 result = Long.compareUnsigned(o1[i], o2[i]);
                 i--;
             }
@@ -81,23 +80,24 @@ public class Node {
         public int compare(Node o1, Node o2) {
             int result = Double.compare(o1.log, o2.log);
 
-            return result!=0?result:BM_COMPARATOR.compare( o1.bitMap, o2.bitMap);
+            return result != 0 ? result : BM_COMPARATOR.compare(o1.bitMap, o2.bitMap);
         }
     };
 
     private Node parent;
-    private Set<Node> children;
+    private SortedSet<Node> children;
     final long[] bitMap;
     private List<Integer> ids;
     private final int hashValue;
     private final double log;
 
     public Node(Node parent, BloomFilter bloomFilter, int id) {
-        this.bitMap = bloomFilter==null?new long[0]:BloomFilter.asBitMapArray(bloomFilter);
+        this.bitMap = bloomFilter == null ? new long[0] : BloomFilter.asBitMapArray(bloomFilter);
         this.children = null;
         this.ids = new ArrayList<>(1);
         this.ids.add(id);
-        this.log = bloomFilter == null? (double)Integer.MAX_VALUE : getApproximateLog(getApproximateLogExponents(bloomFilter));
+        this.log = bloomFilter == null ? (double) Integer.MAX_VALUE
+                : getApproximateLog(getApproximateLogExponents(bloomFilter));
         this.hashValue = Double.hashCode(log);
         if (parent != null) {
             parent.addChild(this);
@@ -112,11 +112,11 @@ public class Node {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (parent != null) {
-            sb.append( parent ).append( " -> ");
+            sb.append(parent).append(" -> ");
         }
-        sb.append( getId() );
-        if (hasChildren() ) {
-            sb.append( " *" );
+        sb.append(getId());
+        if (hasChildren()) {
+            sb.append(" *");
         }
         return sb.toString();
     }
@@ -127,7 +127,7 @@ public class Node {
             return true;
         }
         if (obj instanceof Node) {
-            return COMPARATOR.compare( this, (Node)obj) == 0;
+            return COMPARATOR.compare(this, (Node) obj) == 0;
         }
         return false;
     }
@@ -136,8 +136,6 @@ public class Node {
     public int hashCode() {
         return hashValue;
     }
-
-
 
     public Node getParent() {
         return parent;
@@ -154,6 +152,7 @@ public class Node {
     public double getLog() {
         return log;
     }
+
     public boolean hasChildren() {
         return children != null && !children.isEmpty();
     }
@@ -226,16 +225,15 @@ public class Node {
         return exp;
     }
 
-
-    private boolean contains(Node other) {
-        return contains( other.bitMap );
+    boolean contains(Node other) {
+        return contains(other.bitMap);
     }
 
-    boolean contains(long[] otherBitMap ) {
+    boolean contains(long[] otherBitMap) {
         if (otherBitMap.length > bitMap.length) {
             return false;
         }
-        for (int i=0;i<otherBitMap.length;i++) {
+        for (int i = 0; i < otherBitMap.length; i++) {
             if ((bitMap[i] & otherBitMap[i]) != otherBitMap[i]) {
                 return false;
             }
@@ -266,27 +264,33 @@ public class Node {
             }
         }
         if (!nodeChildren.isEmpty()) {
-            nodeChildren.forEach( node::addChild );
+            nodeChildren.forEach(node::addChild);
             children.removeAll(nodeChildren);
         }
         node.parent = this;
         children.add(node);
     }
 
-    void removeChild( Node child ) {
-        children.remove( child );
-        child.forChildren( this::addChild );
+    void removeChild(Node child) {
+        children.remove(child);
+        child.forChildren(this::addChild);
     }
 
-    public void forChildren( Consumer<Node> consumer ) {
+    public void searchChildren(Node head, Consumer<Node> consumer) {
         if (hasChildren()) {
-            children.forEach( consumer );
+            children.tailSet(head).forEach(consumer);
         }
     }
 
-    public boolean testChildren( Predicate<Node> consumer ) {
+    public void forChildren(Consumer<Node> consumer) {
         if (hasChildren()) {
-            for (Node child : children) {
+            children.forEach(consumer);
+        }
+    }
+
+    public boolean testChildren(Node head, Predicate<Node> consumer) {
+        if (hasChildren()) {
+            for (Node child : children.tailSet(head)) {
                 if (!consumer.test(child)) {
                     return false;
                 }
@@ -295,8 +299,8 @@ public class Node {
         return true;
     }
 
-    public void walkTree( Consumer<Node> consumer ) {
+    public void walkTree(Consumer<Node> consumer) {
         consumer.accept(this);
-        forChildren( (Consumer<Node>)(n -> n.walkTree(consumer) ));
+        forChildren((Consumer<Node>) (n -> n.walkTree(consumer)));
     }
 }

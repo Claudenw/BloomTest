@@ -278,7 +278,6 @@ public class Test {
             stopwatch.reset();
             stopwatch.start();
             for (int i = 0;i<bfSample.length;i++) {
-//                System.out.format( "Deleting %s %s", i, printFilter( bfSample[i] ));
                 bi.delete(bfSample[i]);
             }
             stopwatch.stop();
@@ -289,14 +288,6 @@ public class Test {
         }
     }
 
-    static String printFilter( BloomFilter bf ) {
-        StringBuilder sb = new StringBuilder();
-        long[] ary = BloomFilter.asBitMapArray(bf);
-        for (long l : ary) {
-            sb.append( Long.toHexString(l)).append( " ");
-        }
-        return sb.toString();
-    }
     /**
      * Executes the query tests.
      * @param shape The shape of the Bloom filters.
@@ -317,9 +308,6 @@ public class Test {
 
         BloomIndex bi = doLoad(constructor, filters, shape, stats);
 
-        if (bi instanceof NaturalBloofi) {
-            ((NaturalBloofi)bi).report( System.out );
-        }
         for (Stats.Type type : pattern.getSupportedTypes()) {
             BloomFilter[] bfSample = pattern.createSample(shape, type, sample);
             doCount(type, bi, bfSample, stats, collectFilters);

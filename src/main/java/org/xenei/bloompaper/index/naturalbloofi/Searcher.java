@@ -6,20 +6,18 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 
 public class Searcher implements Consumer<Node> {
     private final Consumer<Node> baseConsumer;
-    private final long[] target;
-    private final double log;
+    final Node target;
 
     public Searcher(Consumer<Node> baseConsumer, BloomFilter filter) {
         this.baseConsumer = baseConsumer;
-        this.target = BloomFilter.asBitMapArray(filter);
-        this.log = Node.getApproximateLog( Node.getApproximateLogExponents( filter ));
+        target = new Node(null, filter, -2);
     }
 
     @Override
     public void accept(Node node) {
-        if (node.getLog() >= log && node.contains( target )) {
-            baseConsumer.accept( node );
-            node.forChildren( this );
+        if (node.getLog() >= target.getLog() && node.contains(target)) {
+            baseConsumer.accept(node);
+            node.searchChildren(target, this);
         }
     }
 }
