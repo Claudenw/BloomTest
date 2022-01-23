@@ -162,13 +162,15 @@ public final class FlatBloofi {
         return BitSet.valueOf(result);
     }
 
-    public void delete(BloomFilter filter) {
+    public boolean delete(BloomFilter filter) {
         BitSet found = findExactMatch(filter);
 
         int delIdx = found.nextSetBit(0);
         if (delIdx > -1) {
             busy.clear(delIdx);
+            return true;
         }
+        return false;
     }
 
     public int count() {

@@ -1,8 +1,6 @@
 package org.xenei.bloompaper;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
@@ -253,40 +251,41 @@ public class Test {
 
     /**
      * Executes the delete tests.
+     * @param bi bloomIndex under test.
      * @param type The type of Bloom filter we are deleting.
-     * @param constructor the Constructor for the test.
-     * @param filters the list of all filters.
      * @param bfSample the list of sample to delete.
      * @param stats the list of statistics for this test.
-     * @param shape the Shape of the filters for the tests.
      * @throws InstantiationException on instantiation error in test constructor.
      * @throws IllegalAccessException on access error in test constructor.
      * @throws InvocationTargetException on invocation error in test constructor.
      */
-    private static void doDelete(Stats.Type type, final Constructor<? extends BloomIndex> constructor,
-            final BloomFilter[] filters, final BloomFilter[] bfSample, final List<Stats> stats, Shape shape)
-                    throws InstantiationException, IllegalAccessException, InvocationTargetException {
-        BloomIndex bi;
+    private static void doDelete(BloomIndex bi, Stats.Type type, final BloomFilter[] bfSample, final List<Stats> stats)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException {
+
+        boolean[] results = new boolean[bfSample.length];
+
         StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
-            /* setup */
+
             Stats stat = stats.get(run);
-            bi = constructor.newInstance(stat.getPopulation(), shape);
-            for (int i = 0; i < stat.getPopulation(); i++) {
-                bi.add(filters[i]);
-            }
 
             /* run */
             stopwatch.reset();
             stopwatch.start();
-            for (int i = 0;i<bfSample.length;i++) {
-                bi.delete(bfSample[i]);
+            for (int i = 0; i < bfSample.length; i++) {
+                results[i] = bi.delete(bfSample[i]);
             }
             stopwatch.stop();
 
             stat.registerResult(Stats.Phase.Delete, type, stopwatch.getNanoTime(), stat.getPopulation() - bi.count());
 
             System.out.println(stat.displayString(Stats.Phase.Delete, type));
+            // add the deleted records back
+            for (int i = 0; i < bfSample.length; i++) {
+                if (results[i]) {
+                    bi.add(bfSample[i]);
+                }
+            }
         }
     }
 
@@ -310,19 +309,18 @@ public class Test {
 
         BloomIndex bi = doLoad(constructor, filters, shape, stats);
 
+        System.out.println("Calculating query times");
         for (Stats.Type type : pattern.getSupportedTypes()) {
             BloomFilter[] bfSample = pattern.createSample(shape, type, sample);
             doCount(type, bi, bfSample, stats, collectFilters);
         }
 
-        // release the memory
-        bi = null;
-
+        System.out.println("Calculating delete times");
         for (Stats.Type type : pattern.getSupportedTypes()) {
             BloomFilter[] bfSample = pattern.createSample(shape, type, sample);
-            doDelete(type, constructor, filters, bfSample, stats, shape);
+            doDelete(bi, type, bfSample, stats);
         }
-
+        System.out.println("test complete");
         return stats;
     }
 
@@ -340,8 +338,9 @@ public class Test {
      */
     private static BloomIndex doLoad(final Constructor<? extends BloomIndex> constructor, final BloomFilter[] filters,
             final Shape shape, final List<Stats> stats)
-                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException  {
+            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi = null;
+        System.out.println("Calculating load times");
         StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
             Stats stat = stats.get(run);

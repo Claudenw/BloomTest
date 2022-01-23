@@ -12,8 +12,7 @@ public abstract class NodeContainer {
     protected SortedSet<Node> children;
     private NodeContainer parent;
 
-
-    protected NodeContainer( NodeContainer parent, SortedSet<Node> children ) {
+    protected NodeContainer(NodeContainer parent, SortedSet<Node> children) {
         this.parent = parent;
         this.children = children;
     }
@@ -26,11 +25,9 @@ public abstract class NodeContainer {
         this.parent = parent;
     }
 
-
     final boolean hasChildren() {
         return children != null && !children.isEmpty();
     }
-
 
     final void searchChildren(Node head, Consumer<Node> consumer) {
         if (hasChildren()) {
@@ -70,7 +67,7 @@ public abstract class NodeContainer {
             nodeChildren.forEach(node::addChild);
             children.removeAll(nodeChildren);
         }
-        node.setParent( this );
+        node.setParent(this);
         children.add(node);
     }
 

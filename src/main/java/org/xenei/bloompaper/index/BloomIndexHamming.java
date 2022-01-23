@@ -30,10 +30,12 @@ public class BloomIndexHamming extends BloomIndex {
     }
 
     @Override
-    public void delete(BloomFilter filter) {
+    public boolean delete(BloomFilter filter) {
         if (index.delete(filter)) {
             count--;
+            return true;
         }
+        return false;
     }
 
     public List<FrozenBloomFilter> getFound() {

@@ -1,6 +1,5 @@
 package org.xenei.bloompaper.index.naturalbloofi;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -15,64 +14,84 @@ public class NaturalBloofi extends BloomIndex {
 
     private List<Bucket> root;
     private int id;
-    private int count;
+    private final int bucketPopulation = 10000;
 
     public NaturalBloofi(int population, Shape shape) {
         super(population, shape);
-        int limit = (population/10000)+1;
+        int limit = (population / bucketPopulation) + 1;
         root = new ArrayList<Bucket>(limit);
 
-        for (int i=0;i<limit;i++) {
-            int bucketNumber = (i+1)*-10000;
-            root.add( new Bucket( bucketNumber ) );
+        for (int i = 0; i < limit; i++) {
+            int bucketNumber = (i + 1) * bucketPopulation * -1;
+            root.add(new Bucket(bucketNumber));
         }
         id = 0;
-        count = 0;
     }
 
     @Override
     public void add(BloomFilter filter) {
         BloomFilter filterFilter = Bucket.forFilter(filter);
         int dist = Integer.MAX_VALUE;
-        int bucket=-1;
+        int bucket = -1;
+        int childDist = Integer.MAX_VALUE;
+        int childBucket = -1;
         Bucket candidate = null;
-        for (int i=0;i<root.size();i++) {
-            candidate = root.get(i);
+        if (root.size() == 1) {
+            candidate = root.get(0);
             if (candidate.hasSpace()) {
-                int candidateDist = candidate.distance(filterFilter);
-                if (dist > candidateDist) {
-                    dist = candidateDist;
-                    bucket = i;
+                bucket = 0;
+            }
+        } else {
+            for (int i = 0; i < root.size() && dist!=0; i++) {
+                candidate = root.get(i);
+                if (candidate.contains(filterFilter)) {
+                    int candidateDist = candidate.distance(filterFilter);
+                    if (childDist > candidateDist) {
+                        childDist = candidateDist;
+                        childBucket = i;
+                    }
+                } else {
+                    if (candidate.hasSpace()) {
+                        int candidateDist = candidate.distance(filterFilter);
+                        if (dist > candidateDist) {
+                            dist = candidateDist;
+                            bucket = i;
+                        }
+                    }
                 }
             }
         }
 
-        if (bucket == -1) {
-            // no space
-            bucket = root.size();
-            int bucketNumber = (bucket+1)*-10000;
-            candidate = new Bucket( bucketNumber );
-            root.add( candidate );
+
+        if (childBucket != -1) {
+            candidate = root.get(childBucket);
         } else {
-            candidate = root.get(bucket);
+            if (bucket == -1) {
+                // no space
+                bucket = root.size();
+                int bucketNumber = (bucket + 1) * -10000;
+                candidate = new Bucket(bucketNumber);
+                root.add(candidate);
+            } else {
+                candidate = root.get(bucket);
+            }
         }
-        candidate.add( filter, id++, filterFilter );
-        count++;
+        candidate.add(filter, id++, filterFilter);
     }
 
     @Override
-    public void delete(BloomFilter filter) {
+    public boolean delete(BloomFilter filter) {
         BloomFilter filterFilter = Bucket.forFilter(filter);
         Bucket candidate = null;
-        for (int i=0;i<root.size();i++) {
+        for (int i = 0; i < root.size(); i++) {
             candidate = root.get(i);
-            if (candidate.contains( filterFilter )) {
-                if (candidate.delete( filter, filterFilter )) {
-                    count--;
-                    return;
+            if (candidate.contains(filterFilter)) {
+                if (candidate.delete(filter, filterFilter)) {
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     private void mapper(Shape shape, Node n, Consumer<BloomFilter> consumer) {
@@ -88,9 +107,9 @@ public class NaturalBloofi extends BloomIndex {
         Searcher searcher = new Searcher(n -> mapper(filter.getShape(), n, consumer), filter);
         BloomFilter filterFilter = Bucket.forFilter(filter);
         Bucket candidate = null;
-        for (int i=0;i<root.size();i++) {
+        for (int i = 0; i < root.size(); i++) {
             candidate = root.get(i);
-            if (candidate.contains( filterFilter )) {
+            if (candidate.contains(filterFilter)) {
                 candidate.searchChildren(searcher.target, searcher);
             }
         }
@@ -103,53 +122,14 @@ public class NaturalBloofi extends BloomIndex {
 
     @Override
     public int count() {
-        return count;
-    }
-/*
-    public void graph(PrintStream out) {
-        Consumer<Node> grapher = new Consumer<Node>() {
-
-            @Override
-            public void accept(Node t) {
-                if (t.getParent() != null) {
-                    if (t.getParent().getId() != -1) {
-                        out.format("%s -> %s%n", t.getParent().getId(), t.getId());
-                    } else {
-                        if (t.hasChildren()) {
-                            out.format("%s -> %s%n", t.getParent().getId(), t.getId());
-
-                        }
-                    }
-                }
-            }
-        };
-        root.walkTree(grapher);
+        int i = 0;
+        for (Bucket b : root ) { i+= b.getCount(); }
+        return i;
     }
 
-    private void checkPrint(long[] o1, long[] o2, int id1, int id2) {
-        if (id1 != id2 && Node.BM_COMPARATOR.compare(o1, o2) == 0) {
-            System.out.format("%s => %s%n,", id1, id2);
+    public void reportStatus() {
+        for (Bucket bucket : root ) {
+            System.out.format( "%s%n", bucket.getCount());
         }
     }
-
-    public void report(PrintStream out) {
-        // graph( out );
-        Consumer<Node> rowMaker = new Consumer<Node>() {
-            private Node root = null;
-
-            @Override
-            public void accept(Node t) {
-                if (root == null) {
-                    root = t.getParent();
-                    while (root.getParent() != null) {
-                        root = root.getParent();
-                    }
-                }
-                root.forChildren((Consumer<Node>) n -> checkPrint(n.bitMap, t.bitMap, n.getId(), t.getId()));
-            }
-
-        };
-        root.forChildren(rowMaker);
-    }
-    */
 }

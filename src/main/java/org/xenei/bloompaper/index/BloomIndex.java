@@ -38,8 +38,9 @@ public abstract class BloomIndex {
     /**
      * Deletes a Bloom filter from the index.
      * @param filter  The Bloom filter to delete.
+     * @return true if the filter was deleted.
      */
-    abstract public void delete(BloomFilter filter);
+    abstract public boolean delete(BloomFilter filter);
 
     /**
      * Counts the number of matching Bloom filters in the index.

@@ -5,12 +5,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.LongPredicate;
-import java.util.function.Predicate;
-
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 
 public class Node extends NodeContainer implements Comparable<Node> {
@@ -80,7 +77,7 @@ public class Node extends NodeContainer implements Comparable<Node> {
     private final double log;
 
     public Node(NodeContainer parent, BloomFilter bloomFilter, int id) {
-        super( parent, null );
+        super(parent, null);
         this.bitMap = bloomFilter == null ? new long[0] : BloomFilter.asBitMapArray(bloomFilter);
 
         this.ids = new ArrayList<>(1);
@@ -104,7 +101,7 @@ public class Node extends NodeContainer implements Comparable<Node> {
             return true;
         }
         if (obj instanceof Node) {
-            return compareTo( (Node) obj) == 0;
+            return compareTo((Node) obj) == 0;
         }
         return false;
     }

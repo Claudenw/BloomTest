@@ -97,12 +97,15 @@ public class Table {
      * @throws IOException on error.
      */
     public void add(String tableName, List<Stats> tbl) throws IOException {
+        System.out.println("Saving run data");
         tableNames.add(tableName);
         Stats.Serde serde = new Stats.Serde();
         try (DataOutputStream out = new DataOutputStream(new FileOutputStream(statsFile(tableName), true));
                 DataOutputStream filters = new DataOutputStream(new FileOutputStream(filterMapFile(tableName), true))) {
             for (Stats stat : tbl) {
+                System.out.format("writing %s run %s stats ", stat.getPopulation(), stat.getRun());
                 serde.writeStats(out, stat);
+                System.out.format("and filter maps%n", stat.getPopulation(), stat.getRun());
                 serde.writeFilterMaps(filters, stat);
             }
         }

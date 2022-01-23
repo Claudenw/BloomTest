@@ -38,8 +38,8 @@ public class BloomIndexBFTrie4 extends BloomIndex {
     }
 
     @Override
-    public void delete(BloomFilter filter) {
-        bftrie.remove(filter);
+    public boolean delete(BloomFilter filter) {
+        return bftrie.remove(filter);
     }
 
     @Override

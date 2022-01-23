@@ -52,10 +52,12 @@ public class BFTrie8 implements BFTrie {
     }
 
     @Override
-    public void remove(BloomFilter filter) {
+    public boolean remove(BloomFilter filter) {
         if (root.remove(BloomFilter.asBitMapArray(filter))) {
             count--;
+            return true;
         }
+        return false;
     }
 
     @Override
