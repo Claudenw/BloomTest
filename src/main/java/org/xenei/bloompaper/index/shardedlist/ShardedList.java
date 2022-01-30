@@ -31,17 +31,17 @@ public class ShardedList extends BloomIndex {
 
     @Override
     public void add(BloomFilter filter) {
-        BloomFilter filterFilter = new SimpleBloomFilter(filterShape, new BitUtils.ShardingHasher(filter));
         int dist = Integer.MAX_VALUE;
         int bucket = -1;
         Shard candidate = null;
-
+        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
         if (root.size() == 1) {
             candidate = root.get(0);
             if (candidate.hasSpace()) {
                 bucket = 0;
             }
         } else {
+            BloomFilter filterFilter = new SimpleBloomFilter(filterShape, filterHasher );
             for (int i = 0; i < root.size(); i++) {
                 candidate = root.get(i);
                 if (candidate.hasSpace()) {
@@ -61,7 +61,7 @@ public class ShardedList extends BloomIndex {
         } else {
             candidate = root.get(bucket);
         }
-        candidate.add(filter, filterFilter);
+        candidate.add(filter, filterHasher);
         count++;
     }
 

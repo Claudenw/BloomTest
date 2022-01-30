@@ -210,8 +210,9 @@ public final class BitUtils {
             return new IndexProducer() {
                 @Override
                 public boolean forEachIndex(IntPredicate consumer) {
+                    FilteredIntPredicate filtered = new FilteredIntPredicate(shape.getNumberOfBits(), consumer);
                     for (int idx : indices) {
-                        if (!asHasher(idx).indices(shape).forEachIndex(consumer)) {
+                        if (!asHasher(idx).indices(shape).forEachIndex(filtered)) {
                             return false;
                         }
                     }
@@ -222,7 +223,7 @@ public final class BitUtils {
 
         @Override
         public int size() {
-            return indices.length;
+            return 1;
         }
 
     }

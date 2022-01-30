@@ -139,8 +139,6 @@ public class BloomIndexTest {
 
     @Test
     public void testCount() {
-        // List<BloomFilter> capture = new ArrayList<BloomFilter>();
-
         assertEquals(0, underTest.count());
         underTest.add(new SimpleBloomFilter(shape, hasher[0]));
         assertEquals(1, underTest.count());

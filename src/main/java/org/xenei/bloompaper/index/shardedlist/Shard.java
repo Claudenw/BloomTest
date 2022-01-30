@@ -37,8 +37,8 @@ public class Shard {
         return gatekeeper.contains(filterHasher);
     }
 
-    public void add(BloomFilter filter, BloomFilter filterFilter) {
-        gatekeeper.mergeInPlace(filterFilter);
+    public void add(BloomFilter filter, Hasher filterHasher) {
+        gatekeeper.mergeInPlace(filterHasher);
         filters.add(filter);
     }
 
