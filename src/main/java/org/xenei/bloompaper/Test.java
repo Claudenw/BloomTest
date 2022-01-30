@@ -235,14 +235,14 @@ public class Test {
         }
 
         final Summary summary = new Summary(table);
-        Summary.doOutput(table, null, true);
+        Summary.doOutput(table, null, true, false, usagePattern.getName());
 
         if (dir != null) {
             try (PrintStream ps = new PrintStream(new File(dir, "data.csv"))) {
                 Summary.writeData(ps, table);
             }
             try (PrintStream ps = new PrintStream(new File(dir, "summary.csv"))) {
-                summary.writeSummary(ps);
+                summary.writeSummary(ps, usagePattern.getName());
             }
         }
 

@@ -11,7 +11,6 @@ import org.xenei.bloompaper.index.BloomIndex;
 public class ShardedList extends BloomIndex {
     private final static int shardSize = 10000;
     private List<Shard> root;
-    private int id;
     private int count;
 
     public ShardedList(int population, Shape shape) {
@@ -22,7 +21,6 @@ public class ShardedList extends BloomIndex {
         for (int i = 0; i < limit; i++) {
             root.add(new Shard());
         }
-        id = 0;
         count = 0;
     }
 
