@@ -41,8 +41,8 @@ public class StatsSerdeTest {
         found.add(FrozenBloomFilter.makeInstance(new TestingBloomFilter(shape)));
         expected.addFoundFilters(Type.COMPLETE, target, found);
         expected.setLoad(40000);
-        expected.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500, 1);
-        expected.registerResult(Phase.Query, Type.COMPLETE, 70000, 700, 1);
+        expected.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500);
+        expected.registerResult(Phase.Query, Type.COMPLETE, 70000, 700);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
@@ -67,14 +67,12 @@ public class StatsSerdeTest {
         assertEquals(40000 * Stats.TIME_SCALE, actual.getLoad(), Stats.TIME_SCALE);
         assertEquals(500, actual.getCount(Phase.Delete, Type.COMPLETE));
         assertEquals(700, actual.getCount(Phase.Query, Type.COMPLETE));
-        assertEquals(1, actual.getFalsePositives( Phase.Query,Type.COMPLETE ));
         assertEquals(60000 * Stats.TIME_SCALE, expected.getElapsed(Phase.Delete, Type.COMPLETE), Stats.TIME_SCALE);
         assertEquals(70000 * Stats.TIME_SCALE, expected.getElapsed(Phase.Query, Type.COMPLETE), Stats.TIME_SCALE);
         assertEquals(0.0, expected.getElapsed(Phase.Delete, Type.HIGHCARD), Stats.TIME_SCALE);
         assertEquals(0.0, expected.getElapsed(Phase.Query, Type.HIGHCARD), Stats.TIME_SCALE);
         assertEquals(0, actual.getCount(Phase.Query, Type.HIGHCARD));
         assertEquals(0, actual.getCount(Phase.Delete, Type.HIGHCARD));
-        assertEquals(0, actual.getFalsePositives( Phase.Query,Type.HIGHCARD ));
         Map<FrozenBloomFilter, Set<FrozenBloomFilter>> m = actual.getFound(Type.COMPLETE);
         assertNotNull(m.get(target));
         Set<FrozenBloomFilter> s = m.get(target);

@@ -69,7 +69,6 @@ public class Stats {
     @SuppressWarnings("unchecked")
     private Map<FrozenBloomFilter, Set<FrozenBloomFilter>>[] foundFilters = new HashMap[Type.values().length];
 
-    private long[][] falsePositives = new long[Phase.values().length][Type.values().length];
     /**
      * An array of timings for phase and type
      */
@@ -79,8 +78,6 @@ public class Stats {
      * An array of counts for phase and type.
      */
     private long[][] count = new long[Phase.values().length][Type.values().length];
-
-
 
     /**
      * Constructor.
@@ -121,10 +118,6 @@ public class Stats {
         this.load = load;
     }
 
-    public long getFalsePositives( Phase phase, Type type ) {
-        return falsePositives[phase.ordinal()][type.ordinal()];
-    }
-
     /**
      * Gets all the found filters for the specified operation.
      * @param type the operation type.
@@ -134,8 +127,6 @@ public class Stats {
         Map<FrozenBloomFilter, Set<FrozenBloomFilter>> result = foundFilters[type.ordinal()];
         return result == null ? Collections.emptyMap() : result;
     }
-
-
 
     /**
      * Load the filter maps from a directory.
@@ -216,10 +207,9 @@ public class Stats {
      * @param count the count of items detected in the test.
      * @param falsePositives the count of falst positives on this run.
      */
-    public void registerResult(final Phase phase, final Type type, final long elapsed, final long count, final long falsePositives) {
+    public void registerResult(final Phase phase, final Type type, final long elapsed, final long count) {
         this.time[phase.ordinal()][type.ordinal()] = elapsed;
         this.count[phase.ordinal()][type.ordinal()] = count;
-        this.falsePositives[phase.ordinal()][type.ordinal()] = falsePositives;
     }
 
     /**
@@ -262,8 +252,6 @@ public class Stats {
             out.writeLong(stats.load);
             writeLongMatrix(out, stats.time);
             writeLongMatrix(out, stats.count);
-            writeLongMatrix(out, stats.falsePositives);
-
         }
 
         /**
@@ -343,7 +331,6 @@ public class Stats {
             result.load = in.readLong();
             result.time = readLongMatrix(in);
             result.count = readLongMatrix(in);
-            result.falsePositives = readLongMatrix(in);
             return result;
         }
 
@@ -433,6 +420,7 @@ public class Stats {
         public CSV(PrintStream out) {
             this.out = out;
         }
+
         /**
          * Generate the CSV header for this stat
          * @return the CSV header for this stat.
@@ -440,7 +428,7 @@ public class Stats {
         public void printHeader() {
             out.print("'Index Name', 'Usage', 'Run', 'Phase', 'Population', 'Load Elapsed'");
             for (Type type : Type.values()) {
-                out.format(", '%1$s Elapsed', '%1$s Count', '%1$s False Positives'", type);
+                out.format(", '%1$s Elapsed', '%1$s Count'", type);
             }
             out.println();
         }
@@ -448,7 +436,7 @@ public class Stats {
         public void printLine(Phase phase) {
             out.format("'%s','%s', %s,'%s',%s,%s", indexName, usageType, run, phase, population, load);
             for (Type type : Type.values()) {
-                out.format(",%s,%s,%s", getElapsed(phase, type), getCount(phase, type), getFalsePositives(phase, type));
+                out.format(",%s,%s", getElapsed(phase, type), getCount(phase, type));
             }
             out.println();
         }

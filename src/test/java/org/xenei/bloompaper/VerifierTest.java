@@ -53,14 +53,14 @@ public class VerifierTest {
         Stats one = new Stats("usage", "testing", 1000, 5);
         one.addFoundFilters(Type.COMPLETE, target, found);
         one.setLoad(40000);
-        one.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500, 0);
-        one.registerResult(Phase.Query, Type.COMPLETE, 70000, 700, 1);
+        one.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500);
+        one.registerResult(Phase.Query, Type.COMPLETE, 70000, 700);
 
         Stats two = new Stats("usage", "testing2", 1000, 5);
         two.addFoundFilters(Type.COMPLETE, target, found);
         two.setLoad(40000);
-        two.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500,0);
-        two.registerResult(Phase.Query, Type.COMPLETE, 70000, 700,1);
+        two.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500);
+        two.registerResult(Phase.Query, Type.COMPLETE, 70000, 700);
 
         Stats three = new Stats("usage", "testing3", 1000, 5);
         found.add(FrozenBloomFilter.makeInstance(new TestingBloomFilter(shape)));
@@ -68,8 +68,8 @@ public class VerifierTest {
         found.add(FrozenBloomFilter.makeInstance(new TestingBloomFilter(shape)));
         three.addFoundFilters(Type.COMPLETE, target, found);
         three.setLoad(40000);
-        three.registerResult(Phase.Delete, Type.COMPLETE, 60000, 400,0);
-        three.registerResult(Phase.Query, Type.COMPLETE, 70000, 800,1);
+        three.registerResult(Phase.Delete, Type.COMPLETE, 60000, 400);
+        three.registerResult(Phase.Query, Type.COMPLETE, 70000, 800);
 
         Table table = new Table(dir);
         table.add("testing", Arrays.asList(one));
@@ -92,20 +92,20 @@ public class VerifierTest {
         Stats one = new Stats("usage", "testing", 1000, 5);
         one.addFoundFilters(Type.COMPLETE, target, found);
         one.setLoad(40000);
-        one.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500,0);
-        one.registerResult(Phase.Query, Type.COMPLETE, 70000, 700,0);
+        one.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500);
+        one.registerResult(Phase.Query, Type.COMPLETE, 70000, 700);
 
         Stats two = new Stats("usage", "testing2", 1000, 5);
         two.addFoundFilters(Type.COMPLETE, target, found);
         two.setLoad(40000);
-        two.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500,0);
-        two.registerResult(Phase.Query, Type.COMPLETE, 70000, 701,1);
+        two.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500);
+        two.registerResult(Phase.Query, Type.COMPLETE, 70000, 700);
 
         Stats three = new Stats("usage", "testing3", 1000, 5);
         three.addFoundFilters(Type.COMPLETE, target, found);
         three.setLoad(40000);
-        three.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500,0);
-        three.registerResult(Phase.Query, Type.COMPLETE, 70000, 702,2);
+        three.registerResult(Phase.Delete, Type.COMPLETE, 60000, 500);
+        three.registerResult(Phase.Query, Type.COMPLETE, 70000, 700);
 
         Table table = new Table(dir);
         table.add("testing", Arrays.asList(one));

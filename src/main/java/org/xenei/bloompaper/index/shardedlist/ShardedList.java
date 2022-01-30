@@ -6,27 +6,32 @@ import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
+import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
+import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
+import org.xenei.bloompaper.index.BitUtils;
 import org.xenei.bloompaper.index.BloomIndex;
 
 public class ShardedList extends BloomIndex {
     private final static int shardSize = 10000;
     private List<Shard> root;
     private int count;
+    private final Shape filterShape;
 
     public ShardedList(int population, Shape shape) {
         super(population, shape);
         int limit = (population / shardSize) + 1;
         root = new ArrayList<Shard>(limit);
+        filterShape = Shape.Factory.fromNP(shardSize * shape.getNumberOfHashFunctions(), 0.1);
 
         for (int i = 0; i < limit; i++) {
-            root.add(new Shard());
+            root.add(new Shard(filterShape, shardSize));
         }
         count = 0;
     }
 
     @Override
     public void add(BloomFilter filter) {
-        BloomFilter filterFilter = Shard.forFilter(filter);
+        BloomFilter filterFilter = new SimpleBloomFilter(filterShape, new BitUtils.ShardingHasher(filter));
         int dist = Integer.MAX_VALUE;
         int bucket = -1;
         Shard candidate = null;
@@ -51,7 +56,7 @@ public class ShardedList extends BloomIndex {
         if (bucket == -1) {
             // no space
             bucket = root.size();
-            candidate = new Shard();
+            candidate = new Shard(filterShape, shardSize);
             root.add(candidate);
         } else {
             candidate = root.get(bucket);
@@ -62,12 +67,12 @@ public class ShardedList extends BloomIndex {
 
     @Override
     public boolean delete(BloomFilter filter) {
-        BloomFilter filterFilter = Shard.forFilter(filter);
+        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
         Shard candidate = null;
         for (int i = 0; i < root.size(); i++) {
             candidate = root.get(i);
-            if (candidate.contains(filterFilter)) {
-                if (candidate.delete(filter, filterFilter)) {
+            if (candidate.contains(filterHasher)) {
+                if (candidate.delete(filter, filterHasher)) {
                     count--;
                     return true;
                 }
@@ -78,12 +83,13 @@ public class ShardedList extends BloomIndex {
 
     @Override
     protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
-        BloomFilter filterFilter = Shard.forFilter(filter);
+        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
+
         Shard candidate = null;
 
         for (int i = 0; i < root.size(); i++) {
             candidate = root.get(i);
-            if (candidate.contains(filterFilter)) {
+            if (candidate.contains(filterHasher)) {
                 candidate.doSearch(consumer, filter);
             }
         }

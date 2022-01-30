@@ -1,55 +1,40 @@
 package org.xenei.bloompaper.index.shardedlist;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
-import org.apache.commons.codec.digest.MurmurHash3;
+
 import org.apache.commons.collections4.bloomfilter.ArrayCountingBloomFilter;
-import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.CountingBloomFilter;
 import org.apache.commons.collections4.bloomfilter.SetOperations;
 import org.apache.commons.collections4.bloomfilter.Shape;
-import org.apache.commons.collections4.bloomfilter.SparseBloomFilter;
 import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
-import org.apache.commons.collections4.bloomfilter.hasher.SimpleHasher;
 import org.xenei.bloompaper.index.BitUtils;
 
 public class Shard {
-    private static final Shape shape = Shape.Factory.fromNP(10000, 0.1);
 
     private final CountingBloomFilter gatekeeper;
-    private List<BloomFilter> filters;
+    private final List<BloomFilter> filters;
+    private final int shardSize;
 
-    public Shard() {
-        gatekeeper = new ArrayCountingBloomFilter(shape);
-        filters = new ArrayList<>(10000);
-    }
-
-    public static BloomFilter forFilter(BloomFilter filter) {
-        byte[] buffer = new byte[BitMap.numberOfBitMaps(filter.getShape().getNumberOfBits()) * Long.BYTES];
-        ByteBuffer bb = ByteBuffer.wrap(buffer);
-        filter.forEachBitMap(x -> {
-            bb.putLong(x);
-            return true;
-        });
-        long[] parts = MurmurHash3.hash128(buffer);
-        Hasher hasher = new SimpleHasher(parts[0], parts[1]);
-        return new SparseBloomFilter(shape, hasher);
+    public Shard(Shape filterShape, int shardSize) {
+        gatekeeper = new ArrayCountingBloomFilter(filterShape);
+        this.shardSize = shardSize;
+        filters = new ArrayList<>(shardSize);
     }
 
     public boolean hasSpace() {
-        return filters.size() < 10000;
+        return filters.size() < shardSize;
     }
 
     public int distance(BloomFilter filter) {
         return SetOperations.hammingDistance(gatekeeper, filter);
     }
 
-    public boolean contains(BloomFilter filterFilter) {
-        return gatekeeper.contains(filterFilter);
+    public boolean contains(Hasher filterHasher) {
+        return gatekeeper.contains(filterHasher);
     }
 
     public void add(BloomFilter filter, BloomFilter filterFilter) {
@@ -57,13 +42,13 @@ public class Shard {
         filters.add(filter);
     }
 
-    public boolean delete(BloomFilter filter, BloomFilter filterFilter) {
+    public boolean delete(BloomFilter filter, Hasher filterHasher) {
         BitUtils.BufferCompare comp = new BitUtils.BufferCompare(filter, BitUtils.BufferCompare.exact);
         Iterator<BloomFilter> iter = filters.iterator();
         while (iter.hasNext()) {
             if (comp.matches(iter.next())) {
                 iter.remove();
-                gatekeeper.remove(filterFilter);
+                gatekeeper.remove(filterHasher);
                 return true;
             }
         }

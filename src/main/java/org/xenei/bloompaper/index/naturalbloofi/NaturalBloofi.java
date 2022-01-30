@@ -8,29 +8,32 @@ import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
+import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
+import org.xenei.bloompaper.index.BitUtils;
 import org.xenei.bloompaper.index.BloomIndex;
 
 public class NaturalBloofi extends BloomIndex {
-
     private List<Bucket> root;
     private int id;
     private final int bucketPopulation = 10000;
+    private final Shape filterShape;
 
     public NaturalBloofi(int population, Shape shape) {
         super(population, shape);
         int limit = (population / bucketPopulation) + 1;
         root = new ArrayList<Bucket>(limit);
-
+        filterShape = Shape.Factory.fromNP(bucketPopulation * shape.getNumberOfHashFunctions(), 0.1);
         for (int i = 0; i < limit; i++) {
             int bucketNumber = (i + 1) * bucketPopulation * -1;
-            root.add(new Bucket(bucketNumber));
+            root.add(new Bucket(bucketNumber, filterShape, bucketPopulation));
         }
         id = 0;
     }
 
     @Override
     public void add(BloomFilter filter) {
-        BloomFilter filterFilter = Bucket.forFilter(filter);
+        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
+
         int dist = Integer.MAX_VALUE;
         int bucket = -1;
         int childDist = Integer.MAX_VALUE;
@@ -42,9 +45,10 @@ public class NaturalBloofi extends BloomIndex {
                 bucket = 0;
             }
         } else {
-            for (int i = 0; i < root.size() && dist!=0; i++) {
+            BloomFilter filterFilter = new SimpleBloomFilter(filterShape, filterHasher);
+            for (int i = 0; i < root.size() && dist != 0; i++) {
                 candidate = root.get(i);
-                if (candidate.contains(filterFilter)) {
+                if (candidate.contains(filterHasher)) {
                     int candidateDist = candidate.distance(filterFilter);
                     if (childDist > candidateDist) {
                         childDist = candidateDist;
@@ -62,7 +66,6 @@ public class NaturalBloofi extends BloomIndex {
             }
         }
 
-
         if (childBucket != -1) {
             candidate = root.get(childBucket);
         } else {
@@ -70,23 +73,23 @@ public class NaturalBloofi extends BloomIndex {
                 // no space
                 bucket = root.size();
                 int bucketNumber = (bucket + 1) * -10000;
-                candidate = new Bucket(bucketNumber);
+                candidate = new Bucket(bucketNumber, filterShape, bucketPopulation);
                 root.add(candidate);
             } else {
                 candidate = root.get(bucket);
             }
         }
-        candidate.add(filter, id++, filterFilter);
+        candidate.add(filter, id++, filterHasher);
     }
 
     @Override
     public boolean delete(BloomFilter filter) {
-        BloomFilter filterFilter = Bucket.forFilter(filter);
+        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
         Bucket candidate = null;
         for (int i = 0; i < root.size(); i++) {
             candidate = root.get(i);
-            if (candidate.contains(filterFilter)) {
-                if (candidate.delete(filter, filterFilter)) {
+            if (candidate.contains(filterHasher)) {
+                if (candidate.delete(filter, filterHasher)) {
                     return true;
                 }
             }
@@ -105,11 +108,11 @@ public class NaturalBloofi extends BloomIndex {
     @Override
     protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
         Searcher searcher = new Searcher(n -> mapper(filter.getShape(), n, consumer), filter);
-        BloomFilter filterFilter = Bucket.forFilter(filter);
+        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
         Bucket candidate = null;
         for (int i = 0; i < root.size(); i++) {
             candidate = root.get(i);
-            if (candidate.contains(filterFilter)) {
+            if (candidate.contains(filterHasher)) {
                 candidate.searchChildren(searcher.target, searcher);
             }
         }
@@ -123,13 +126,15 @@ public class NaturalBloofi extends BloomIndex {
     @Override
     public int count() {
         int i = 0;
-        for (Bucket b : root ) { i+= b.getCount(); }
+        for (Bucket b : root) {
+            i += b.getCount();
+        }
         return i;
     }
 
     public void reportStatus() {
-        for (Bucket bucket : root ) {
-            System.out.format( "%s%n", bucket.getCount());
+        for (Bucket bucket : root) {
+            System.out.format("%s%n", bucket.getCount());
         }
     }
 }

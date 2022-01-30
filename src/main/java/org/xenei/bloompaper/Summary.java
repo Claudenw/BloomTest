@@ -189,15 +189,16 @@ public class Summary {
         return table;
     }
 
-    //    /**
-    //     * Writes produces a summary report for the specified table.
-    //     * @param ps the print stream to write the report to.
-    //     * @param table the table to process.
-    //     * @throws IOException on IO Error.
-    //     */
-    //    public static void writeData(PrintStream ps, Table table) throws IOException {
-    //        table.forEachPhase( table.new CSV( ps ) );
-    //    }
+    // /**
+    // * Writes produces a summary report for the specified table.
+    // * @param ps the print stream to write the report to.
+    // * @param table the table to process.
+    // * @throws IOException on IO Error.
+    // */
+    // public static void writeData(PrintStream ps, Table table) throws IOException
+    // {
+    // table.forEachPhase( table.new CSV( ps ) );
+    // }
 
     /**
      * Gets the options for the main code.
@@ -344,9 +345,9 @@ public class Summary {
                     StringBuilder sb = new StringBuilder(String.format("'%s'", name));
                     for (Integer population : populations) {
                         table.stream().filter(e -> e.population == population && e.indexName.equals(name))
-                        .forEach(e -> {
-                            sb.append(",").append(e.getGraphValue(p, t));
-                        });
+                                .forEach(e -> {
+                                    sb.append(",").append(e.getGraphValue(p, t));
+                                });
                     }
                     System.out.println(sb);
                     if (outfile != null) {

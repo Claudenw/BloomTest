@@ -1,9 +1,14 @@
 package org.xenei.bloompaper.index;
 
 import java.util.function.BiPredicate;
+import java.util.function.IntPredicate;
 import java.util.function.LongPredicate;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.IndexProducer;
+import org.apache.commons.collections4.bloomfilter.Shape;
+import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
+import org.apache.commons.collections4.bloomfilter.hasher.SimpleHasher;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -167,5 +172,58 @@ public final class BitUtils {
             i = 0;
             return other.forEachBitMap(this) ? i == bitMap.length : false;
         }
+    }
+
+    public static class ShardingHasher implements Hasher {
+        private static int INIT_MASK = 0x0F;
+        private static int INCR_MASK = 0xF0;
+
+        private int[] indices;
+
+        public ShardingHasher(BloomFilter filter) {
+            super();
+            this.indices = BloomFilter.asIndexArray(filter);
+        }
+
+        public static Hasher asHasher(int value) {
+            int initial = value;
+            int incr = 0;
+            for (int i = 0; i < Integer.BYTES; i++) {
+                incr += (value & (INIT_MASK << (Byte.SIZE * i)));
+                initial += value & ((INCR_MASK << (Byte.SIZE * i)));
+            }
+            return new SimpleHasher(initial, incr);
+        }
+
+        public static Hasher asHasher(long value) {
+            long initial = value;
+            long incr = 0;
+            for (int i = 0; i < Long.BYTES; i++) {
+                incr += (value & (((long) INIT_MASK) << (Byte.SIZE * i)));
+                initial += value & ((((long) INCR_MASK) << (Byte.SIZE * i)));
+            }
+            return new SimpleHasher(initial, incr);
+        }
+
+        @Override
+        public IndexProducer indices(Shape shape) {
+            return new IndexProducer() {
+                @Override
+                public boolean forEachIndex(IntPredicate consumer) {
+                    for (int idx : indices) {
+                        if (!asHasher(idx).indices(shape).forEachIndex(consumer)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            };
+        }
+
+        @Override
+        public int size() {
+            return indices.length;
+        }
+
     }
 }

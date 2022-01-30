@@ -82,7 +82,7 @@ public class Verifier {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                long idx = s.getCount(phase, type)-s.getFalsePositives(phase,type);
+                long idx = s.getCount(phase, type);
                 List<Stats> lst = report.get(idx);
                 if (lst == null) {
                     lst = new ArrayList<Stats>();

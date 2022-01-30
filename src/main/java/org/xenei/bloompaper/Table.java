@@ -39,15 +39,14 @@ public class Table {
         this(null);
     }
 
-    public class CSV implements BiConsumer<Stats,Stats.Phase>{
+    public class CSV implements BiConsumer<Stats, Stats.Phase> {
 
         private PrintStream stream;
         private boolean headerPrinted = false;
 
-        public CSV( PrintStream stream ) {
+        public CSV(PrintStream stream) {
             this.stream = stream;
         }
-
 
         @Override
         public void accept(Stats stats, Phase phase) {
