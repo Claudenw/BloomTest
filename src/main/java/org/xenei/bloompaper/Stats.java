@@ -3,6 +3,7 @@ package org.xenei.bloompaper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.Collection;
@@ -68,6 +69,7 @@ public class Stats {
     @SuppressWarnings("unchecked")
     private Map<FrozenBloomFilter, Set<FrozenBloomFilter>>[] foundFilters = new HashMap[Type.values().length];
 
+    private long[][] falsePositives = new long[Phase.values().length][Type.values().length];
     /**
      * An array of timings for phase and type
      */
@@ -78,17 +80,7 @@ public class Stats {
      */
     private long[][] count = new long[Phase.values().length][Type.values().length];
 
-    /**
-     * Generate the CSV header for this stat
-     * @return the CSV header for this stat.
-     */
-    public static String getHeader() {
-        StringBuilder sb = new StringBuilder("'Index Name', 'Usage', 'Run', 'Phase', 'Population', 'Load Elapsed'");
-        for (Type type : Type.values()) {
-            sb.append(String.format(", '%1$s Elapsed', '%1$s Count'", type));
-        }
-        return sb.toString();
-    }
+
 
     /**
      * Constructor.
@@ -129,6 +121,10 @@ public class Stats {
         this.load = load;
     }
 
+    public long getFalsePositives( Phase phase, Type type ) {
+        return falsePositives[phase.ordinal()][type.ordinal()];
+    }
+
     /**
      * Gets all the found filters for the specified operation.
      * @param type the operation type.
@@ -139,19 +135,7 @@ public class Stats {
         return result == null ? Collections.emptyMap() : result;
     }
 
-    /**
-     * Report the statistics for the specified phase.
-     * @param phase the phase to report for.
-     * @return the reporting string CSV.
-     */
-    public String reportStats(Phase phase) {
-        StringBuilder sb = new StringBuilder(
-                String.format("'%s','%s', %s,'%s',%s,%s", indexName, usageType, run, phase, population, load));
-        for (Type type : Type.values()) {
-            sb.append(String.format(",%s,%s", getElapsed(phase, type), getCount(phase, type)));
-        }
-        return sb.toString();
-    }
+
 
     /**
      * Load the filter maps from a directory.
@@ -230,10 +214,12 @@ public class Stats {
      * @param type the type of filter being used.
      * @param elapsed the elapsed time in milliseconds.
      * @param count the count of items detected in the test.
+     * @param falsePositives the count of falst positives on this run.
      */
-    public void registerResult(final Phase phase, final Type type, final long elapsed, final long count) {
+    public void registerResult(final Phase phase, final Type type, final long elapsed, final long count, final long falsePositives) {
         this.time[phase.ordinal()][type.ordinal()] = elapsed;
         this.count[phase.ordinal()][type.ordinal()] = count;
+        this.falsePositives[phase.ordinal()][type.ordinal()] = falsePositives;
     }
 
     /**
@@ -276,6 +262,7 @@ public class Stats {
             out.writeLong(stats.load);
             writeLongMatrix(out, stats.time);
             writeLongMatrix(out, stats.count);
+            writeLongMatrix(out, stats.falsePositives);
 
         }
 
@@ -356,6 +343,7 @@ public class Stats {
             result.load = in.readLong();
             result.time = readLongMatrix(in);
             result.count = readLongMatrix(in);
+            result.falsePositives = readLongMatrix(in);
             return result;
         }
 
@@ -432,6 +420,44 @@ public class Stats {
             BloomFilter bf = new SimpleBloomFilter(shape, producer);
             return FrozenBloomFilter.makeInstance(bf);
         }
+
+    }
+
+    /**
+     * Class to perform binary serialization/deserialization of the Stats object.
+     * This is stored in the .dat files as well as the .fmf files.
+     */
+    public class CSV {
+        private PrintStream out;
+
+        public CSV(PrintStream out) {
+            this.out = out;
+        }
+        /**
+         * Generate the CSV header for this stat
+         * @return the CSV header for this stat.
+         */
+        public void printHeader() {
+            out.print("'Index Name', 'Usage', 'Run', 'Phase', 'Population', 'Load Elapsed'");
+            for (Type type : Type.values()) {
+                out.format(", '%1$s Elapsed', '%1$s Count', '%1$s False Positives'", type);
+            }
+            out.println();
+        }
+
+        public void printLine(Phase phase) {
+            out.format("'%s','%s', %s,'%s',%s,%s", indexName, usageType, run, phase, population, load);
+            for (Type type : Type.values()) {
+                out.format(",%s,%s,%s", getElapsed(phase, type), getCount(phase, type), getFalsePositives(phase, type));
+            }
+            out.println();
+        }
+
+        /**
+         * Report the statistics for the specified phase.
+         * @param phase the phase to report for.
+         * @return the reporting string CSV.
+         */
 
     }
 

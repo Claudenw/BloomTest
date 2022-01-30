@@ -72,7 +72,7 @@ public class BFHamming {
         while (lowerLimit.compareTo(index.last()) <= 0) {
             upperLimit = lowerLimit.upperLimitNode();
             tailSet.tailSet(lowerLimit).headSet(upperLimit).stream().filter(n -> n.getFilter().contains(filter))
-                    .forEach((n) -> n.getCount(result));
+            .forEach((n) -> n.getCount(result));
             lowerLimit = upperLimit.lowerLimitNode();
         }
     }

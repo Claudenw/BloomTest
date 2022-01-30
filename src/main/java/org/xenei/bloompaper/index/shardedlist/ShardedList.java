@@ -80,6 +80,7 @@ public class ShardedList extends BloomIndex {
     protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
         BloomFilter filterFilter = Shard.forFilter(filter);
         Shard candidate = null;
+
         for (int i = 0; i < root.size(); i++) {
             candidate = root.get(i);
             if (candidate.contains(filterFilter)) {

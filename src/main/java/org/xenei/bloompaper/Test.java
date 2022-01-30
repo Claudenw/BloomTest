@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -239,10 +240,10 @@ public class Test {
 
         if (dir != null) {
             try (PrintStream ps = new PrintStream(new File(dir, "data.csv"))) {
-                Summary.writeData(ps, table);
+                table.forEachPhase( table.new CSV( ps ));
             }
             try (PrintStream ps = new PrintStream(new File(dir, "summary.csv"))) {
-                summary.writeSummary(ps, usagePattern.getName());
+                summary.new CSV( ps, usagePattern.getName()).print();
             }
         }
 
@@ -277,7 +278,7 @@ public class Test {
             }
             stopwatch.stop();
 
-            stat.registerResult(Stats.Phase.Delete, type, stopwatch.getNanoTime(), stat.getPopulation() - bi.count());
+            stat.registerResult(Stats.Phase.Delete, type, stopwatch.getNanoTime(), stat.getPopulation() - bi.count(), 0);
 
             System.out.println(stat.displayString(Stats.Phase.Delete, type));
             // add the deleted records back
@@ -338,7 +339,7 @@ public class Test {
      */
     private static BloomIndex doLoad(final Constructor<? extends BloomIndex> constructor, final BloomFilter[] filters,
             final Shape shape, final List<Stats> stats)
-            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi = null;
         System.out.println("Calculating load times");
         StopWatch stopwatch = new StopWatch();
@@ -375,6 +376,7 @@ public class Test {
         for (int run = 0; run < RUN_COUNT; run++) {
             long elapsed = 0;
             long found = 0;
+            long falsePositives = 0;
             Stats stat = stats.get(run);
             for (int i = 0; i < sampleSize; i++) {
                 Collection<BloomFilter> filterCapture = new ArrayList<BloomFilter>();
@@ -386,8 +388,11 @@ public class Test {
                 if (collectFilters) {
                     stat.addFoundFilters(type, bfSample[i], filterCapture);
                 }
+                long[] filterAry = BloomFilter.asBitMapArray(bfSample[i]);
+                falsePositives += filterCapture.stream()
+                        .filter(f -> !Arrays.equals(BloomFilter.asBitMapArray(f), filterAry)).count();
             }
-            stat.registerResult(Stats.Phase.Query, type, elapsed, found);
+            stat.registerResult(Stats.Phase.Query, type, elapsed, found, falsePositives);
             System.out.println(stat.displayString(Stats.Phase.Query, type));
         }
     }

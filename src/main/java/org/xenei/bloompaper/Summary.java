@@ -1,10 +1,8 @@
 package org.xenei.bloompaper;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -17,6 +15,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.xenei.bloompaper.Stats.Phase;
 import org.xenei.bloompaper.Stats.Type;
@@ -28,6 +27,50 @@ import org.xenei.bloompaper.Stats.Type;
  *
  */
 public class Summary {
+
+    public class CSV {
+        private PrintStream out;
+        private String usage;
+
+        public CSV(PrintStream out, String usage) {
+            this.out = out;
+            this.usage = usage;
+        }
+
+        /**
+         * Get the header for the CSV report.
+         * @return the header string for the CSV report.
+         */
+        private void printHeader() {
+            out.print("'Index Name', 'Usage', 'Phase', 'Population', 'Avg Load Elapsed'");
+            for (Type type : Type.values()) {
+                out.format(", 'Avg %1$s Elapsed'", type);
+            }
+            out.println();
+        }
+
+        /**
+         * Report the totals for the specified phase.
+         * @param phase the Phase to report.
+         * @param the name of the usage pattern
+         * @return a CSV formatted string of the totals.
+         */
+        private void printLine(Stats.Phase phase, Summary.Element element) {
+            out.format("'%s','%s', '%s', %s,%s,%s,%s,%s%n", element.indexName, usage, phase, element.population,
+                    element.load / element.n, element.total(phase, Stats.Type.COMPLETE) / element.n,
+                    element.total(phase, Stats.Type.HIGHCARD) / element.n,
+                    element.total(phase, Stats.Type.LOWCARD) / element.n);
+        }
+
+        public void print() {
+            printHeader();
+            for (final Summary.Element element : getTable()) {
+                for (Stats.Phase phase : Stats.Phase.values()) {
+                    printLine(phase, element);
+                }
+            }
+        }
+    }
 
     /**
      * A summary element
@@ -75,18 +118,6 @@ public class Summary {
             return totals[phase.ordinal()][type.ordinal()];
         }
 
-        /**
-         * Report the totals for the specified phase.
-         * @param phase the Phase to report.
-         * @param the name of the usage pattern
-         * @return a CSV formatted string of the totals.
-         */
-        public String getReport(Stats.Phase phase, String usage) {
-            return String.format("'%s','%s', '%s', %s,%s,%s,%s,%s", indexName, usage, phase, population, load / n,
-                    total(phase, Stats.Type.COMPLETE) / n, total(phase, Stats.Type.HIGHCARD) / n,
-                    total(phase, Stats.Type.LOWCARD) / n);
-        }
-
         public double getGraphLoadTime() {
             return load / n;
         }
@@ -115,18 +146,6 @@ public class Summary {
             }
             return false;
         }
-    }
-
-    /**
-     * Get the header for the CSV report.
-     * @return the header string for the CSV report.
-     */
-    public static String getHeader() {
-        StringBuilder sb = new StringBuilder("'Index Name', 'Usage', 'Phase', 'Population', 'Avg Load Elapsed'");
-        for (Type type : Type.values()) {
-            sb.append(String.format(", 'Avg %1$s Elapsed'", type));
-        }
-        return sb.toString();
     }
 
     /**
@@ -170,38 +189,15 @@ public class Summary {
         return table;
     }
 
-    /**
-     * Writes produces a summary report for the specified table.
-     * @param ps the print stream to write the report to.
-     * @param table the table to process.
-     * @throws IOException on IO Error.
-     */
-    public static void writeData(PrintStream ps, Table table) throws IOException {
-        ps.println(Stats.getHeader());
-        table.forEachPhase((s, p) -> {
-            try {
-                s.loadFilterMaps(table.getDir());
-            } catch (IOException e) {
-                ps.println("Unable to load filter maps: " + e.getMessage());
-            }
-            ps.println(s.reportStats(p));
-        });
-    }
-
-    /**
-     * Write the summary report.
-     * @param ps the print stream to write the report to.
-     * @param usage the name of the usage pattern.
-     */
-    public void writeSummary(PrintStream ps, String usage) {
-        ps.println(Summary.getHeader());
-        for (final Summary.Element e : getTable()) {
-            for (Stats.Phase phase : Stats.Phase.values()) {
-                ps.println(e.getReport(phase, usage));
-            }
-        }
-
-    }
+    //    /**
+    //     * Writes produces a summary report for the specified table.
+    //     * @param ps the print stream to write the report to.
+    //     * @param table the table to process.
+    //     * @throws IOException on IO Error.
+    //     */
+    //    public static void writeData(PrintStream ps, Table table) throws IOException {
+    //        table.forEachPhase( table.new CSV( ps ) );
+    //    }
 
     /**
      * Gets the options for the main code.
@@ -210,13 +206,15 @@ public class Summary {
     public static Options getOptions() {
         Options options = new Options();
         options.addOption("h", "help", false, "This help");
-        options.addOption("c", "csv", true, "The name of a csv file to read (optional, may be repeated)");
-        options.addOption("d", "data", true, "The name of directory containing .dat files (optional, may be repeated)");
+        Option option = new Option("d", "data", true,
+                "The name of directory containing .dat files (optional, may be repeated)");
+        option.setRequired(true);
+        options.addOption(option);
         options.addOption("f", "full", false, "Include full statistics report (data.csv)");
         options.addOption("o", "output", true,
                 "Output directory in which to write output files.  If not specified results will not be preserved");
         options.addOption("v", "verify", false, "Run data verification");
-        options.addOption("g", "graph", false, "Create a graph_x.csv files. Only applies if -o is also specified");
+        options.addOption("g", "graph", false, "Create a graph_x.csv file data.");
         options.addOption("u", "usage", true, "Specify usage pattern, if not set 'unknown' is used");
         return options;
     }
@@ -241,33 +239,19 @@ public class Summary {
 
         if (cmd.hasOption("h")) {
             HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("Test", "", getOptions(), "Options 'c' and 'd' may occure more than once");
+            formatter.printHelp("Test", "", getOptions(), "Option 'd' may occure more than once");
         }
 
         if (cmd.hasOption('u')) {
             usagePattern = cmd.getOptionValue('u');
         }
-        if (cmd.hasOption("c")) {
-            for (String fn : cmd.getOptionValues("c")) {
-                File f = new File(fn);
-                try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-                    Table table = Table.parse(br);
-                    doOutput(table, cmd.getOptionValue("o"), cmd.hasOption("f"), cmd.hasOption("g"), usagePattern);
-                    if (cmd.hasOption("v")) {
-                        doVerify(table, cmd.getOptionValue("o"));
-                    }
-                } catch (IOException e) {
-                    System.err.println(String.format("Error reading %s: %s", fn, e.getMessage()));
-                }
-            }
 
-        }
         if (cmd.hasOption("d")) {
             for (String dirs : cmd.getOptionValues("d")) {
                 File d = new File(dirs);
                 Table table = new Table(d);
                 table.scanForFiles();
-                doOutput(table, cmd.getOptionValue("o"), cmd.hasOption("f"), cmd.hasOption("g"),usagePattern);
+                doOutput(table, cmd.getOptionValue("o"), cmd.hasOption("f"), cmd.hasOption("g"), usagePattern);
                 if (cmd.hasOption("v")) {
                     try {
                         doVerify(table, cmd.getOptionValue("o"));
@@ -301,7 +285,8 @@ public class Summary {
      * @param usage The name of the usage pattern.
      * @throws IOException on IO Error.
      */
-    public static void doOutput(Table table, String directoryName, boolean full, boolean graph, String usage) throws IOException {
+    public static void doOutput(Table table, String directoryName, boolean full, boolean graph, String usage)
+            throws IOException {
 
         File outfile = null;
         if (directoryName != null) {
@@ -310,19 +295,18 @@ public class Summary {
 
         if (full) {
             System.out.println("=== data ===");
-            Summary.writeData(System.out, table);
+            table.forEachPhase(table.new CSV(System.out));
             if (outfile != null) {
-                Summary.writeData(new PrintStream(new FileOutputStream(new File(outfile, "data.csv"))), table);
+                table.forEachPhase(table.new CSV(new PrintStream(new FileOutputStream(new File(outfile, "data.csv")))));
             }
         }
         Summary summary = new Summary(table);
 
         System.out.println("=== summary data ===");
-        summary.writeSummary(System.out, usage);
+        summary.new CSV(System.out, usage).print();
 
         if (outfile != null) {
-            summary.writeSummary(new PrintStream(new FileOutputStream(new File(outfile, "summary.csv"))),
-                    usage);
+            summary.new CSV(new PrintStream(new FileOutputStream(new File(outfile, "summary.csv"))), usage).print();
         }
 
         if (graph) {
@@ -346,7 +330,8 @@ public class Summary {
                 System.out.format("%nGraph data for %s %s%n", p, t);
                 {
                     StringBuilder sb = new StringBuilder("'name'");
-                    populations.forEach(pop -> sb.append(",'10^").append(Double.valueOf(Math.log10(pop)).intValue()).append("'"));
+                    populations.forEach(
+                            pop -> sb.append(",'10^").append(Double.valueOf(Math.log10(pop)).intValue()).append("'"));
                     System.out.println(sb);
 
                     if (dir != null) {
