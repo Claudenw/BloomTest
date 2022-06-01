@@ -78,7 +78,7 @@ public class Node extends NodeContainer implements Comparable<Node> {
 
     public Node(NodeContainer parent, BloomFilter bloomFilter, int id) {
         super(parent, null);
-        this.bitMap = bloomFilter == null ? new long[0] : BloomFilter.asBitMapArray(bloomFilter);
+        this.bitMap = bloomFilter == null ? new long[0] : bloomFilter.asBitMapArray();
 
         this.ids = new ArrayList<>(1);
         this.ids.add(id);

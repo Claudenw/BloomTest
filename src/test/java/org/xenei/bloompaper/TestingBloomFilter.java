@@ -1,8 +1,8 @@
 package org.xenei.bloompaper;
 
-import org.apache.commons.collections4.bloomfilter.hasher.SimpleHasher;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
+import org.apache.commons.collections4.bloomfilter.SimpleHasher;
 
 /**
  * An arbitrary bloom filter.

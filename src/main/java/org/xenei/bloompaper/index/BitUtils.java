@@ -5,10 +5,10 @@ import java.util.function.IntPredicate;
 import java.util.function.LongPredicate;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.IndexProducer;
 import org.apache.commons.collections4.bloomfilter.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
-import org.apache.commons.collections4.bloomfilter.hasher.SimpleHasher;
+import org.apache.commons.collections4.bloomfilter.SimpleHasher;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -159,7 +159,7 @@ public final class BitUtils {
         int i;
 
         public BufferCompare(BloomFilter filter, BiPredicate<Long, Long> func) {
-            bitMap = BloomFilter.asBitMapArray(filter);
+            bitMap = filter.asBitMapArray();
             this.func = func;
         }
 
@@ -182,7 +182,7 @@ public final class BitUtils {
 
         public ShardingHasher(BloomFilter filter) {
             super();
-            this.indices = BloomFilter.asIndexArray(filter);
+            this.indices = filter.asIndexArray();
         }
 
         public static Hasher asHasher(int value) {

@@ -5,12 +5,18 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 import org.xenei.bloompaper.index.BitUtils;
 import org.xenei.bloompaper.index.BloomIndex;
 
+/**
+ * A multidimentional Bloom filter that constructs a list by creating sharded sub lists.
+ * Each shard is fronted by a Bloom filter to determine if the shard should be searched.  Each
+ * filter inserted in the list is used to generate an internal Bloom filter.
+ * When all shards are full a new shard is created.
+ */
 public class ShardedList extends BloomIndex {
     private final static int shardSize = 10000;
     private List<Shard> root;
@@ -21,7 +27,7 @@ public class ShardedList extends BloomIndex {
         super(population, shape);
         int limit = (population / shardSize) + 1;
         root = new ArrayList<Shard>(limit);
-        filterShape = Shape.Factory.fromNP(shardSize * shape.getNumberOfHashFunctions(), 0.1);
+        filterShape = Shape.fromNP(shardSize * shape.getNumberOfHashFunctions(), 0.1);
 
         for (int i = 0; i < limit; i++) {
             root.add(new Shard(filterShape, shardSize));

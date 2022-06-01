@@ -9,8 +9,9 @@ import org.apache.commons.collections4.bloomfilter.BitCountProducer;
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.CountingBloomFilter;
+import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.IndexProducer;
-import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
+import org.apache.commons.collections4.bloomfilter.LongBiPredicate;
 import org.apache.commons.collections4.bloomfilter.Shape;
 
 /**
@@ -135,5 +136,52 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
         filter.add(BitCountProducer.from(hasher.indices(delegate.getShape())));
         return filter;
     }
+
+    @Override
+    public BloomFilter copy() {
+        return new PseudoCountingBloomFilter( delegate.copy() );
+    }
+
+    @Override
+    public LongPredicate makePredicate(LongBiPredicate func) {
+        return delegate.makePredicate(func);
+    }
+
+    @Override
+    public long[] asBitMapArray() {
+        return delegate.asBitMapArray();
+    }
+
+    @Override
+    public int[] asIndexArray() {
+        return delegate.asIndexArray();
+    }
+
+    @Override
+    public boolean mergeInPlace(Hasher hasher) {
+        return delegate.mergeInPlace(hasher);
+    }
+
+    @Override
+    public boolean isFull() {
+        return delegate.isFull();
+    }
+
+    @Override
+    public int estimateN() {
+        return delegate.estimateN();
+    }
+
+    @Override
+    public int estimateUnion(BloomFilter other) {
+        return delegate.estimateUnion(other);
+    }
+
+    @Override
+    public int estimateIntersection(BloomFilter other) {
+        return delegate.estimateIntersection(other);
+    }
+
+
 
 }

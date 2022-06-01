@@ -19,10 +19,10 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.collections4.bloomfilter.SparseBloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 import org.apache.commons.lang3.time.StopWatch;
 import org.xenei.bloompaper.Stats.Type;
 import org.xenei.bloompaper.geoname.GeoName;
@@ -447,7 +447,7 @@ public class Test {
         /**
          * The shape for this type of filter.
          */
-        final Shape shape = Shape.Factory.fromNP(3, 1.0 / 100000);
+        final Shape shape = Shape.fromNP(3, 1.0 / 100000);
 
         @Override
         public Type[] getSupportedTypes() {
@@ -552,7 +552,7 @@ public class Test {
 
         @Override
         public Shape getShape(int population) {
-            return Shape.Factory.fromNP(population, 0.1);
+            return Shape.fromNP(population, 0.1);
         }
 
         @Override

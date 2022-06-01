@@ -24,7 +24,7 @@ import org.apache.commons.io.FileUtils;
 
 public class VerifierTest {
 
-    private Shape shape = new Shape(12, 12);
+    private Shape shape = Shape.fromKM(12, 12);
 
     private File dir;
 

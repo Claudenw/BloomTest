@@ -14,16 +14,16 @@ import org.xenei.bloompaper.TestingBloomFilter;
 public class NumericBloomFilterTest {
     int n = 3;
     double p = 1.0 / 100000;
-    Shape shape = Shape.Factory.fromNP(n, p);
+    Shape shape = Shape.fromNP(n, p);
 
     @Test
     public void hashCodeTest() {
         FrozenBloomFilter target = new FrozenBloomFilter(shape,
-                BitMapProducer.fromLongArray(new long[] { -3025718536694661252L }));
+                BitMapProducer.fromBitMapArray(new long[] { -3025718536694661252L }));
         assertEquals(target.hashCode(), target.hashCode());
 
         FrozenBloomFilter two = new FrozenBloomFilter(shape,
-                BitMapProducer.fromLongArray(new long[] { -3025718536694661252L }));
+                BitMapProducer.fromBitMapArray(new long[] { -3025718536694661252L }));
         assertEquals(target.hashCode(), two.hashCode());
 
     }
@@ -32,7 +32,7 @@ public class NumericBloomFilterTest {
     public void collectionTest() {
 
         FrozenBloomFilter target = new FrozenBloomFilter(shape,
-                BitMapProducer.fromLongArray(new long[] { -3025718536694661252L }));
+                BitMapProducer.fromBitMapArray(new long[] { -3025718536694661252L }));
         Set<FrozenBloomFilter> set = new HashSet<FrozenBloomFilter>();
 
         set.add(FrozenBloomFilter.makeInstance(new TestingBloomFilter(shape)));
@@ -48,7 +48,7 @@ public class NumericBloomFilterTest {
         long bits[] = new long[1];
         bits[0] = -3025718536694661252L;
 
-        FrozenBloomFilter target = new FrozenBloomFilter(shape, BitMapProducer.fromLongArray(bits));
+        FrozenBloomFilter target = new FrozenBloomFilter(shape, BitMapProducer.fromBitMapArray(bits));
 
         int hash = target.hashCode();
 

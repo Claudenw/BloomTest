@@ -105,7 +105,7 @@ public class LeafNode implements Node {
 
     @Override
     public String toString() {
-        long[] bits = BloomFilter.asBitMapArray(filter);
+        long[] bits = filter.asBitMapArray();
         return String
                 .format(String.format("LeafNode %s: %s (%s)", id, BitUtils.formatHex(bits), BitUtils.format(bits)));
     }

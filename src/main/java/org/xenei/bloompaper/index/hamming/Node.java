@@ -67,7 +67,7 @@ public class Node implements Comparable<Node> {
             return true;
         });
 
-        return String.format("%s n=%s h=%s l=%s, 0x%s", BitUtils.format(wrapped.getBitMap()), count, getHamming(),
+        return String.format("%s n=%s h=%s l=%s, 0x%s", BitUtils.format(wrapped.asBitMapArray()), count, getHamming(),
                 getLog(), sb);
     }
 
@@ -130,13 +130,13 @@ public class Node implements Comparable<Node> {
     private final int[] getApproximateLogExponents(int depth) {
         int[] exp = new int[depth + 1];
 
-        exp[0] = BitUtils.maxSet(wrapped.getBitMap());
+        exp[0] = BitUtils.maxSet(wrapped.asBitMapArray());
         if (exp[0] < 0) {
             return exp;
         }
 
         for (int i = 1; i < depth; i++) {
-            exp[i] = BitUtils.maxSetBefore(wrapped.getBitMap(), exp[i - 1]);
+            exp[i] = BitUtils.maxSetBefore(wrapped.asBitMapArray(), exp[i - 1]);
             if (exp[i] - exp[0] < -25) {
                 exp[i] = -1;
             }

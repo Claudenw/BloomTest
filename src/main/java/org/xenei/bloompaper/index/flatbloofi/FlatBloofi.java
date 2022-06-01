@@ -38,17 +38,17 @@ public final class FlatBloofi {
         busy = new BitSet(0);
     }
 
-    public void add(BloomFilter bf) {
+    public void add(BloomFilter filter) {
         int i = busy.nextClearBit(0);
         if (buffer.size() - 1 < BitUtils.getLongIndex(i)) {
             buffer.add(new long[shape.getNumberOfBits() + 1]);
         }
-        setBloomAt(i, BloomFilter.asBitMapArray(bf));
+        setBloomAt(i, filter.asBitMapArray());
         busy.set(i);
     }
 
-    public void search(Consumer<BloomFilter> result, BloomFilter bf) {
-        BitSet bs = BitSet.valueOf(BloomFilter.asBitMapArray(bf));
+    public void search(Consumer<BloomFilter> result, BloomFilter filter) {
+        BitSet bs = BitSet.valueOf(filter.asBitMapArray());
 
         for (int i = 0; i < buffer.size(); i++) {
             long w = ~0l;
@@ -107,7 +107,7 @@ public final class FlatBloofi {
      * @return a packed index of entries.
      */
     private BitSet findExactMatch(BloomFilter filter) {
-        long[] bits = BloomFilter.asBitMapArray(filter);
+        long[] bits = filter.asBitMapArray();
         long[] result = new long[buffer.size()];
         long[] busyBits = busy.toLongArray();
         /*

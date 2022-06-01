@@ -54,7 +54,7 @@ public class InnerNodeTest {
         BFTrie trie = mock(BFTrie.class);
         when(trie.getWidth()).thenReturn(4);
 
-        Shape shape = new Shape(302, 17);
+        Shape shape = Shape.fromKM(302, 17);
         InnerNode innerNode = new InnerNode(0, shape, trie);
 
         for (int i = 0; i < 16; i++) {

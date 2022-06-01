@@ -316,7 +316,7 @@ public class Stats {
         private void writeBloomFilter(DataOutputStream out, BloomFilter bf) throws IOException {
             out.writeInt(bf.getShape().getNumberOfHashFunctions());
             out.writeInt(bf.getShape().getNumberOfBits());
-            writeLongArray(out, BloomFilter.asBitMapArray(bf));
+            writeLongArray(out, bf.asBitMapArray());
         }
 
         /**R
@@ -401,9 +401,9 @@ public class Stats {
          * @throws IOException on IO error.
          */
         private FrozenBloomFilter readBloomFilter(DataInputStream in) throws IOException {
-            Shape shape = new Shape(in.readInt(), in.readInt());
+            Shape shape = Shape.fromKM(in.readInt(), in.readInt());
             long[] bitMaps = readLongArray(in);
-            BitMapProducer producer = BitMapProducer.fromLongArray(bitMaps);
+            BitMapProducer producer = BitMapProducer.fromBitMapArray(bitMaps);
             BloomFilter bf = new SimpleBloomFilter(shape, producer);
             return FrozenBloomFilter.makeInstance(bf);
         }

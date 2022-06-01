@@ -23,7 +23,7 @@ import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 public class StatsSerdeTest {
 
-    private Shape shape = new Shape(12, 12);
+    private Shape shape = Shape.fromKM(12, 12);
 
     private Stats.Serde serde = new Stats.Serde();
 

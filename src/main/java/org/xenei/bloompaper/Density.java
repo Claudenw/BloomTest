@@ -64,7 +64,7 @@ public class Density {
         int numberOfItems = 3;
         double probability = 1.0 / 100000;
 
-        Shape shape = Shape.Factory.fromNP(numberOfItems, probability);
+        Shape shape = Shape.fromNP(numberOfItems, probability);
         Status status = new Status(shape);
         BloomFilter[] filters = new BloomFilter[SAMPLE_SIZE];
         try (GeoNameIterator geoIter = new GeoNameIterator(Density.class.getResource("/allCountries.txt"))) {

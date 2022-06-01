@@ -1,18 +1,288 @@
-Query COMPLETE 100 - OK
-Query COMPLETE 1000 - OK
-Query COMPLETE 10000 - OK
-Query COMPLETE 100000 - OK
-Query COMPLETE 1000000 - OK
-Query HIGHCARD 100 - OK
-Query HIGHCARD 1000 - OK
-Query HIGHCARD 10000 - OK
-Query HIGHCARD 100000 - OK
-Query HIGHCARD 1000000 - OK
-Query LOWCARD 100 - OK
-Query LOWCARD 1000 - OK
-Query LOWCARD 10000 - OK
-Query LOWCARD 100000 - OK
-Query LOWCARD 1000000 - OK
+Query COMPLETE 100 - ERROR
+count = 1
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 3
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query COMPLETE 1000 - ERROR
+count = 4
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 22
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query COMPLETE 10000 - ERROR
+count = 174
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 530
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query COMPLETE 100000 - ERROR
+count = 4136
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 23764
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query COMPLETE 1000000 - ERROR
+count = 30155
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 212576
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query HIGHCARD 100 - ERROR
+count = 0
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 1918
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query HIGHCARD 1000 - ERROR
+count = 0
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 22278
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query HIGHCARD 10000 - ERROR
+count = 19320
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 165870
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query HIGHCARD 100000 - ERROR
+count = 25487
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 2507517
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query HIGHCARD 1000000 - ERROR
+count = 49027
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 13013419
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query LOWCARD 100 - ERROR
+count = 0
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 6036
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query LOWCARD 1000 - ERROR
+count = 0
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 59685
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query LOWCARD 10000 - ERROR
+count = 18572
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 767607
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query LOWCARD 100000 - ERROR
+count = 1133016
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 14508171
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
+Query LOWCARD 1000000 - ERROR
+count = 29604
+     ShardedList (run 0)
+     ShardedList (run 1)
+     ShardedList (run 2)
+     ShardedList (run 3)
+     ShardedList (run 4)
+count = 120373308
+     Array (run 0)
+     Array (run 1)
+     Array (run 2)
+     Array (run 3)
+     Array (run 4)
+     List (run 0)
+     List (run 1)
+     List (run 2)
+     List (run 3)
+     List (run 4)
+
 Delete COMPLETE 100 - OK
 Delete COMPLETE 1000 - OK
 Delete COMPLETE 10000 - OK

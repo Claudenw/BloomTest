@@ -4,9 +4,9 @@ import java.util.TreeSet;
 import org.apache.commons.collections4.bloomfilter.ArrayCountingBloomFilter;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.CountingBloomFilter;
+import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.SetOperations;
 import org.apache.commons.collections4.bloomfilter.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 
 public class Bucket extends NodeContainer {
 

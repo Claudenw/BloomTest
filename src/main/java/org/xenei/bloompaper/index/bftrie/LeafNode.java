@@ -44,7 +44,7 @@ public class LeafNode implements Node {
     @Override
     public void search(BFTrie trie, Consumer<BloomFilter> result, long[] buffer) {
         if (checkEntries) {
-            BitMapProducer bmp = BitMapProducer.fromLongArray(buffer);
+            BitMapProducer bmp = BitMapProducer.fromBitMapArray(buffer);
             lst.stream().filter(b -> b.contains(bmp)).forEach(result);
         } else {
             lst.stream().forEach(result);

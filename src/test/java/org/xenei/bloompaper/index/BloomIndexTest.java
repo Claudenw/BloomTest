@@ -11,10 +11,10 @@ import java.util.Collection;
 import java.util.Map.Entry;
 
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
-import org.apache.commons.collections4.bloomfilter.hasher.SimpleHasher;
+import org.apache.commons.collections4.bloomfilter.SimpleHasher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ import org.xenei.bloompaper.index.BitUtils.BufferCompare;
 public class BloomIndexTest {
     private static int HASHER_COUNT = 200;
     private static int INSERT_LIMIT = HASHER_COUNT + 1;
-    private final Shape shape = Shape.Factory.fromNP(3, 1.0 / 100000);
+    private final Shape shape = Shape.fromNP(3, 1.0 / 100000);
     private final Hasher[] hasher = new Hasher[HASHER_COUNT];
     private final int[] matches = new int[HASHER_COUNT];
     private final int[] duplicates = new int[HASHER_COUNT];

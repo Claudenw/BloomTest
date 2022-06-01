@@ -1,10 +1,11 @@
 package org.xenei.bloompaper.geoname;
 
-import org.apache.commons.collections4.bloomfilter.hasher.NullHasher;
-import org.apache.commons.collections4.bloomfilter.hasher.SimpleHasher;
-import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
+import org.xenei.bloompaper.index.NullHasher;
+
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.digest.MurmurHash3;
+import org.apache.commons.collections4.bloomfilter.Hasher;
+import org.apache.commons.collections4.bloomfilter.SimpleHasher;
 
 public class GeoNameGatekeeperHasher {
 

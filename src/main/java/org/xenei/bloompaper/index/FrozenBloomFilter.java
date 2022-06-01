@@ -1,13 +1,16 @@
 package org.xenei.bloompaper.index;
 
+import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.IntPredicate;
 import java.util.function.LongPredicate;
 
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.IndexProducer;
+import org.apache.commons.collections4.bloomfilter.LongBiPredicate;
 import org.apache.commons.collections4.bloomfilter.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 
 /**
@@ -63,9 +66,10 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
      * Get the Bitmap as an array of long.
      * @return the BitMaps
      */
-    public long[] getBitMap() {
+    @Override
+    public long[] asBitMapArray() {
         if (bitMap == null) {
-            bitMap = BloomFilter.asBitMapArray(wrapped);
+            bitMap = wrapped.asBitMapArray();
         }
         return bitMap;
     }
@@ -107,10 +111,13 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
         if (this == other) {
             return 0;
         }
-        int result = this.getShape().compareTo(other.getShape());
+        int result = Integer.compare(getShape().getNumberOfBits(), other.getShape().getNumberOfBits());
         if (result == 0) {
-            long[] oBitMap = other.getBitMap();
-            int limit = getBitMap().length < oBitMap.length ? getBitMap().length : oBitMap.length;
+                    result = Integer.compare(getShape().getNumberOfHashFunctions(), other.getShape().getNumberOfHashFunctions());
+        }
+        if (result == 0) {
+            long[] oBitMap = other.asBitMapArray();
+            int limit = asBitMapArray().length < oBitMap.length ? asBitMapArray().length : oBitMap.length;
             int i = 0;
             while (i < limit && result == 0) {
                 result = Long.compare(bitMap[i], oBitMap[i]);
@@ -163,4 +170,61 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
         return cardinality;
     }
 
+    @Override
+    public BloomFilter copy() {
+        return new FrozenBloomFilter( wrapped.copy() );
+    }
+
+    @Override
+    public boolean contains(BloomFilter other) {
+        return wrapped.contains(other);
+    }
+
+    @Override
+    public LongPredicate makePredicate(LongBiPredicate func) {
+        return wrapped.makePredicate(func);
+    }
+
+    @Override
+    public boolean contains(Hasher hasher) {
+        return wrapped.contains(hasher);
+    }
+
+    @Override
+    public int[] asIndexArray() {
+        return wrapped.asIndexArray();
+    }
+
+    @Override
+    public BloomFilter merge(BloomFilter other) {
+        return wrapped.merge(other);
+    }
+
+    @Override
+    public BloomFilter merge(Hasher hasher) {
+        return wrapped.merge(hasher);
+    }
+
+    @Override
+    public int estimateN() {
+        return wrapped.estimateN();
+    }
+
+    @Override
+    public int estimateUnion(BloomFilter other) {
+        return wrapped.estimateUnion(other);
+    }
+
+    @Override
+    public int estimateIntersection(BloomFilter other) {
+        return wrapped.estimateIntersection(other);
+    }
+
+    private class ShapeComparator implements Comparator<Shape> {
+        @Override
+        public int compare(Shape shape1, Shape other) {
+            int i = Integer.compare(shape1.getNumberOfBits(), other.getNumberOfBits());
+            return i == 0 ? Integer.compare(shape1.getNumberOfHashFunctions(), other.getNumberOfHashFunctions()) : i;
+        }
+    }
 }
