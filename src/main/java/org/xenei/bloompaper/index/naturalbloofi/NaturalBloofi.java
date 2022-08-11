@@ -42,7 +42,7 @@ public class NaturalBloofi extends BloomIndex {
 
     @Override
     public void add(BloomFilter filter) {
-        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
+        Hasher filterHasher = BitUtils.ShardingHasherFactory.asHasher(filter);
 
         int dist = Integer.MAX_VALUE;
         int bucket = -1;
@@ -94,7 +94,7 @@ public class NaturalBloofi extends BloomIndex {
 
     @Override
     public boolean delete(BloomFilter filter) {
-        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
+        Hasher filterHasher = BitUtils.ShardingHasherFactory.asHasher(filter);
         Bucket candidate = null;
         for (int i = 0; i < root.size(); i++) {
             candidate = root.get(i);
@@ -118,7 +118,7 @@ public class NaturalBloofi extends BloomIndex {
     @Override
     protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
         Searcher searcher = new Searcher(n -> mapper(filter.getShape(), n, consumer), filter);
-        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
+        Hasher filterHasher = BitUtils.ShardingHasherFactory.asHasher(filter);
         Bucket candidate = null;
         for (int i = 0; i < root.size(); i++) {
             candidate = root.get(i);

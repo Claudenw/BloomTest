@@ -1,14 +1,14 @@
 package org.xenei.bloompaper.index;
 
+import java.nio.ByteBuffer;
 import java.util.function.BiPredicate;
-import java.util.function.IntPredicate;
 import java.util.function.LongPredicate;
 
+import org.apache.commons.codec.digest.MurmurHash3;
+import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Hasher;
-import org.apache.commons.collections4.bloomfilter.IndexProducer;
-import org.apache.commons.collections4.bloomfilter.Shape;
-import org.apache.commons.collections4.bloomfilter.SimpleHasher;
+import org.apache.commons.collections4.bloomfilter.EnhancedDoubleHasher;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -31,8 +31,6 @@ import org.apache.commons.collections4.bloomfilter.SimpleHasher;
  * Contains functions to convert {@code int} indices into Bloom filter bit positions.
  */
 public final class BitUtils {
-    /** A bit shift to apply to an integer to divided by 64 (2^6). */
-    private static final int DIVIDE_BY_64 = 6;
 
     /** Do not instantiate. */
     private BitUtils() {
@@ -51,52 +49,6 @@ public final class BitUtils {
     }
 
     /**
-     * Gets the filter index for the specified bit index assuming the filter is using 64-bit longs
-     * to store bits starting at index 0.
-     *
-     * <p>The index is assumed to be positive. For a positive index the result will match
-     * {@code bitIndex / 64}.
-     *
-     * <p>The divide is performed using bit shifts. If the input is negative the behaviour
-     * is not defined.
-     *
-     * @param bitIndex the bit index (assumed to be positive)
-     * @return the filter index
-     * @see #checkPositive(int)
-     */
-    public static int getLongIndex(int bitIndex) {
-        // An integer divide by 64 is equivalent to a shift of 6 bits if the integer is
-        // positive.
-        // We do not explicitly check for a negative here. Instead we use a
-        // a signed shift. Any negative index will produce a negative value
-        // by sign-extension and if used as an index into an array it will throw an
-        // exception.
-        return bitIndex >> DIVIDE_BY_64;
-    }
-
-    /**
-     * Gets the filter bit mask for the specified bit index assuming the filter is using 64-bit
-     * longs to store bits starting at index 0. The returned value is a {@code long} with only
-     * 1 bit set.
-     *
-     * <p>The index is assumed to be positive. For a positive index the result will match
-     * {@code 1L << (bitIndex % 64)}.
-     *
-     * <p>If the input is negative the behaviour is not defined.
-     *
-     * @param bitIndex the bit index (assumed to be positive)
-     * @return the filter bit
-     * @see #checkPositive(int)
-     */
-    public static long getLongBit(int bitIndex) {
-        // Bit shifts only use the first 6 bits. Thus it is not necessary to mask this
-        // using 0x3f (63) or compute bitIndex % 64.
-        // Note: If the index is negative the shift will be (64 - (bitIndex & 0x3f)) and
-        // this will identify an incorrect bit.
-        return 1L << bitIndex;
-    }
-
-    /**
      * Given a set of longs as a bit vector find the highest bit set
      * @param bits the set of longs as a bit vector
      * @return the highest bit set or -1 for none.
@@ -105,7 +57,7 @@ public final class BitUtils {
         for (int longIndex = bits.length - 1; longIndex >= 0; longIndex--) {
             if (bits[longIndex] != 0) {
                 for (int bitIndex = Long.SIZE - 1; bitIndex >= 0; bitIndex--) {
-                    if ((bits[longIndex] & getLongBit(bitIndex)) != 0) {
+                    if ((bits[longIndex] & BitMap.getLongBit(bitIndex)) != 0) {
                         return (Long.SIZE * longIndex) + bitIndex;
                     }
                 }
@@ -122,7 +74,7 @@ public final class BitUtils {
      */
     public static int maxSetBefore(long[] bits, int before) {
         for (int i = before - 1; i >= 0; i--) {
-            if ((bits[getLongIndex(i)] & getLongBit(i)) != 0) {
+            if ((bits[BitMap.getLongIndex(i)] & BitMap.getLongBit(i)) != 0) {
                 return i;
             }
         }
@@ -146,8 +98,8 @@ public final class BitUtils {
     }
 
     public static boolean isSet(long[] bits, int bitIdx) {
-        int longRec = getLongIndex(bitIdx);
-        return (longRec < bits.length) ? (bits[longRec] & getLongBit(bitIdx)) != 0 : false;
+        int longRec = BitMap.getLongIndex(bitIdx);
+        return (longRec < bits.length) ? (bits[longRec] & BitMap.getLongBit(bitIdx)) != 0 : false;
     }
 
     public static class BufferCompare implements LongPredicate {
@@ -174,57 +126,20 @@ public final class BitUtils {
         }
     }
 
-    public static class ShardingHasher implements Hasher {
-        private static int INIT_MASK = 0x0F;
-        private static int INCR_MASK = 0xF0;
+    public static class ShardingHasherFactory {
 
-        private int[] indices;
-
-        public ShardingHasher(BloomFilter filter) {
-            super();
-            this.indices = filter.asIndexArray();
+        private ShardingHasherFactory() {
+            // do not instantiate
         }
 
-        public static Hasher asHasher(int value) {
-            int initial = value;
-            int incr = 0;
-            for (int i = 0; i < Integer.BYTES; i++) {
-                incr += (value & (INIT_MASK << (Byte.SIZE * i)));
-                initial += value & ((INCR_MASK << (Byte.SIZE * i)));
-            }
-            return new SimpleHasher(initial, incr);
-        }
+        public static Hasher asHasher(BloomFilter filter) {
 
-        public static Hasher asHasher(long value) {
-            long initial = value;
-            long incr = 0;
-            for (int i = 0; i < Long.BYTES; i++) {
-                incr += (value & (((long) INIT_MASK) << (Byte.SIZE * i)));
-                initial += value & ((((long) INCR_MASK) << (Byte.SIZE * i)));
-            }
-            return new SimpleHasher(initial, incr);
-        }
+            byte[] buf = new byte[ Long.BYTES * BitMap.numberOfBitMaps(filter.getShape().getNumberOfBits())];
+            ByteBuffer bb = ByteBuffer.wrap(buf);
+            filter.forEachBitMap( x -> {bb.putLong(x);return true;} );
+            long[] longs = MurmurHash3.hash128x64( buf );
+            return new EnhancedDoubleHasher(longs[0], longs[1]);
 
-        @Override
-        public IndexProducer indices(Shape shape) {
-            return new IndexProducer() {
-                @Override
-                public boolean forEachIndex(IntPredicate consumer) {
-                    FilteredIntPredicate filtered = new FilteredIntPredicate(shape.getNumberOfBits(), consumer);
-                    for (int idx : indices) {
-                        if (!asHasher(idx).indices(shape).forEachIndex(filtered)) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-            };
         }
-
-        @Override
-        public int size() {
-            return 1;
-        }
-
     }
 }

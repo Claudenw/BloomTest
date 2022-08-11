@@ -20,8 +20,6 @@ package org.xenei.bloompaper.index;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +36,6 @@ public class NullHasherTest {
 
     private Hasher hasher = NullHasher.INSTANCE;
 
-    @Test
-    public void sizeTest() {
-        assertEquals(0, hasher.size());
-    }
 
     @Test
     public void testIterator() {
@@ -50,11 +44,6 @@ public class NullHasherTest {
         IndexProducer producer = hasher.indices(shape);
         producer.forEachIndex(lst::add);
         assertEquals(0, lst.size());
-    }
-
-    @Test
-    public void isEmptyTest() {
-        assertTrue(hasher.isEmpty());
     }
 
 }

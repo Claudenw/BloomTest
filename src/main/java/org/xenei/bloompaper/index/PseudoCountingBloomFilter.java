@@ -1,6 +1,5 @@
 package org.xenei.bloompaper.index;
 
-import java.util.Objects;
 import java.util.function.IntPredicate;
 import java.util.function.LongPredicate;
 
@@ -11,7 +10,6 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.CountingBloomFilter;
 import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.IndexProducer;
-import org.apache.commons.collections4.bloomfilter.LongBiPredicate;
 import org.apache.commons.collections4.bloomfilter.Shape;
 
 /**
@@ -86,7 +84,7 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
     }
 
     @Override
-    public boolean mergeInPlace(BloomFilter other) {
+    public boolean merge(BloomFilter other) {
         throw new UnsupportedOperationException();
     }
 
@@ -115,36 +113,17 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
      * Clones the filter.  Used to create merged values.
      * @return A clone of this filter.
      */
-    protected ArrayCountingBloomFilter makeClone() {
+    @Override
+    public ArrayCountingBloomFilter clone() {
         ArrayCountingBloomFilter filter = new ArrayCountingBloomFilter(delegate.getShape());
         filter.add(this);
         return filter;
     }
 
-    @Override
-    public CountingBloomFilter merge(BloomFilter other) {
-        Objects.requireNonNull(other, "other");
-        CountingBloomFilter filter = makeClone();
-        filter.add(BitCountProducer.from(other));
-        return filter;
-    }
 
     @Override
-    public CountingBloomFilter merge(Hasher hasher) {
-        Objects.requireNonNull(hasher, "hasher");
-        ArrayCountingBloomFilter filter = makeClone();
-        filter.add(BitCountProducer.from(hasher.indices(delegate.getShape())));
-        return filter;
-    }
-
-    @Override
-    public BloomFilter copy() {
+    public PseudoCountingBloomFilter copy() {
         return new PseudoCountingBloomFilter( delegate.copy() );
-    }
-
-    @Override
-    public LongPredicate makePredicate(LongBiPredicate func) {
-        return delegate.makePredicate(func);
     }
 
     @Override
@@ -158,8 +137,8 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
     }
 
     @Override
-    public boolean mergeInPlace(Hasher hasher) {
-        return delegate.mergeInPlace(hasher);
+    public boolean merge(Hasher hasher) {
+        return delegate.merge(hasher);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class ShardedList extends BloomIndex {
         int dist = Integer.MAX_VALUE;
         int bucket = -1;
         Shard candidate = null;
-        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
+        Hasher filterHasher = BitUtils.ShardingHasherFactory.asHasher(filter);
         if (root.size() == 1) {
             candidate = root.get(0);
             if (candidate.hasSpace()) {
@@ -73,7 +73,7 @@ public class ShardedList extends BloomIndex {
 
     @Override
     public boolean delete(BloomFilter filter) {
-        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
+        Hasher filterHasher = BitUtils.ShardingHasherFactory.asHasher(filter);
         Shard candidate = null;
         for (int i = 0; i < root.size(); i++) {
             candidate = root.get(i);
@@ -89,7 +89,7 @@ public class ShardedList extends BloomIndex {
 
     @Override
     protected void doSearch(Consumer<BloomFilter> consumer, BloomFilter filter) {
-        Hasher filterHasher = new BitUtils.ShardingHasher(filter);
+        Hasher filterHasher = BitUtils.ShardingHasherFactory.asHasher(filter);
 
         Shard candidate = null;
 

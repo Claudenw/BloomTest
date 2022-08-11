@@ -14,7 +14,7 @@ import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
-import org.apache.commons.collections4.bloomfilter.SimpleHasher;
+import org.apache.commons.collections4.bloomfilter.EnhancedDoubleHasher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +40,7 @@ public class BloomIndexTest {
 
         // setup the hashers
         for (int i = 0; i < HASHER_COUNT; i++) {
-            hasher[i] = new SimpleHasher(1, i + 1);
+            hasher[i] = new EnhancedDoubleHasher(1, i + 1);
         }
 
         // calculate the hasher collisions

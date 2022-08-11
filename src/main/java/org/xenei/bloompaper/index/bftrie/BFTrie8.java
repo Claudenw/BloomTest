@@ -2,9 +2,9 @@ package org.xenei.bloompaper.index.bftrie;
 
 import java.util.function.Consumer;
 
+import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
-import org.xenei.bloompaper.index.BitUtils;
 
 public class BFTrie8 implements BFTrie {
     public static int[][] byteTable;
@@ -77,7 +77,7 @@ public class BFTrie8 implements BFTrie {
     @Override
     public int getIndex(long[] buffer, int level) {
 
-        int idx = BitUtils.getLongIndex(level);
+        int idx = BitMap.getLongIndex(level);
         // buffer may be short if upper values are zero
         if (idx >= buffer.length) {
             return 0;

@@ -76,7 +76,7 @@ public class Density {
                     final BloomFilter bf = new SimpleBloomFilter(shape,
                             GeoNameReferenceHasher.createHasher(geoIter.next()));
                     if (density > 0) {
-                        filters[i].mergeInPlace(bf);
+                        filters[i].merge(bf);
                     } else {
                         filters[i] = bf;
                     }

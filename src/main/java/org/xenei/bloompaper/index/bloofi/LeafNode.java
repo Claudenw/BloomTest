@@ -43,7 +43,7 @@ public class LeafNode implements Node {
     private void updateFilters(BloomFilter candidate) {
         InnerNode node = getParent();
         while (node != null) {
-            node.getFilter().mergeInPlace(candidate);
+            node.getFilter().merge(candidate);
             node = node.getParent();
         }
     }

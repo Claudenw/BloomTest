@@ -40,7 +40,7 @@ public class Bucket extends NodeContainer {
     }
 
     public void add(BloomFilter filter, int id, Hasher filterHasher) {
-        this.filter.mergeInPlace(filterHasher);
+        this.filter.merge(filterHasher);
         new Node(this, filter, id);
         count++;
     }

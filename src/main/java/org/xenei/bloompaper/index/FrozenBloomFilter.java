@@ -1,7 +1,5 @@
 package org.xenei.bloompaper.index;
 
-import java.util.Comparator;
-import java.util.Objects;
 import java.util.function.IntPredicate;
 import java.util.function.LongPredicate;
 
@@ -9,7 +7,6 @@ import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.IndexProducer;
-import org.apache.commons.collections4.bloomfilter.LongBiPredicate;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 
@@ -75,12 +72,12 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     }
 
     @Override
-    public boolean mergeInPlace(Hasher hasher) {
+    public boolean merge(Hasher hasher) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean mergeInPlace(BloomFilter other) {
+    public boolean merge(BloomFilter other) {
         throw new UnsupportedOperationException();
     }
 
@@ -181,11 +178,6 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     }
 
     @Override
-    public LongPredicate makePredicate(LongBiPredicate func) {
-        return wrapped.makePredicate(func);
-    }
-
-    @Override
     public boolean contains(Hasher hasher) {
         return wrapped.contains(hasher);
     }
@@ -193,16 +185,6 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     @Override
     public int[] asIndexArray() {
         return wrapped.asIndexArray();
-    }
-
-    @Override
-    public BloomFilter merge(BloomFilter other) {
-        return wrapped.merge(other);
-    }
-
-    @Override
-    public BloomFilter merge(Hasher hasher) {
-        return wrapped.merge(hasher);
     }
 
     @Override
@@ -220,11 +202,4 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
         return wrapped.estimateIntersection(other);
     }
 
-    private class ShapeComparator implements Comparator<Shape> {
-        @Override
-        public int compare(Shape shape1, Shape other) {
-            int i = Integer.compare(shape1.getNumberOfBits(), other.getNumberOfBits());
-            return i == 0 ? Integer.compare(shape1.getNumberOfHashFunctions(), other.getNumberOfHashFunctions()) : i;
-        }
-    }
 }

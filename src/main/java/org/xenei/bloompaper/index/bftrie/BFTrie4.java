@@ -2,9 +2,9 @@ package org.xenei.bloompaper.index.bftrie;
 
 import java.util.function.Consumer;
 
+import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
-import org.xenei.bloompaper.index.BitUtils;
 
 public class BFTrie4 implements BFTrie {
     public static final int[][] nibbleTable = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF },
@@ -68,7 +68,7 @@ public class BFTrie4 implements BFTrie {
     public int getIndex(long[] buffer, int level) {
         int startBit = level * 4;
 
-        int idx = BitUtils.getLongIndex(startBit);
+        int idx = BitMap.getLongIndex(startBit);
         // buffer may be short if upper values are zero
         if (idx >= buffer.length) {
             return (byte) 0;

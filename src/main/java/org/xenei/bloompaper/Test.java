@@ -20,6 +20,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Hasher;
+import org.apache.commons.collections4.bloomfilter.HasherCollection;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.collections4.bloomfilter.SparseBloomFilter;
@@ -529,8 +530,7 @@ public class Test {
          * @return A Bloom filter of the proper shape built with the hasher.
          */
         private BloomFilter makeFilter(Shape shape, Hasher hasher) {
-            int bits = shape.getNumberOfHashFunctions() * hasher.size();
-            double d = bits * 1.0 / BitMap.numberOfBitMaps(shape.getNumberOfBits());
+            double d = shape.getNumberOfHashFunctions()  / (double)BitMap.numberOfBitMaps(shape.getNumberOfBits());
             return (d > 2.0) ? new SimpleBloomFilter(shape, hasher) : new SparseBloomFilter(shape, hasher);
         }
 
