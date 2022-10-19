@@ -28,7 +28,8 @@ public class TestingBloomFilter implements BloomFilter {
      * Constructor.
      */
     public TestingBloomFilter(Shape shape) {
-        delegate= new SimpleBloomFilter(shape, new EnhancedDoubleHasher(Integer.toUnsignedLong(pfx), Integer.toUnsignedLong(counter)));
+        delegate= new SimpleBloomFilter(shape);
+        delegate.merge(new EnhancedDoubleHasher(Integer.toUnsignedLong(pfx), Integer.toUnsignedLong(counter)));
         counter++;
         if (counter == Integer.MIN_VALUE) {
             pfx++;
@@ -71,6 +72,20 @@ public class TestingBloomFilter implements BloomFilter {
     }
 
     @Override
+    public void clear() {
+        delegate.clear();
+    }
+
+    @Override
+    public boolean merge(IndexProducer indexProducer) {
+        return delegate.merge(indexProducer);
+    }
+
+    @Override
+    public boolean merge(BitMapProducer bitMapProducer) {
+        return delegate.merge(bitMapProducer);
+    }
+    @Override
     public boolean merge(BloomFilter other) {
         return delegate.merge(other);
     }
@@ -86,8 +101,8 @@ public class TestingBloomFilter implements BloomFilter {
     }
 
     @Override
-    public boolean isSparse() {
-        return delegate.isSparse();
+    public int characteristics () {
+        return delegate.characteristics();
     }
 
     @Override
@@ -144,5 +159,4 @@ public class TestingBloomFilter implements BloomFilter {
     public String toString() {
         return delegate.toString();
     }
-
 }

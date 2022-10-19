@@ -1,7 +1,6 @@
 package org.xenei.bloompaper;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,8 +72,8 @@ public class Density {
             for (int density = 0; density < MAX_DENSITY; density++) {
                 System.out.println("Saturation " + (density + 1));
                 for (int i = 0; i < SAMPLE_SIZE; i++) {
-                    final BloomFilter bf = new SimpleBloomFilter(shape,
-                            GeoNameReferenceHasher.createHasher(geoIter.next()));
+                    final BloomFilter bf = new SimpleBloomFilter(shape);
+                    bf.merge(GeoNameReferenceHasher.createHasher(geoIter.next()));
                     if (density > 0) {
                         filters[i].merge(bf);
                     } else {
@@ -165,7 +164,7 @@ public class Density {
         }
 
         public void record(Map<Integer, Map<Double, Integer>> points, int density, BloomFilter[] filters,
-                double probability) throws FileNotFoundException {
+                double probability) {
 
             SaturationStats sat = new SaturationStats();
             LogStats log = new LogStats();

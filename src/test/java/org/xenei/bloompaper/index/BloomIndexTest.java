@@ -45,10 +45,12 @@ public class BloomIndexTest {
 
         // calculate the hasher collisions
         for (int i = 0; i < HASHER_COUNT; i++) {
-            BloomFilter bf = new SimpleBloomFilter(shape, hasher[i]);
+            BloomFilter bf = new SimpleBloomFilter(shape);
+            bf.merge(hasher[i]);
             BitUtils.BufferCompare comp = new BitUtils.BufferCompare(bf, BitUtils.BufferCompare.exact);
             for (int j = 0; j < HASHER_COUNT; j++) {
-                BloomFilter test = new SimpleBloomFilter(shape, hasher[j]);
+                BloomFilter test = new SimpleBloomFilter(shape);
+                test.merge(hasher[j]);
                 if (bf.contains(test)) {
                     matches[j]++;
                 }
@@ -78,20 +80,26 @@ public class BloomIndexTest {
         }
         return Arrays.asList(objs);
     }
+    
+    private BloomFilter simpleFilter(Hasher hasher) {
+        BloomFilter bf = new SimpleBloomFilter(shape);
+        bf.merge(hasher);
+        return bf;
+    }
 
     @Test
     public void testDelete() {
         assertEquals(0, underTest.count());
-        underTest.add(new SimpleBloomFilter(shape, hasher[0]));
-        underTest.delete(new SimpleBloomFilter(shape, hasher[0]));
+        underTest.add(simpleFilter(hasher[0]));
+        underTest.delete(simpleFilter(hasher[0]));
         assertEquals(0, underTest.count());
 
         for (int i = 0; i < HASHER_COUNT; i++) {
-            underTest.add(new SimpleBloomFilter(shape, hasher[i]));
+            underTest.add(simpleFilter(hasher[i]));
         }
         assertEquals(HASHER_COUNT, underTest.count());
         for (int i = 0; i < HASHER_COUNT; i++) {
-            underTest.delete(new SimpleBloomFilter(shape, hasher[i]));
+            underTest.delete(simpleFilter(hasher[i]));
         }
         assertEquals(0, underTest.count());
     }
@@ -100,7 +108,7 @@ public class BloomIndexTest {
     public void testDeleteMultiples() {
 
         for (int i = 0; i < HASHER_COUNT; i++) {
-            underTest.add(new SimpleBloomFilter(shape, hasher[i]));
+            underTest.add(simpleFilter(hasher[i]));
         }
 
         int expected = HASHER_COUNT;
@@ -117,7 +125,7 @@ public class BloomIndexTest {
             }
         }
 
-        BloomFilter bf = new SimpleBloomFilter(shape, hasher[idx]);
+        BloomFilter bf = simpleFilter(hasher[idx]);
         underTest.delete(bf);
         assertEquals(expected - 1, underTest.count());
         assertEquals(matches[idx] - 1, underTest.count(bf));
@@ -126,13 +134,13 @@ public class BloomIndexTest {
 
     @Test
     public void testAdd()
-            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            throws IllegalArgumentException {
         assertEquals(0, underTest.count());
-        underTest.add(new SimpleBloomFilter(shape, hasher[0]));
+        underTest.add(simpleFilter(hasher[0]));
         assertEquals(1, underTest.count());
 
         for (int i = 0; i < HASHER_COUNT; i++) {
-            underTest.add(new SimpleBloomFilter(shape, hasher[i]));
+            underTest.add(simpleFilter(hasher[i]));
         }
         assertEquals(HASHER_COUNT + 1, underTest.count());
     }
@@ -140,11 +148,11 @@ public class BloomIndexTest {
     @Test
     public void testCount() {
         assertEquals(0, underTest.count());
-        underTest.add(new SimpleBloomFilter(shape, hasher[0]));
+        underTest.add(simpleFilter(hasher[0]));
         assertEquals(1, underTest.count());
 
         for (int i = 1; i < hasher.length; i++) {
-            underTest.add(new SimpleBloomFilter(shape, hasher[i]));
+            underTest.add(simpleFilter(hasher[i]));
         }
 
         Collection<BloomFilter> collection = new ArrayList<BloomFilter>();
@@ -153,7 +161,7 @@ public class BloomIndexTest {
             // System.out.println( String.format( "%s count %s : %s", name, i,
             // underTest.count( new SimpleBloomFilter( shape, hasher[i] ))));
             collection.clear();
-            int actual = underTest.count(new SimpleBloomFilter(shape, hasher[i]));
+            int actual = underTest.count(simpleFilter(hasher[i]));
             if (matches[i] != actual) {
                 System.out.println(String.format("%s: %s ", name, i));
                 for (BloomFilter bf : collection) {
@@ -174,12 +182,12 @@ public class BloomIndexTest {
     public void testRetrieval() {
 
         for (int i = 1; i < hasher.length; i++) {
-            underTest.add(new SimpleBloomFilter(shape, hasher[i]));
+            underTest.add(simpleFilter(hasher[i]));
         }
 
         Collection<BloomFilter> collection = new ArrayList<BloomFilter>();
 
-        BloomFilter bf = new SimpleBloomFilter(shape, hasher[0]);
+        BloomFilter bf = simpleFilter(hasher[0]);
         underTest.search(collection::add, bf);
 
         BufferCompare buffComp = new BufferCompare(bf, BufferCompare.exact);

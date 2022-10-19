@@ -16,7 +16,6 @@ import java.util.Set;
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
-import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 /**
@@ -404,8 +403,7 @@ public class Stats {
             Shape shape = Shape.fromKM(in.readInt(), in.readInt());
             long[] bitMaps = readLongArray(in);
             BitMapProducer producer = BitMapProducer.fromBitMapArray(bitMaps);
-            BloomFilter bf = new SimpleBloomFilter(shape, producer);
-            return FrozenBloomFilter.makeInstance(bf);
+            return new FrozenBloomFilter(shape, producer);
         }
 
     }

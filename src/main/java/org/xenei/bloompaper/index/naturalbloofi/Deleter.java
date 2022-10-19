@@ -34,9 +34,8 @@ public class Deleter implements Predicate<Node> {
                     found = node;
                 }
                 return false;
-            } else {
-                return node.testChildren(target, this);
-            }
+            } 
+            return node.testChildren(target, this);
         }
         return true;
     }

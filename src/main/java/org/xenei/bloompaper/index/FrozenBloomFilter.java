@@ -56,7 +56,9 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
      * @param producer the BitMapProducer to create the bitmaps.
      */
     public FrozenBloomFilter(Shape shape, BitMapProducer producer) {
-        this(new SimpleBloomFilter(shape, producer));
+        wrapped = new SimpleBloomFilter(shape);
+        wrapped.merge(producer);
+        cardinality = wrapped.cardinality();
     }
 
     /**
@@ -73,6 +75,22 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
 
     @Override
     public boolean merge(Hasher hasher) {
+        throw new UnsupportedOperationException();
+    }
+    
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean merge(IndexProducer indexProducer) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean merge(BitMapProducer bitMapProducer) {
         throw new UnsupportedOperationException();
     }
 
@@ -136,11 +154,12 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     public boolean forEachBitMap(LongPredicate consumer) {
         return wrapped.forEachBitMap(consumer);
     }
-
+    
     @Override
-    public boolean isSparse() {
-        return wrapped.isSparse();
+    public int characteristics() {
+        return wrapped.characteristics();
     }
+
 
     @Override
     public Shape getShape() {
@@ -201,5 +220,4 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     public int estimateIntersection(BloomFilter other) {
         return wrapped.estimateIntersection(other);
     }
-
 }

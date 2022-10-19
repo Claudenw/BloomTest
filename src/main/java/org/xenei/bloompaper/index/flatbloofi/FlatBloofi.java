@@ -87,7 +87,9 @@ public final class FlatBloofi {
             }
         };
         BitMapProducer bitMapProducer = BitMapProducer.fromIndexProducer(indexProducer, shape.getNumberOfBits());
-        return new SimpleBloomFilter(shape, bitMapProducer);
+        BloomFilter bf = new SimpleBloomFilter(shape);
+        bf.merge(bitMapProducer);
+        return bf;
     }
 
     private void setBloomAt(int i, long[] bits) {

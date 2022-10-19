@@ -55,7 +55,8 @@ public class NaturalBloofi extends BloomIndex {
                 bucket = 0;
             }
         } else {
-            BloomFilter filterFilter = new SimpleBloomFilter(filterShape, filterHasher);
+            BloomFilter filterFilter = new SimpleBloomFilter(filterShape);
+            filterFilter.merge(filterHasher);
             for (int i = 0; i < root.size() && dist != 0; i++) {
                 candidate = root.get(i);
                 if (candidate.contains(filterHasher)) {
@@ -108,7 +109,8 @@ public class NaturalBloofi extends BloomIndex {
     }
 
     private void mapper(Shape shape, Node n, Consumer<BloomFilter> consumer) {
-        BloomFilter bf = new SimpleBloomFilter(shape, BitMapProducer.fromBitMapArray(n.bitMap));
+        BloomFilter bf = new SimpleBloomFilter(shape);
+        bf.merge(BitMapProducer.fromBitMapArray(n.bitMap));
         for (@SuppressWarnings("unused")
         int i : n.getIds()) {
             consumer.accept(bf);

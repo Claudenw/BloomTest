@@ -47,7 +47,8 @@ public class ShardedList extends BloomIndex {
                 bucket = 0;
             }
         } else {
-            BloomFilter filterFilter = new SimpleBloomFilter(filterShape, filterHasher );
+            BloomFilter filterFilter = new SimpleBloomFilter(filterShape);
+            filterFilter.merge(filterHasher);
             for (int i = 0; i < root.size(); i++) {
                 candidate = root.get(i);
                 if (candidate.hasSpace()) {

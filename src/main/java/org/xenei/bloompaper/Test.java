@@ -20,7 +20,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Hasher;
-import org.apache.commons.collections4.bloomfilter.HasherCollection;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.collections4.bloomfilter.SparseBloomFilter;
@@ -475,7 +474,8 @@ public class Test {
         private void readFilters(GeoNameIterator iter) {
             System.out.print("Creating filters...");
             for (int i = 0; i < 1000000; i++) {
-                filters[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.createHasher(iter.next()));
+                filters[i] = new SimpleBloomFilter(shape);
+                filters[1].merge(GeoNameReferenceHasher.createHasher(iter.next()));
                 if ((i % 1000) == 0) {
                     System.out.print(".");
                 }
@@ -494,16 +494,16 @@ public class Test {
             final int sampleSize = sample.size();
             BloomFilter[] bfSample = new BloomFilter[sampleSize];
             for (int i = 0; i < sample.size(); i++) {
+                bfSample[i] = new SimpleBloomFilter(shape);
                 switch (type) {
                 case COMPLETE:
-                    bfSample[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.createHasher(sample.get(i)));
+                    bfSample[i].merge(GeoNameReferenceHasher.createHasher(sample.get(i)));
                     break;
                 case HIGHCARD:
-                    bfSample[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.hasherFor(sample.get(i).name));
+                    bfSample[i].merge(GeoNameReferenceHasher.hasherFor(sample.get(i).name));
                     break;
                 case LOWCARD:
-                    bfSample[i] = new SimpleBloomFilter(shape,
-                            GeoNameReferenceHasher.hasherFor(sample.get(i).feature_code));
+                    bfSample[i].merge(GeoNameReferenceHasher.hasherFor(sample.get(i).feature_code));
                     break;
                 }
             }
@@ -531,7 +531,9 @@ public class Test {
          */
         private BloomFilter makeFilter(Shape shape, Hasher hasher) {
             double d = shape.getNumberOfHashFunctions()  / (double)BitMap.numberOfBitMaps(shape.getNumberOfBits());
-            return (d > 2.0) ? new SimpleBloomFilter(shape, hasher) : new SparseBloomFilter(shape, hasher);
+            BloomFilter bf = (d > 2.0) ? new SimpleBloomFilter(shape) : new SparseBloomFilter(shape);
+            bf.merge(hasher);
+            return bf;
         }
 
         @Override

@@ -69,8 +69,8 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
     }
 
     @Override
-    public boolean isSparse() {
-        return delegate.isSparse();
+    public int characteristics() {
+        return delegate.characteristics();
     }
 
     @Override
@@ -159,6 +159,11 @@ public class PseudoCountingBloomFilter implements CountingBloomFilter {
     @Override
     public int estimateIntersection(BloomFilter other) {
         return delegate.estimateIntersection(other);
+    }
+
+    @Override
+    public void clear() {
+        delegate.clear();
     }
 
 
