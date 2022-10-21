@@ -4,22 +4,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.BufferedReader;
+import java.io.PrintStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
+import org.xenei.bloompaper.Stats.Phase;
 
 /**
  * A collection of Stats that represents a complete test run.
@@ -42,6 +37,31 @@ public class Table {
      */
     public Table() throws IOException {
         this(null);
+    }
+
+    public class CSV implements BiConsumer<Stats, Stats.Phase> {
+
+        private PrintStream stream;
+        private boolean headerPrinted = false;
+
+        public CSV(PrintStream stream) {
+            this.stream = stream;
+        }
+
+        @Override
+        public void accept(Stats stats, Phase phase) {
+            Stats.CSV csv = stats.new CSV(stream);
+            if (!headerPrinted) {
+                csv.printHeader();
+                headerPrinted = true;
+            }
+            try {
+                stats.loadFilterMaps(getDir());
+            } catch (IOException e) {
+                stream.println("Unable to load filter maps: " + e.getMessage());
+            }
+            csv.printLine(phase);
+        }
     }
 
     /**
@@ -97,12 +117,15 @@ public class Table {
      * @throws IOException on error.
      */
     public void add(String tableName, List<Stats> tbl) throws IOException {
+        System.out.println("Saving run data");
         tableNames.add(tableName);
         Stats.Serde serde = new Stats.Serde();
         try (DataOutputStream out = new DataOutputStream(new FileOutputStream(statsFile(tableName), true));
                 DataOutputStream filters = new DataOutputStream(new FileOutputStream(filterMapFile(tableName), true))) {
             for (Stats stat : tbl) {
+                System.out.format("writing %s run %s stats ", stat.getPopulation(), stat.getRun());
                 serde.writeStats(out, stat);
+                System.out.format("and filter maps%n", stat.getPopulation(), stat.getRun());
                 serde.writeFilterMaps(filters, stat);
             }
         }
@@ -164,59 +187,6 @@ public class Table {
             }
         };
         forEachStat(c);
-    }
-
-    /**
-     * Parse a table from a CSV file.
-     * @param reader the reader on the CSV file.
-     * @return the Table.
-     * @throws IOException on IO error
-     */
-    public static Table parse(BufferedReader reader) throws IOException {
-        CSVFormat format = CSVFormat.DEFAULT.withQuote('\'');
-
-        String line = reader.readLine();
-        if (!Stats.getHeader().equals(line)) {
-            String s = String.format("Wrong header.  Wrong version? Expected:\n%s\nRead:\n%s", Stats.getHeader(), line);
-            throw new IOException(s);
-        }
-
-        Map<String, List<Stats>> table = new HashMap<String, List<Stats>>();
-        while ((line = reader.readLine()) != null) {
-            CSVParser parser = CSVParser.parse(line, format);
-            List<CSVRecord> lst = parser.getRecords();
-            CSVRecord rec = lst.get(0);
-
-            Stats stat = new Stats(rec.get(1), rec.get(0), Integer.parseInt(rec.get(4)), Integer.parseInt(rec.get(2)));
-            stat.setLoad(Integer.parseInt(rec.get(5)));
-            for (Stats.Phase phase : Stats.Phase.values()) {
-                if (phase != Stats.Phase.valueOf(rec.get(3))) {
-                    throw new IOException(
-                            String.format("Wrong phase for %s.  Expected: %s Found: %s", stat, phase, rec.get(3)));
-                }
-                for (Stats.Type type : Stats.Type.values()) {
-                    int idx = 6 + (type.ordinal() * 2);
-
-                    stat.registerResult(phase, type, Long.parseLong(rec.get(idx)), Long.parseLong(rec.get(idx + 1)));
-                }
-                if (phase.ordinal() + 1 < Stats.Phase.values().length) {
-                    parser = CSVParser.parse(reader.readLine(), format);
-                    lst = parser.getRecords();
-                    rec = lst.get(0);
-                }
-            }
-            List<Stats> resultList = table.get(stat.getName());
-            if (resultList == null) {
-                resultList = new ArrayList<Stats>();
-                table.put(stat.getName(), resultList);
-            }
-            resultList.add(stat);
-        }
-        Table result = new Table();
-        for (Map.Entry<String, List<Stats>> e : table.entrySet()) {
-            result.add(e.getKey(), e.getValue());
-        }
-        return result;
     }
 
 }

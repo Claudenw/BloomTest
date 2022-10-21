@@ -41,10 +41,12 @@ public class Bloofi {
         }
     }
 
-    public void delete(BloomFilter candidate) {
+    public boolean delete(BloomFilter candidate) {
         if (root.remove(candidate)) {
             count--;
+            return true;
         }
+        return false;
     }
 
     /**

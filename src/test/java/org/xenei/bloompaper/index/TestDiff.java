@@ -7,16 +7,16 @@ import org.xenei.bloompaper.index.hamming.Node;
 public class TestDiff {
     int n = 3;
     double p = 1.0 / 100000;
-    Shape shape = Shape.Factory.fromNP(n, p);
+    Shape shape = Shape.fromNP(n, p);
 
     // NumericBloomFilter filter = new NumericBloomFilter( shape,
     // 2315448351954444800L, 34 );
     // NumericBloomFilter target = new NumericBloomFilter( shape,
     // -5570068171581312439L, 34 );
     FrozenBloomFilter filter = new FrozenBloomFilter(shape,
-            BitMapProducer.fromLongArray(new long[] { 5764629513350676800L }));
+            BitMapProducer.fromBitMapArray(new long[] { 5764629513350676800L }));
     FrozenBloomFilter target = new FrozenBloomFilter(shape,
-            BitMapProducer.fromLongArray(new long[] { -3025718536694661252L }));
+            BitMapProducer.fromBitMapArray(new long[] { -3025718536694661252L }));
 
     public static void main(String[] args) {
         new TestDiff().execute();

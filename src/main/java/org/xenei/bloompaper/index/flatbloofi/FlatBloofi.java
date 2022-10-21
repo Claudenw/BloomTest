@@ -5,6 +5,7 @@ import java.util.BitSet;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
 
+import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.IndexProducer;
@@ -38,17 +39,17 @@ public final class FlatBloofi {
         busy = new BitSet(0);
     }
 
-    public void add(BloomFilter bf) {
+    public void add(BloomFilter filter) {
         int i = busy.nextClearBit(0);
-        if (buffer.size() - 1 < BitUtils.getLongIndex(i)) {
+        if (buffer.size() - 1 < BitMap.getLongIndex(i)) {
             buffer.add(new long[shape.getNumberOfBits() + 1]);
         }
-        setBloomAt(i, BloomFilter.asBitMapArray(bf));
+        setBloomAt(i, filter.asBitMapArray());
         busy.set(i);
     }
 
-    public void search(Consumer<BloomFilter> result, BloomFilter bf) {
-        BitSet bs = BitSet.valueOf(BloomFilter.asBitMapArray(bf));
+    public void search(Consumer<BloomFilter> result, BloomFilter filter) {
+        BitSet bs = BitSet.valueOf(filter.asBitMapArray());
 
         for (int i = 0; i < buffer.size(); i++) {
             long w = ~0l;
@@ -70,8 +71,8 @@ public final class FlatBloofi {
     private BloomFilter getBloomAt(int idx) {
         IndexProducer indexProducer = new IndexProducer() {
 
-            final long[] mybuffer = buffer.get(BitUtils.getLongIndex(idx));
-            final long mask = BitUtils.getLongBit(idx);
+            final long[] mybuffer = buffer.get(BitMap.getLongIndex(idx));
+            final long mask = BitMap.getLongBit(idx);
 
             @Override
             public boolean forEachIndex(IntPredicate consumer) {
@@ -86,12 +87,14 @@ public final class FlatBloofi {
             }
         };
         BitMapProducer bitMapProducer = BitMapProducer.fromIndexProducer(indexProducer, shape.getNumberOfBits());
-        return new SimpleBloomFilter(shape, bitMapProducer);
+        BloomFilter bf = new SimpleBloomFilter(shape);
+        bf.merge(bitMapProducer);
+        return bf;
     }
 
     private void setBloomAt(int i, long[] bits) {
-        final long[] mybuffer = buffer.get(BitUtils.getLongIndex(i));
-        final long mask = BitUtils.getLongBit(i);
+        final long[] mybuffer = buffer.get(BitMap.getLongIndex(i));
+        final long mask = BitMap.getLongBit(i);
         for (int k = 0; k < mybuffer.length; k++) {
             if (BitUtils.isSet(bits, k)) {
                 mybuffer[k] |= mask;
@@ -107,7 +110,7 @@ public final class FlatBloofi {
      * @return a packed index of entries.
      */
     private BitSet findExactMatch(BloomFilter filter) {
-        long[] bits = BloomFilter.asBitMapArray(filter);
+        long[] bits = filter.asBitMapArray();
         long[] result = new long[buffer.size()];
         long[] busyBits = busy.toLongArray();
         /*
@@ -162,13 +165,15 @@ public final class FlatBloofi {
         return BitSet.valueOf(result);
     }
 
-    public void delete(BloomFilter filter) {
+    public boolean delete(BloomFilter filter) {
         BitSet found = findExactMatch(filter);
 
         int delIdx = found.nextSetBit(0);
         if (delIdx > -1) {
             busy.clear(delIdx);
+            return true;
         }
+        return false;
     }
 
     public int count() {

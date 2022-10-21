@@ -23,7 +23,7 @@ import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 public class StatsSerdeTest {
 
-    private Shape shape = new Shape(12, 12);
+    private Shape shape = Shape.fromKM(12, 12);
 
     private Stats.Serde serde = new Stats.Serde();
 
@@ -73,7 +73,6 @@ public class StatsSerdeTest {
         assertEquals(0.0, expected.getElapsed(Phase.Query, Type.HIGHCARD), Stats.TIME_SCALE);
         assertEquals(0, actual.getCount(Phase.Query, Type.HIGHCARD));
         assertEquals(0, actual.getCount(Phase.Delete, Type.HIGHCARD));
-
         Map<FrozenBloomFilter, Set<FrozenBloomFilter>> m = actual.getFound(Type.COMPLETE);
         assertNotNull(m.get(target));
         Set<FrozenBloomFilter> s = m.get(target);

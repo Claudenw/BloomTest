@@ -26,16 +26,17 @@ public class BloomIndexList extends BloomIndex {
     }
 
     @Override
-    public void delete(BloomFilter filter) {
+    public boolean delete(BloomFilter filter) {
         BitUtils.BufferCompare comp = new BitUtils.BufferCompare(filter, BitUtils.BufferCompare.exact);
 
         Iterator<BloomFilter> iter = index.iterator();
         while (iter.hasNext()) {
             if (comp.matches(iter.next())) {
                 iter.remove();
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     @Override

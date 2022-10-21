@@ -3,6 +3,7 @@ package org.xenei.bloompaper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.Collection;
@@ -15,7 +16,6 @@ import java.util.Set;
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
-import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.xenei.bloompaper.index.FrozenBloomFilter;
 
 /**
@@ -79,18 +79,6 @@ public class Stats {
     private long[][] count = new long[Phase.values().length][Type.values().length];
 
     /**
-     * Generate the CSV header for this stat
-     * @return the CSV header for this stat.
-     */
-    public static String getHeader() {
-        StringBuilder sb = new StringBuilder("'Index Name', 'Usage', 'Run', 'Phase', 'Population', 'Load Elapsed'");
-        for (Type type : Type.values()) {
-            sb.append(String.format(", '%1$s Elapsed', '%1$s Count'", type));
-        }
-        return sb.toString();
-    }
-
-    /**
      * Constructor.
      * @param usageType the usage type for this set of statistics.
      * @param indexName the index name that generated the statistics.
@@ -137,20 +125,6 @@ public class Stats {
     public Map<FrozenBloomFilter, Set<FrozenBloomFilter>> getFound(Type type) {
         Map<FrozenBloomFilter, Set<FrozenBloomFilter>> result = foundFilters[type.ordinal()];
         return result == null ? Collections.emptyMap() : result;
-    }
-
-    /**
-     * Report the statistics for the specified phase.
-     * @param phase the phase to report for.
-     * @return the reporting string CSV.
-     */
-    public String reportStats(Phase phase) {
-        StringBuilder sb = new StringBuilder(
-                String.format("'%s','%s', %s,'%s',%s,%s", indexName, usageType, run, phase, population, load));
-        for (Type type : Type.values()) {
-            sb.append(String.format(",%s,%s", getElapsed(phase, type), getCount(phase, type)));
-        }
-        return sb.toString();
     }
 
     /**
@@ -230,6 +204,7 @@ public class Stats {
      * @param type the type of filter being used.
      * @param elapsed the elapsed time in milliseconds.
      * @param count the count of items detected in the test.
+     * @param falsePositives the count of falst positives on this run.
      */
     public void registerResult(final Phase phase, final Type type, final long elapsed, final long count) {
         this.time[phase.ordinal()][type.ordinal()] = elapsed;
@@ -276,7 +251,6 @@ public class Stats {
             out.writeLong(stats.load);
             writeLongMatrix(out, stats.time);
             writeLongMatrix(out, stats.count);
-
         }
 
         /**
@@ -341,7 +315,7 @@ public class Stats {
         private void writeBloomFilter(DataOutputStream out, BloomFilter bf) throws IOException {
             out.writeInt(bf.getShape().getNumberOfHashFunctions());
             out.writeInt(bf.getShape().getNumberOfBits());
-            writeLongArray(out, BloomFilter.asBitMapArray(bf));
+            writeLongArray(out, bf.asBitMapArray());
         }
 
         /**R
@@ -426,12 +400,50 @@ public class Stats {
          * @throws IOException on IO error.
          */
         private FrozenBloomFilter readBloomFilter(DataInputStream in) throws IOException {
-            Shape shape = new Shape(in.readInt(), in.readInt());
+            Shape shape = Shape.fromKM(in.readInt(), in.readInt());
             long[] bitMaps = readLongArray(in);
-            BitMapProducer producer = BitMapProducer.fromLongArray(bitMaps);
-            BloomFilter bf = new SimpleBloomFilter(shape, producer);
-            return FrozenBloomFilter.makeInstance(bf);
+            BitMapProducer producer = BitMapProducer.fromBitMapArray(bitMaps);
+            return new FrozenBloomFilter(shape, producer);
         }
+
+    }
+
+    /**
+     * Class to perform binary serialization/deserialization of the Stats object.
+     * This is stored in the .dat files as well as the .fmf files.
+     */
+    public class CSV {
+        private PrintStream out;
+
+        public CSV(PrintStream out) {
+            this.out = out;
+        }
+
+        /**
+         * Generate the CSV header for this stat
+         * @return the CSV header for this stat.
+         */
+        public void printHeader() {
+            out.print("'Index Name', 'Usage', 'Run', 'Phase', 'Population', 'Load Elapsed'");
+            for (Type type : Type.values()) {
+                out.format(", '%1$s Elapsed', '%1$s Count'", type);
+            }
+            out.println();
+        }
+
+        public void printLine(Phase phase) {
+            out.format("'%s','%s', %s,'%s',%s,%s", indexName, usageType, run, phase, population, load);
+            for (Type type : Type.values()) {
+                out.format(",%s,%s", getElapsed(phase, type), getCount(phase, type));
+            }
+            out.println();
+        }
+
+        /**
+         * Report the statistics for the specified phase.
+         * @param phase the phase to report for.
+         * @return the reporting string CSV.
+         */
 
     }
 

@@ -5,9 +5,9 @@ import java.util.function.LongPredicate;
 
 import org.apache.commons.collections4.bloomfilter.BitMapProducer;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.IndexProducer;
 import org.apache.commons.collections4.bloomfilter.Shape;
-import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 
 /**
@@ -56,27 +56,46 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
      * @param producer the BitMapProducer to create the bitmaps.
      */
     public FrozenBloomFilter(Shape shape, BitMapProducer producer) {
-        this(new SimpleBloomFilter(shape, producer));
+        wrapped = new SimpleBloomFilter(shape);
+        wrapped.merge(producer);
+        cardinality = wrapped.cardinality();
     }
 
     /**
      * Get the Bitmap as an array of long.
      * @return the BitMaps
      */
-    public long[] getBitMap() {
+    @Override
+    public long[] asBitMapArray() {
         if (bitMap == null) {
-            bitMap = BloomFilter.asBitMapArray(wrapped);
+            bitMap = wrapped.asBitMapArray();
         }
         return bitMap;
     }
 
     @Override
-    public boolean mergeInPlace(Hasher hasher) {
+    public boolean merge(Hasher hasher) {
+        throw new UnsupportedOperationException();
+    }
+    
+
+    @Override
+    public void clear() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean mergeInPlace(BloomFilter other) {
+    public boolean merge(IndexProducer indexProducer) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean merge(BitMapProducer bitMapProducer) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean merge(BloomFilter other) {
         throw new UnsupportedOperationException();
     }
 
@@ -107,10 +126,13 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
         if (this == other) {
             return 0;
         }
-        int result = this.getShape().compareTo(other.getShape());
+        int result = Integer.compare(getShape().getNumberOfBits(), other.getShape().getNumberOfBits());
         if (result == 0) {
-            long[] oBitMap = other.getBitMap();
-            int limit = getBitMap().length < oBitMap.length ? getBitMap().length : oBitMap.length;
+                    result = Integer.compare(getShape().getNumberOfHashFunctions(), other.getShape().getNumberOfHashFunctions());
+        }
+        if (result == 0) {
+            long[] oBitMap = other.asBitMapArray();
+            int limit = asBitMapArray().length < oBitMap.length ? asBitMapArray().length : oBitMap.length;
             int i = 0;
             while (i < limit && result == 0) {
                 result = Long.compare(bitMap[i], oBitMap[i]);
@@ -132,11 +154,12 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
     public boolean forEachBitMap(LongPredicate consumer) {
         return wrapped.forEachBitMap(consumer);
     }
-
+    
     @Override
-    public boolean isSparse() {
-        return wrapped.isSparse();
+    public int characteristics() {
+        return wrapped.characteristics();
     }
+
 
     @Override
     public Shape getShape() {
@@ -163,4 +186,38 @@ public class FrozenBloomFilter implements BloomFilter, Comparable<FrozenBloomFil
         return cardinality;
     }
 
+    @Override
+    public BloomFilter copy() {
+        return new FrozenBloomFilter( wrapped.copy() );
+    }
+
+    @Override
+    public boolean contains(BloomFilter other) {
+        return wrapped.contains(other);
+    }
+
+    @Override
+    public boolean contains(Hasher hasher) {
+        return wrapped.contains(hasher);
+    }
+
+    @Override
+    public int[] asIndexArray() {
+        return wrapped.asIndexArray();
+    }
+
+    @Override
+    public int estimateN() {
+        return wrapped.estimateN();
+    }
+
+    @Override
+    public int estimateUnion(BloomFilter other) {
+        return wrapped.estimateUnion(other);
+    }
+
+    @Override
+    public int estimateIntersection(BloomFilter other) {
+        return wrapped.estimateIntersection(other);
+    }
 }

@@ -8,7 +8,7 @@ public interface BFTrie {
 
     public int getWidth();
 
-    public void remove(BloomFilter filter);
+    public boolean remove(BloomFilter filter);
 
     public int count();
 

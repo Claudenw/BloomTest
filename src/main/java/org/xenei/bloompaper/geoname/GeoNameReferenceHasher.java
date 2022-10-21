@@ -1,11 +1,12 @@
 package org.xenei.bloompaper.geoname;
 
-import org.apache.commons.collections4.bloomfilter.hasher.HasherCollection;
-import org.apache.commons.collections4.bloomfilter.hasher.NullHasher;
-import org.apache.commons.collections4.bloomfilter.hasher.SimpleHasher;
-import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
+import org.xenei.bloompaper.index.NullHasher;
+
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.digest.MurmurHash3;
+import org.apache.commons.collections4.bloomfilter.Hasher;
+import org.apache.commons.collections4.bloomfilter.HasherCollection;
+import org.apache.commons.collections4.bloomfilter.EnhancedDoubleHasher;
 
 public class GeoNameReferenceHasher {
 
@@ -23,7 +24,7 @@ public class GeoNameReferenceHasher {
             return NullHasher.INSTANCE;
         }
         long[] longs = MurmurHash3.hash128(n.getBytes(StandardCharsets.UTF_8));
-        return new SimpleHasher(longs[0], longs[1]);
+        return new EnhancedDoubleHasher(longs[0], longs[1]);
     }
 
 }

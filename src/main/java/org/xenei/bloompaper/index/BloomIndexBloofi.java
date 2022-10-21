@@ -32,8 +32,8 @@ public class BloomIndexBloofi extends BloomIndex {
     }
 
     @Override
-    public void delete(BloomFilter filter) {
-        bloofi.delete(filter);
+    public boolean delete(BloomFilter filter) {
+        return bloofi.delete(filter);
     }
 
     @Override

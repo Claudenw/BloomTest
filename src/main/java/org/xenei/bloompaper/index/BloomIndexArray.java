@@ -25,7 +25,7 @@ public class BloomIndexArray extends BloomIndex {
     }
 
     @Override
-    public void delete(BloomFilter filter) {
+    public boolean delete(BloomFilter filter) {
         BitUtils.BufferCompare comp = new BitUtils.BufferCompare(filter, BitUtils.BufferCompare.exact);
 
         for (int i = idx - 1; i >= 0; i--) {
@@ -34,9 +34,10 @@ public class BloomIndexArray extends BloomIndex {
                     System.arraycopy(index, i + 1, index, i, idx - i - 1);
                 }
                 index[--idx] = null;
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     @Override

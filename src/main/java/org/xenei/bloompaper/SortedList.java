@@ -36,9 +36,8 @@ public class SortedList<T> implements List<T> {
     private int search(T t) {
         if (comparator == null) {
             return Collections.binarySearch(((List<? extends Comparable<? super T>>) wrapped), t);
-        } else {
-            return Collections.binarySearch(wrapped, t, comparator);
         }
+        return Collections.binarySearch(wrapped, t, comparator);
     }
 
     /**

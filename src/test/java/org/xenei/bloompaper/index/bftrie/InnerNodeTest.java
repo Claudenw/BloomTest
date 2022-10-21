@@ -4,14 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.junit.Test;
-import org.xenei.bloompaper.index.BitUtils;
 
 public class InnerNodeTest {
 
     private long getMask(int idx) {
-        return BitUtils.getLongBit(idx - 1);
+        return BitMap.getLongBit(idx - 1);
     }
 
     @Test
@@ -54,7 +54,7 @@ public class InnerNodeTest {
         BFTrie trie = mock(BFTrie.class);
         when(trie.getWidth()).thenReturn(4);
 
-        Shape shape = new Shape(302, 17);
+        Shape shape = Shape.fromKM(302, 17);
         InnerNode innerNode = new InnerNode(0, shape, trie);
 
         for (int i = 0; i < 16; i++) {

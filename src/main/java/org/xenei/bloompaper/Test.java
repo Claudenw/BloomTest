@@ -19,10 +19,10 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
+import org.apache.commons.collections4.bloomfilter.Hasher;
 import org.apache.commons.collections4.bloomfilter.Shape;
 import org.apache.commons.collections4.bloomfilter.SimpleBloomFilter;
 import org.apache.commons.collections4.bloomfilter.SparseBloomFilter;
-import org.apache.commons.collections4.bloomfilter.hasher.Hasher;
 import org.apache.commons.lang3.time.StopWatch;
 import org.xenei.bloompaper.Stats.Type;
 import org.xenei.bloompaper.geoname.GeoName;
@@ -36,6 +36,8 @@ import org.xenei.bloompaper.index.BloomIndexBloofi;
 import org.xenei.bloompaper.index.BloomIndexFlatBloofi;
 import org.xenei.bloompaper.index.BloomIndexHamming;
 import org.xenei.bloompaper.index.BloomIndexList;
+import org.xenei.bloompaper.index.naturalbloofi.NaturalBloofi;
+import org.xenei.bloompaper.index.shardedlist.ShardedList;
 import org.xenei.bloompaper.index.BloomIndexArray;
 
 /**
@@ -73,6 +75,8 @@ public class Test {
         constructors.put("BF-Trie8", BloomIndexBFTrie8.class.getConstructor(int.class, Shape.class));
         constructors.put("Array", BloomIndexArray.class.getConstructor(int.class, Shape.class));
         constructors.put("List", BloomIndexList.class.getConstructor(int.class, Shape.class));
+        constructors.put("NaturalBloofi", NaturalBloofi.class.getConstructor(int.class, Shape.class));
+        constructors.put("ShardedList", ShardedList.class.getConstructor(int.class, Shape.class));
     }
 
     /**
@@ -231,14 +235,14 @@ public class Test {
         }
 
         final Summary summary = new Summary(table);
-        Summary.doOutput(table, null, true);
+        Summary.doOutput(table, null, true, false, usagePattern.getName());
 
         if (dir != null) {
             try (PrintStream ps = new PrintStream(new File(dir, "data.csv"))) {
-                Summary.writeData(ps, table);
+                table.forEachPhase(table.new CSV(ps));
             }
             try (PrintStream ps = new PrintStream(new File(dir, "summary.csv"))) {
-                summary.writeSummary(ps);
+                summary.new CSV(ps, usagePattern.getName()).print();
             }
         }
 
@@ -247,40 +251,41 @@ public class Test {
 
     /**
      * Executes the delete tests.
+     * @param bi bloomIndex under test.
      * @param type The type of Bloom filter we are deleting.
-     * @param constructor the Constructor for the test.
-     * @param filters the list of all filters.
      * @param bfSample the list of sample to delete.
      * @param stats the list of statistics for this test.
-     * @param shape the Shape of the filters for the tests.
      * @throws InstantiationException on instantiation error in test constructor.
      * @throws IllegalAccessException on access error in test constructor.
      * @throws InvocationTargetException on invocation error in test constructor.
      */
-    private static void doDelete(Stats.Type type, final Constructor<? extends BloomIndex> constructor,
-            final BloomFilter[] filters, final BloomFilter[] bfSample, final List<Stats> stats, Shape shape)
-                    throws InstantiationException, IllegalAccessException, InvocationTargetException {
-        BloomIndex bi;
+    private static void doDelete(BloomIndex bi, Stats.Type type, final BloomFilter[] bfSample, final List<Stats> stats)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException {
+
+        boolean[] results = new boolean[bfSample.length];
+
         StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
-            /* setup */
+
             Stats stat = stats.get(run);
-            bi = constructor.newInstance(stat.getPopulation(), shape);
-            for (int i = 0; i < stat.getPopulation(); i++) {
-                bi.add(filters[i]);
-            }
 
             /* run */
             stopwatch.reset();
             stopwatch.start();
-            for (BloomFilter bf : bfSample) {
-                bi.delete(bf);
+            for (int i = 0; i < bfSample.length; i++) {
+                results[i] = bi.delete(bfSample[i]);
             }
             stopwatch.stop();
 
             stat.registerResult(Stats.Phase.Delete, type, stopwatch.getNanoTime(), stat.getPopulation() - bi.count());
 
             System.out.println(stat.displayString(Stats.Phase.Delete, type));
+            // add the deleted records back
+            for (int i = 0; i < bfSample.length; i++) {
+                if (results[i]) {
+                    bi.add(bfSample[i]);
+                }
+            }
         }
     }
 
@@ -304,19 +309,18 @@ public class Test {
 
         BloomIndex bi = doLoad(constructor, filters, shape, stats);
 
+        System.out.println("Calculating query times");
         for (Stats.Type type : pattern.getSupportedTypes()) {
             BloomFilter[] bfSample = pattern.createSample(shape, type, sample);
             doCount(type, bi, bfSample, stats, collectFilters);
         }
 
-        // release the memory
-        bi = null;
-
+        System.out.println("Calculating delete times");
         for (Stats.Type type : pattern.getSupportedTypes()) {
             BloomFilter[] bfSample = pattern.createSample(shape, type, sample);
-            doDelete(type, constructor, filters, bfSample, stats, shape);
+            doDelete(bi, type, bfSample, stats);
         }
-
+        System.out.println("test complete");
         return stats;
     }
 
@@ -334,8 +338,9 @@ public class Test {
      */
     private static BloomIndex doLoad(final Constructor<? extends BloomIndex> constructor, final BloomFilter[] filters,
             final Shape shape, final List<Stats> stats)
-                    throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         BloomIndex bi = null;
+        System.out.println("Calculating load times");
         StopWatch stopwatch = new StopWatch();
         for (int run = 0; run < RUN_COUNT; run++) {
             Stats stat = stats.get(run);
@@ -442,7 +447,7 @@ public class Test {
         /**
          * The shape for this type of filter.
          */
-        final Shape shape = Shape.Factory.fromNP(3, 1.0 / 100000);
+        final Shape shape = Shape.fromNP(3, 1.0 / 100000);
 
         @Override
         public Type[] getSupportedTypes() {
@@ -469,7 +474,8 @@ public class Test {
         private void readFilters(GeoNameIterator iter) {
             System.out.print("Creating filters...");
             for (int i = 0; i < 1000000; i++) {
-                filters[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.createHasher(iter.next()));
+                filters[i] = new SimpleBloomFilter(shape);
+                filters[1].merge(GeoNameReferenceHasher.createHasher(iter.next()));
                 if ((i % 1000) == 0) {
                     System.out.print(".");
                 }
@@ -488,16 +494,16 @@ public class Test {
             final int sampleSize = sample.size();
             BloomFilter[] bfSample = new BloomFilter[sampleSize];
             for (int i = 0; i < sample.size(); i++) {
+                bfSample[i] = new SimpleBloomFilter(shape);
                 switch (type) {
                 case COMPLETE:
-                    bfSample[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.createHasher(sample.get(i)));
+                    bfSample[i].merge(GeoNameReferenceHasher.createHasher(sample.get(i)));
                     break;
                 case HIGHCARD:
-                    bfSample[i] = new SimpleBloomFilter(shape, GeoNameReferenceHasher.hasherFor(sample.get(i).name));
+                    bfSample[i].merge(GeoNameReferenceHasher.hasherFor(sample.get(i).name));
                     break;
                 case LOWCARD:
-                    bfSample[i] = new SimpleBloomFilter(shape,
-                            GeoNameReferenceHasher.hasherFor(sample.get(i).feature_code));
+                    bfSample[i].merge(GeoNameReferenceHasher.hasherFor(sample.get(i).feature_code));
                     break;
                 }
             }
@@ -524,9 +530,10 @@ public class Test {
          * @return A Bloom filter of the proper shape built with the hasher.
          */
         private BloomFilter makeFilter(Shape shape, Hasher hasher) {
-            int bits = shape.getNumberOfHashFunctions() * hasher.size();
-            double d = bits * 1.0 / BitMap.numberOfBitMaps(shape.getNumberOfBits());
-            return (d > 2.0) ? new SimpleBloomFilter(shape, hasher) : new SparseBloomFilter(shape, hasher);
+            double d = shape.getNumberOfHashFunctions()  / (double)BitMap.numberOfBitMaps(shape.getNumberOfBits());
+            BloomFilter bf = (d > 2.0) ? new SimpleBloomFilter(shape) : new SparseBloomFilter(shape);
+            bf.merge(hasher);
+            return bf;
         }
 
         @Override
@@ -547,7 +554,7 @@ public class Test {
 
         @Override
         public Shape getShape(int population) {
-            return Shape.Factory.fromNP(population, 1.0 / 100000);
+            return Shape.fromNP(population, 0.1);
         }
 
         @Override

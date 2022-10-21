@@ -70,7 +70,7 @@ public class InnerNode implements Node {
     @Override
     public String toString() {
         return String.format(
-                String.format("InnerNode:%s %s", this.id, BitUtils.formatHex(BloomFilter.asBitMapArray(filter))));
+                String.format("InnerNode:%s %s", this.id, BitUtils.formatHex(filter.asBitMapArray())));
     }
 
     /**

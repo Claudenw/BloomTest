@@ -15,11 +15,11 @@ public class FlatBloofiTest {
     public void testDelete() {
         int n = 3;
         double p = 1.0 / 100000;
-        Shape shape = Shape.Factory.fromNP(n, p);
+        Shape shape = Shape.fromNP(n, p);
 
         FlatBloofi flatBloofi = new FlatBloofi(500, shape);
 
-        BloomFilter bf = new FrozenBloomFilter(shape, BitMapProducer.fromLongArray(new long[] { 1, 1 }));
+        BloomFilter bf = new FrozenBloomFilter(shape, BitMapProducer.fromBitMapArray(new long[] { 1, 1 }));
         flatBloofi.add(bf);
         flatBloofi.add(new TestingBloomFilter(shape));
         flatBloofi.add(new TestingBloomFilter(shape));
@@ -37,11 +37,11 @@ public class FlatBloofiTest {
     public void testDuplicateDelete() {
         int n = 3;
         double p = 1.0 / 100000;
-        Shape shape = Shape.Factory.fromNP(n, p);
+        Shape shape = Shape.fromNP(n, p);
 
         FlatBloofi flatBloofi = new FlatBloofi(500, shape);
 
-        BloomFilter bf = new FrozenBloomFilter(shape, BitMapProducer.fromLongArray(new long[] { 1, 1 }));
+        BloomFilter bf = new FrozenBloomFilter(shape, BitMapProducer.fromBitMapArray(new long[] { 1, 1 }));
         flatBloofi.add(bf);
         flatBloofi.add(new TestingBloomFilter(shape));
         flatBloofi.add(new TestingBloomFilter(shape));

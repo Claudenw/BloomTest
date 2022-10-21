@@ -2,9 +2,9 @@ package org.xenei.bloompaper.index.bftrie;
 
 import java.util.function.Consumer;
 
+import org.apache.commons.collections4.bloomfilter.BitMap;
 import org.apache.commons.collections4.bloomfilter.BloomFilter;
 import org.apache.commons.collections4.bloomfilter.Shape;
-import org.xenei.bloompaper.index.BitUtils;
 
 public class BFTrie4 implements BFTrie {
     public static final int[][] nibbleTable = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF },
@@ -27,20 +27,22 @@ public class BFTrie4 implements BFTrie {
     }
 
     public void add(BloomFilter filter) {
-        root.add(this, filter, BloomFilter.asBitMapArray(filter));
+        root.add(this, filter, filter.asBitMapArray());
         count++;
     }
 
     @Override
     public boolean find(BloomFilter filter) {
-        return root.find(BloomFilter.asBitMapArray(filter));
+        return root.find(filter.asBitMapArray());
     }
 
     @Override
-    public void remove(BloomFilter filter) {
-        if (root.remove(BloomFilter.asBitMapArray(filter))) {
+    public boolean remove(BloomFilter filter) {
+        if (root.remove(filter.asBitMapArray())) {
             count--;
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class BFTrie4 implements BFTrie {
         // estimate result size as % of key space.
         // int f = shape.getNumberOfBits() - filter.cardinality();
         // int initSize = count * f / shape.getNumberOfBits();
-        root.search(this, consumer, BloomFilter.asBitMapArray(filter));
+        root.search(this, consumer, filter.asBitMapArray());
     }
 
     @Override
@@ -66,7 +68,7 @@ public class BFTrie4 implements BFTrie {
     public int getIndex(long[] buffer, int level) {
         int startBit = level * 4;
 
-        int idx = BitUtils.getLongIndex(startBit);
+        int idx = BitMap.getLongIndex(startBit);
         // buffer may be short if upper values are zero
         if (idx >= buffer.length) {
             return (byte) 0;
