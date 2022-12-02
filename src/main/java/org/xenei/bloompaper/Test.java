@@ -474,8 +474,7 @@ public class Test {
         private void readFilters(GeoNameIterator iter) {
             System.out.print("Creating filters...");
             for (int i = 0; i < 1000000; i++) {
-                filters[i] = new SimpleBloomFilter(shape);
-                filters[1].merge(GeoNameReferenceHasher.createHasher(iter.next()));
+                filters[1] = GeoNameReferenceHasher.createHasherCollection(iter.next()).filterFor(shape);
                 if ((i % 1000) == 0) {
                     System.out.print(".");
                 }
@@ -497,7 +496,7 @@ public class Test {
                 bfSample[i] = new SimpleBloomFilter(shape);
                 switch (type) {
                 case COMPLETE:
-                    bfSample[i].merge(GeoNameReferenceHasher.createHasher(sample.get(i)));
+                    GeoNameReferenceHasher.createHasherCollection(sample.get(i)).fill(bfSample[i]);
                     break;
                 case HIGHCARD:
                     bfSample[i].merge(GeoNameReferenceHasher.hasherFor(sample.get(i).name));

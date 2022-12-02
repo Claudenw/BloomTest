@@ -1,16 +1,16 @@
 package org.xenei.bloompaper.geoname;
 
+import org.xenei.bloompaper.HasherCollection;
 import org.xenei.bloompaper.index.NullHasher;
 
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.digest.MurmurHash3;
 import org.apache.commons.collections4.bloomfilter.Hasher;
-import org.apache.commons.collections4.bloomfilter.HasherCollection;
 import org.apache.commons.collections4.bloomfilter.EnhancedDoubleHasher;
 
 public class GeoNameReferenceHasher {
 
-    public static Hasher createHasher(GeoName geoName) {
+    public static HasherCollection createHasherCollection(GeoName geoName) {
         HasherCollection hashers = new HasherCollection();
         hashers.add(hasherFor(geoName.name));
         hashers.add(hasherFor(geoName.feature_code));
