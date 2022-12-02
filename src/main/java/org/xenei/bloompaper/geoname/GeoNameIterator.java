@@ -63,8 +63,7 @@ public class GeoNameIterator implements Iterator<GeoName>, AutoCloseable {
             } finally {
                 next = null;
             }
-        } else {
-            throw new NoSuchElementException();
-        }
+        } 
+        throw new NoSuchElementException();
     }
 }

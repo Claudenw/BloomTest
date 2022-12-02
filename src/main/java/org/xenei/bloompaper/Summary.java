@@ -189,17 +189,6 @@ public class Summary {
         return table;
     }
 
-    // /**
-    // * Writes produces a summary report for the specified table.
-    // * @param ps the print stream to write the report to.
-    // * @param table the table to process.
-    // * @throws IOException on IO Error.
-    // */
-    // public static void writeData(PrintStream ps, Table table) throws IOException
-    // {
-    // table.forEachPhase( table.new CSV( ps ) );
-    // }
-
     /**
      * Gets the options for the main code.
      * @return the Options object
