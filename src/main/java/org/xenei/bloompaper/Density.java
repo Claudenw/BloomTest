@@ -73,7 +73,7 @@ public class Density {
                 System.out.println("Saturation " + (density + 1));
                 for (int i = 0; i < SAMPLE_SIZE; i++) {
                     final BloomFilter bf = new SimpleBloomFilter(shape);
-                    bf.merge(GeoNameReferenceHasher.createHasher(geoIter.next()));
+                    GeoNameReferenceHasher.createHasherCollection(geoIter.next()).fill(bf);
                     if (density > 0) {
                         filters[i].merge(bf);
                     } else {

@@ -142,9 +142,8 @@ public class InnerNode implements Node {
     private CountingBloomFilter asCountingFilter(final BloomFilter filter) {
         if (filter instanceof CountingBloomFilter) {
             return (CountingBloomFilter) filter;
-        } else {
-            return new PseudoCountingBloomFilter(filter);
         }
+        return new PseudoCountingBloomFilter(filter);
     }
 
     /**
